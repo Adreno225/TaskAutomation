@@ -1,0 +1,101 @@
+﻿<Window x:Class="TaskAutomation.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:conv="clr-namespace:TaskAutomation.Infrastructure.Converters"
+        xmlns:vm ="clr-namespace:TaskAutomation.ViewModels"
+        xmlns:models="clr-namespace:TaskAutomation.Models"
+        mc:Ignorable="d"
+        Title="Задание на автоматизацию"
+        MinHeight="590"
+        Height="590"
+        MinWidth="1200"
+        Width="1200"
+        DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}">
+    <Window.Resources>
+        <conv:DebugConverter x:Key="debugConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Margin="5">
+                <TextBlock Padding="5" Text="Сохранить проект" FontSize="12"/>
+            </Button>
+            <Button Margin="5">
+                <TextBlock Padding="5" Text="Загрузить проект" FontSize="12"/>
+            </Button>
+        </StackPanel>
+        <Grid Grid.Row="1" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100*"/>
+                <ColumnDefinition Width="270*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="90"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Margin="5" Grid.Column="0" Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Source="C:\Wpf\TaskAutomation\TaskAutomation\TaskAutomation\Logo.png" Height="100" Width="100"/>
+            </Grid>
+            <Border Grid.Row="1" Grid.Column="0" Margin="0 5 5 0" Style="{StaticResource border}">
+                <TreeView  Margin="5" BorderThickness="0" SelectedItemChanged="TreeView_SelectedItemChanged">
+                    <TreeViewItem Header="{Binding DataContext.TaskTemplate.SelectedItem.Name, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" ItemsSource="{Binding Task.Areas}" ItemTemplate="{StaticResource areaTreeTemplate}">
+                    </TreeViewItem>
+                </TreeView>
+            </Border>
+            <DataGrid Grid.Row="0" Grid.Column="1"
+                      Margin="5"
+                      ItemsSource="{Binding MainTable}"
+                      RowHeight="55"  
+                      Height="80"
+                      VerticalGridLinesBrush="DarkGray">
+                <DataGrid.Columns>
+                    <DataGridTextColumn FontSize="14" Header="Шифр" Width="100" Binding="{Binding Code, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn FontSize="14" Header="Наименование проекта" Width="350" Binding="{Binding DataContext.TaskTemplate.SelectedItem.Name, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn FontSize="14" Header="Объект" Width="200" Binding="{Binding Object, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridComboBoxColumn Header="Стадия" ItemsSource="{Binding Source={StaticResource EnumDataSourceStage}, UpdateSourceTrigger=PropertyChanged}" SelectedItemBinding="{Binding Stage}"/>
+                    <DataGridComboBoxColumn Header="Класс автоматизации" ItemsSource="{Binding Source={StaticResource EnumDataSourceClass}, UpdateSourceTrigger=PropertyChanged}" SelectedItemBinding="{Binding Class}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource border}"  Margin="0 5 5 0">
+                <Border.Resources>
+                    <Style x:Key="selectTemplate" TargetType="ContentControl">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding DataContext.TypeSelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="{x:Static vm:TypeSelectedItem.Task}">
+                                <Setter Property="ContentTemplate" Value="{StaticResource taskTemplate}"/>
+                                <Setter Property="DataContext" Value="{Binding DataContext.TaskTemplate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DataContext.TypeSelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="{x:Static vm:TypeSelectedItem.Area}">
+                                <Setter Property="ContentTemplate" Value="{StaticResource areaTemplate}"/>
+                                <Setter Property="DataContext" Value="{Binding DataContext.AreaTemplate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DataContext.TypeSelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="{x:Static vm:TypeSelectedItem.Object}">
+                                <Setter Property="ContentTemplate" Value="{StaticResource objectTemplate}"/>
+                                <Setter Property="DataContext" Value="{Binding DataContext.ObjectTemplate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DataContext.TypeSelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="{x:Static vm:TypeSelectedItem.Parameter}">
+                                <Setter Property="ContentTemplate" Value="{StaticResource taskTemplate}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Resources>
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <ContentControl Grid.Row="0" Style="{StaticResource selectTemplate}"/>
+                    <Button Grid.Row="1" Margin="5" Padding="5" Width="200">Сформировать задание</Button>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

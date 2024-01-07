@@ -1,0 +1,167 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:models="clr-namespace:TaskAutomation.Models"
+                    xmlns:vm ="clr-namespace:TaskAutomation.ViewModels" >
+
+    <Style TargetType="Border" x:Key="border">
+        <Setter Property="BorderBrush" Value="Gray"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="5"/>
+    </Style>
+    <!--Общий стиль текстблока-->
+    <Style TargetType="TextBlock" x:Key="textBlock">
+        <Setter Property="Margin" Value="5"/>
+    </Style>
+    <!--Стиль текстблока с именем-->
+    <Style BasedOn="{StaticResource textBlock}" TargetType="TextBlock" x:Key="textBlockName">
+        <Setter Property="Text" Value="{Binding DataContext.SelectedItem.Name, RelativeSource={RelativeSource  Mode=FindAncestor, AncestorType=ContentControl}}"/>
+    </Style>
+    <!--Шаблон панели с наименоваием-->
+    <DataTemplate x:Key="nameStackPanel" DataType="vm:BaseTemplate">
+        <StackPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
+                    Orientation="Horizontal" >
+            <TextBlock Style="{StaticResource textBlock}"  Text="Наименование:"/>
+            <TextBox Margin="5" Text="{Binding SelectedItem.Name, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+        </StackPanel>
+    </DataTemplate>
+    <!--Стиль кнопок-->
+    <Style x:Key="buttonStackPanel">
+        <Setter Property="Control.Width" Value="100" />
+        <Setter Property="Control.Margin" Value="5" />
+    </Style>
+    <!--Шаблон панелей кнопок-->
+    <DataTemplate x:Key="buttonsStackPanel" DataType="x:Type vm:ListGroup">
+        <StackPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
+            <Button Style="{StaticResource buttonStackPanel}" Command="{Binding AddItemCommand}">Добавить</Button>
+            <Button Style="{StaticResource buttonStackPanel}" Command="{Binding RemoveSelectedItemCommand}">Удалить</Button>
+            <Button Style="{StaticResource buttonStackPanel}" Command="{Binding CopySelectedItemCommand}">Копировать</Button>
+        </StackPanel>
+    </DataTemplate>
+
+    <!--Стиль листбокса в шаблоне-->
+    <Style TargetType="ListBox" x:Key="actualList">
+        <Setter Property="ItemsSource" Value="{Binding DataContext.Items, RelativeSource={RelativeSource Mode=Self}}"/>
+        <Setter Property="SelectedItem" Value="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource Mode=Self}}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate DataType="models:BaseModel">
+                    <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--Шаблон группы с перечнем айтемов-->
+    <DataTemplate x:Key="listGrop" DataType="x:Type vm:ListGroup">
+        <Border DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
+                Style="{StaticResource border}"
+                Margin="10 5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row ="0" Grid.Column ="0" Grid.ColumnSpan ="2" Style ="{StaticResource textBlock}" Text ="{Binding Text}"/>
+                <ListBox Grid.Row ="1" Grid.Column ="0" Style="{StaticResource actualList}"/>
+                <ContentControl Grid.Row ="1" Grid.Column="1"
+                                ContentTemplate="{StaticResource buttonsStackPanel}"/>
+            </Grid>
+        </Border>
+    </DataTemplate>
+
+    <!--Шаблон группы наименование-->
+    <DataTemplate x:Key="nameGroup" DataType="x:Type vm:ListGroup">
+        <Border Grid.Row="0" Style="{StaticResource border}" Margin="10 10 10 5">
+            <StackPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
+                <TextBlock Style="{StaticResource textBlock}"
+                               Text="{Binding SelectedItem.Name}"/>
+                <ContentControl ContentTemplate="{StaticResource nameStackPanel}"/>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <!--Шаблон комплесного объекта-->
+    <DataTemplate x:Key="taskTemplate" DataType="vm:TaskTemplate">
+        <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ContentControl Grid.Row="0" ContentTemplate="{StaticResource nameGroup}"/>
+            <ContentControl Grid.Row="1" DataContext="{Binding ListAreas}" ContentTemplate="{StaticResource listGrop}"/>
+        </Grid>
+    </DataTemplate>
+
+    <!--Шаблон площадки-->
+    <DataTemplate x:Key="areaTemplate" DataType="vm:AreaTemplate">
+        <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <ContentControl Grid.Row="0" ContentTemplate="{StaticResource nameGroup}"/>
+            <ContentControl Grid.Row="1" DataContext="{Binding ListObjects}" ContentTemplate="{StaticResource listGrop}"/>
+            <ContentControl Grid.Row="2" DataContext="{Binding ListParameters}" ContentTemplate="{StaticResource listGrop}"/>
+        </Grid>
+    </DataTemplate>
+
+    <!--Шаблон объекта-->
+    <DataTemplate x:Key="objectTemplate" DataType="vm:ObjectTemplate">
+        <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ContentControl Grid.Row="0" ContentTemplate="{StaticResource nameGroup}"/>
+            <DataGrid Grid.Row="1" ItemsSource="{Binding MainTableObject}"
+                      Margin="10 5"
+                      RowHeight="50" 
+                      Height="74">
+                <DataGrid.Columns>
+                    <!--Забиндить эту ячейку!!!!-->
+                    <DataGridTextColumn Header="Поз. по схеме" Width="120"/>
+                    <DataGridTextColumn Header="Поз. по ГП" Binding="{Binding NumGP}" Width="80"/>
+                    <DataGridTextColumn Header="Параметр оборудования" Binding="{Binding ParameterEquipment}" Width="200"/>
+                    <DataGridTextColumn Header="Наименование продукта" Binding="{Binding NameProduct}" Width="150"/>
+                    <DataGridTextColumn Header="Характеристики продукта" Binding="{Binding ParameterProduct}" Width="*"/>
+                    <DataGridTextColumn/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <ContentControl Grid.Row="2" DataContext="{Binding ListParameters}" ContentTemplate="{StaticResource listGrop}"/>
+        </Grid>
+    </DataTemplate>
+
+    <!--Шаблон параметра-->
+    <DataTemplate x:Key="parameterTemplate">
+        <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ContentControl Grid.Row="0" ContentTemplate="{StaticResource nameGroup}"/>
+            <DataGrid Grid.Row="1" ItemsSource="{Binding MainTableObject}"
+                      Margin="10 5"
+                      RowHeight="50" 
+                      Height="74">
+                <DataGrid.Columns>
+                    <!--Забиндить эту ячейку!!!!-->
+                    <DataGridTextColumn Header="Поз. по схеме" Width="120"/>
+                    <DataGridTextColumn Header="Поз. по ГП" Binding="{Binding NumGP}" Width="80"/>
+                    <DataGridTextColumn Header="Параметр оборудования" Binding="{Binding ParameterEquipment}" Width="200"/>
+                    <DataGridTextColumn Header="Наименование продукта" Binding="{Binding NameProduct}" Width="150"/>
+                    <DataGridTextColumn Header="Характеристики продукта" Binding="{Binding ParameterProduct}" Width="*"/>
+                    <DataGridTextColumn/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <ContentControl Grid.Row="2" DataContext="{Binding ListParameters}" ContentTemplate="{StaticResource listGrop}"/>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

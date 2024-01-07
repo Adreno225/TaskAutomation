@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:md="clr-namespace:TaskAutomation.Models"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <ObjectDataProvider x:Key="EnumDataSourceStage"
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type Type="md:Stage"/>
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+    <ObjectDataProvider x:Key="EnumDataSourceClass"
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type Type="md:Class"/>
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+</ResourceDictionary>

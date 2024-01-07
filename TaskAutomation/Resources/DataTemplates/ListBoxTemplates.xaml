@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:models="clr-namespace:TaskAutomation.Models"
+                    xmlns:vm ="clr-namespace:TaskAutomation.ViewModels">
+    <DataTemplate DataType="models:Area">
+        <TextBlock Text="{Binding Name}"/>
+    </DataTemplate>
+    <DataTemplate DataType="models:Object">
+        <TextBlock Text="{Binding Name}"/>
+    </DataTemplate>
+    <DataTemplate DataType="models:Parameter">
+        <TextBlock Text="{Binding Name}"/>
+    </DataTemplate>
+
+</ResourceDictionary>
