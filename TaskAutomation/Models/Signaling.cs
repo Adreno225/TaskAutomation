@@ -2,15 +2,15 @@
 
 namespace TaskAutomation.Models
 {
-    public class Signaling
+    public enum TypeSignaling
     {
-        public enum TypeSignaling
-        {
-            LL,
-            L,
-            H,
-            HH
-        }
+        LL,
+        L,
+        H,
+        HH
+    }
+    public class Signaling:BaseModel
+    {
         public Mode Mode { get; set; }
         public string SetPoint { get; set; }
         public TypeSignaling Type { get; set; }

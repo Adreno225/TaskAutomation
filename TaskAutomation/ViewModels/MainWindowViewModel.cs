@@ -40,7 +40,7 @@ namespace TaskAutomation.ViewModels
         }
 
         #region Окно для выбранного комплексного объекта (1 уровень дерева)
-        private TaskTemplate _TaskTemplate;
+        private TaskTemplate _TaskTemplate = new TaskTemplate(_Task, _Task.Areas);
 
         public TaskTemplate TaskTemplate
         {
@@ -49,7 +49,7 @@ namespace TaskAutomation.ViewModels
         }
         #endregion
         #region Окно для выбранной площадки (2 уровень дерева)
-        private AreaTemplate _AreaTemplate;
+        private AreaTemplate _AreaTemplate = new AreaTemplate();
 
         public AreaTemplate AreaTemplate
         {
@@ -57,8 +57,9 @@ namespace TaskAutomation.ViewModels
             set => Set(ref _AreaTemplate, value);
         }
         #endregion
+
         #region Окно для выбранного объекта (3 уровень дерева)
-        private ObjectTemplate _ObjectTemplate;
+        private ObjectTemplate _ObjectTemplate = new ObjectTemplate();
 
         public ObjectTemplate ObjectTemplate
         {
@@ -66,7 +67,18 @@ namespace TaskAutomation.ViewModels
             set => Set(ref _ObjectTemplate, value);
         }
         #endregion
-        #region Выбранный объект
+
+        #region Окно для выбранного параметра (4 уровень дерева)
+        private ParameterTemplate _ParameterTemplate = new ParameterTemplate();
+
+        public ParameterTemplate ParameterTemplate
+        {
+            get => _ParameterTemplate;
+            set => Set(ref _ParameterTemplate, value);
+        }
+        #endregion
+
+        #region Выбранный объект в дереве
         private BaseModel _SelectedObject;
 
         public BaseModel SelectedObject
@@ -88,22 +100,16 @@ namespace TaskAutomation.ViewModels
             switch (SelectedObject)
             {
                 case Models.Task:
-                    TypeSelectedItem = TypeSelectedItem.Task;
+                    TaskTemplate.SetTemplate(this);
                     break;
                 case Area:
-                    AreaTemplate.SelectedItem = SelectedObject;
-                    AreaTemplate.ListParameters = new ListGroup<Parameter>(((Area)SelectedObject).Parameters);
-                    AreaTemplate.ListObjects = new ListGroup<Models.Object>(((Area)SelectedObject).Objects);
-                    TypeSelectedItem = TypeSelectedItem.Area;
+                    AreaTemplate.SetTemplate(this);
                     break;
                 case Models.Object:
-                    ObjectTemplate.SelectedItem = SelectedObject;
-                    ObjectTemplate.ListParameters = new ListGroup<Parameter>(((Object)SelectedObject).Parameters);
-                    ObjectTemplate.MainTableObject = new ObservableCollection<MainDataObject> { new MainDataObject((Object)SelectedObject) };
-                    TypeSelectedItem = TypeSelectedItem.Object;
+                    ObjectTemplate.SetTemplate(this);
                     break;
                 case Parameter:
-                    TypeSelectedItem = TypeSelectedItem.Parameter;
+                    ParameterTemplate.SetTemplate(this);
                     break;
                 default:
                     TypeSelectedItem = TypeSelectedItem.None;
@@ -114,9 +120,7 @@ namespace TaskAutomation.ViewModels
 
         public MainWindowViewModel()
         {
-            TaskTemplate = new TaskTemplate(Task, Task.Areas);
-            AreaTemplate = new AreaTemplate();
-            ObjectTemplate = new ObjectTemplate();
+
         }
     }
 }

@@ -16,4 +16,18 @@
             <x:Type Type="md:Class"/>
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
+    <ObjectDataProvider x:Key="EnumDataSourceMode"
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type Type="md:Mode"/>
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+    <ObjectDataProvider x:Key="EnumDataSourceTypeSignaling"
+                        ObjectType="{x:Type sys:Enum}"
+                        MethodName="GetValues">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type Type="md:TypeSignaling"/>
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
 </ResourceDictionary>

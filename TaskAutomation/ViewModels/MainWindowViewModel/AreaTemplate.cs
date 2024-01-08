@@ -1,4 +1,5 @@
-﻿using Object = TaskAutomation.Models.Object;
+﻿using TaskAutomation.Models;
+using Object = TaskAutomation.Models.Object;
 
 namespace TaskAutomation.ViewModels
 {
@@ -19,6 +20,14 @@ namespace TaskAutomation.ViewModels
         {
             get => _ListParameters;
             set => Set(ref _ListParameters, value);
+        }
+
+        public override void SetTemplate(MainWindowViewModel vM)
+        {
+            SelectedItem = vM.SelectedObject;
+            ListParameters = new ListGroup<Parameter>(((Area)SelectedItem).Parameters);
+            ListObjects = new ListGroup<Object>(((Area)SelectedItem).Objects);
+            vM.TypeSelectedItem = TypeSelectedItem.Area;
         }
         #endregion
     }

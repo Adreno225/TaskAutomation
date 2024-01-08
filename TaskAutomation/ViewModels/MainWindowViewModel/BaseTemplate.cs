@@ -13,5 +13,6 @@ namespace TaskAutomation.ViewModels
             set => Set(ref _SelectedItem, value);
         }
         #endregion
+        public abstract void SetTemplate(MainWindowViewModel vM);
     }
 }

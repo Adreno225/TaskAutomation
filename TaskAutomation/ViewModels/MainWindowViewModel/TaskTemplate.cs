@@ -18,5 +18,10 @@ namespace TaskAutomation.ViewModels
             SelectedItem = item;
             ListAreas = new ListGroup<Area>(listAreas);
         }
+
+        public override void SetTemplate(MainWindowViewModel vM)
+        {
+            vM.TypeSelectedItem = TypeSelectedItem.Task;
+        }
     }
 }

@@ -81,6 +81,12 @@ namespace TaskAutomation.ViewModels
                 case ObservableCollection<Parameter>:
                     Text = "Перечень параметров:";
                     break;
+                case ObservableCollection<Signaling>:
+                    Text = "Перечень сигнализаций:";
+                    break;
+                case ObservableCollection<Algorithm>:
+                    Text = "Перечень алгоритмов:";
+                    break;
                 default:
                     break;
             }

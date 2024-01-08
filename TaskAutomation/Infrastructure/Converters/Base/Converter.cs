@@ -8,7 +8,7 @@ using System.Windows.Data;
 
 namespace TaskAutomation.Infrastructure.Converters.Base
 {
-    internal abstract class Converter : IValueConverter
+    public abstract class Converter : IValueConverter
     {
         public abstract object Convert(object value, Type targetType, object parameter, CultureInfo culture);
 

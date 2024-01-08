@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using TaskAutomation.Models;
 
 namespace TaskAutomation.ViewModels
 {
@@ -14,13 +15,29 @@ namespace TaskAutomation.ViewModels
         }
         #endregion
 
+        //#region Первая таблица       
+        //private ObservableCollection<MainDataObject> _MainTableObject;
+        //public ObservableCollection<MainDataObject> MainTableObject
+        //{
+        //    get => _MainTableObject;
+        //    set => Set(ref _MainTableObject, value);
+        //}
+        //#endregion
+
         #region Первая таблица       
-        private ObservableCollection<MainDataObject> _MainTableObject;
-        public ObservableCollection<MainDataObject> MainTableObject
+        private ObservableCollection<Object> _MainTableObject = new ObservableCollection<Object> { new Object() };
+        public ObservableCollection<Object> MainTableObject
         {
             get => _MainTableObject;
             set => Set(ref _MainTableObject, value);
         }
         #endregion
+        public override void SetTemplate(MainWindowViewModel vM)
+        {
+            SelectedItem = vM.SelectedObject;
+            ListParameters = new ListGroup<Parameter>(((Object)SelectedItem).Parameters);
+            MainTableObject[0] = (Object)SelectedItem;
+            vM.TypeSelectedItem = TypeSelectedItem.Object;
+        }
     }
 }

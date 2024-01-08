@@ -2,7 +2,7 @@
 
 namespace TaskAutomation.Models
 {
-    public class Algorithm
+    public class Algorithm:BaseModel
     {
         public string SetPoint { get; set; }
         public string Action { get; set; }

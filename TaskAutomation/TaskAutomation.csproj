@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\Windows\Logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Views\Windows\Logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Services\" />
   </ItemGroup>
