@@ -7,13 +7,38 @@ namespace TaskAutomation.Models
         LL,
         L,
         H,
-        HH
+        HH,
+        Other
     }
     public class Signaling:BaseModel
     {
-        public Mode Mode { get; set; }
-        public string SetPoint { get; set; }
-        public TypeSignaling Type { get; set; }
+
+        #region Режим 
+        private Mode _Mode;
+        public Mode Mode
+        {
+            get => _Mode;
+            set => Set<Mode>(ref _Mode, value);
+        }
+        #endregion
+
+        #region Уставка 
+        private string _SetPoint;
+        public string SetPoint
+        {
+            get => _SetPoint;
+            set => Set<string>(ref _SetPoint, value);
+        }
+        #endregion
+
+        #region Тип 
+        private TypeSignaling _Type;
+        public TypeSignaling Type
+        {
+            get => _Type;
+            set => Set<TypeSignaling>(ref _Type, value);
+        }
+        #endregion
 
         public Signaling()
         {

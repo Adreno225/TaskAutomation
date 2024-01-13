@@ -3,9 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:conv="clr-namespace:TaskAutomation.Infrastructure.Converters"
         xmlns:vm ="clr-namespace:TaskAutomation.ViewModels"
         xmlns:models="clr-namespace:TaskAutomation.Models"
+        xmlns:beh="clr-namespace:TaskAutomation.Infrastructure.Behaviours"
         mc:Ignorable="d"
         Title="Задание на автоматизацию"
         MinHeight="800"
@@ -28,11 +30,14 @@
             <Button Margin="5">
                 <TextBlock Padding="5" Text="Загрузить проект" FontSize="12"/>
             </Button>
+            <Button Margin="5" Command="{Binding SetDefaultSettingsCommand}">
+                <TextBlock Padding="5" Text="Сброс данных" FontSize="12" />
+            </Button>
         </StackPanel>
         <Grid Grid.Row="1" Margin="5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100*"/>
-                <ColumnDefinition Width="270*"/>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="90"/>
@@ -46,19 +51,40 @@
                 <Image Grid.Column="0" Source="Logo.png" Height="100" Width="100"/>
             </Grid>
             <Border Grid.Row="1" Grid.Column="0" Margin="0 5 5 0" Style="{StaticResource border}">
-                <TreeView  Margin="5" BorderThickness="0" SelectedItemChanged="TreeView_SelectedItemChanged">
-                    <TreeViewItem Header="{Binding DataContext.TaskTemplate.SelectedItem.Name, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" ItemsSource="{Binding Task.Areas}" ItemTemplate="{StaticResource areaTreeTemplate}">
-                    </TreeViewItem>
+                <Border.Resources>
+                    <DataTemplate x:Key="treeParameter" DataType="models:Parameter">
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                    <HierarchicalDataTemplate x:Key="treeObject" DataType="models:Object"
+                                  ItemsSource="{Binding Parameters}"
+                                  ItemTemplate="{StaticResource treeParameter}">
+                        <TextBlock Text="{Binding Name}"/>
+                    </HierarchicalDataTemplate>
+                    <HierarchicalDataTemplate x:Key="treeArea"  DataType="models:Area"
+                              ItemsSource="{Binding Objects}"
+                              ItemTemplate="{StaticResource treeObject}">
+                        <TextBlock Text="{Binding Name}"/>
+                    </HierarchicalDataTemplate>
+                    <HierarchicalDataTemplate x:Key="treeTask" DataType="models:Task"
+                              ItemsSource="{Binding Areas}"
+                              ItemTemplate="{StaticResource treeArea}">
+                        <TextBlock Text="{Binding Name}"/>
+                    </HierarchicalDataTemplate>
+                </Border.Resources>
+                <TreeView x:Name="MainTree" Margin="5" BorderThickness="0" ItemsSource="{Binding Tasks}" ItemTemplate="{StaticResource treeTask}">
+                    <i:Interaction.Behaviors>
+                        <beh:TreeViewSelectedItem SelectedItem="{Binding SelectedTreeViewItem}"/>
+                    </i:Interaction.Behaviors>
                 </TreeView>
             </Border>
             <DataGrid Grid.Row="0" Grid.Column="1"
                       Margin="5"
-                      ItemsSource="{Binding MainTable}"
+                      ItemsSource="{Binding Tasks}"
                       RowHeight="55"  
                       Height="80"
                       VerticalGridLinesBrush="DarkGray">
                 <DataGrid.Columns>
-                    <DataGridTextColumn FontSize="14" Header="Шифр" Width="100" Binding="{Binding Code, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn FontSize="14" Header="Шифр" Width="100" Binding="{Binding Code, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <DataGridTextColumn FontSize="14" Header="Наименование проекта" Width="350" Binding="{Binding DataContext.TaskTemplate.SelectedItem.Name, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"/>
                     <DataGridTextColumn FontSize="14" Header="Объект" Width="200" Binding="{Binding Object, UpdateSourceTrigger=PropertyChanged}"/>
                     <DataGridComboBoxColumn Header="Стадия" ItemsSource="{Binding Source={StaticResource EnumDataSourceStage}, UpdateSourceTrigger=PropertyChanged}" SelectedItemBinding="{Binding Stage, UpdateSourceTrigger=PropertyChanged}"/>

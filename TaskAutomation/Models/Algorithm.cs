@@ -4,24 +4,23 @@ namespace TaskAutomation.Models
 {
     public class Algorithm:BaseModel
     {
-        public string SetPoint { get; set; }
-        public string Action { get; set; }
-
-        public Algorithm()
+        #region Уставка 
+        private string _SetPoint;
+        public string SetPoint
         {
-            Action = "";
-            SetPoint = "";
+            get => _SetPoint;
+            set => Set<string>(ref _SetPoint, value);
         }
+        #endregion
 
-        public Algorithm(string action, string setpoint)
+        #region Действия 
+        private string _Action;
+        public string Action
         {
-            Action = action;
-            SetPoint = setpoint;
+            get => _Action;
+            set => Set<string>(ref _Action, value);
         }
+        #endregion
 
-        public Algorithm(Algorithm algorithm)
-        {
-
-        }
     }
 }

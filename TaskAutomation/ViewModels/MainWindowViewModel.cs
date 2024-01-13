@@ -1,6 +1,9 @@
 ﻿using TaskAutomation.Models;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using TaskAutomation.Infrastructure.Commands;
+using System.ComponentModel;
 
 namespace TaskAutomation.ViewModels
 {
@@ -10,34 +13,29 @@ namespace TaskAutomation.ViewModels
         Area,
         Object,
         Parameter,
+        ParametersArea,
         None
     }
-    public class MainWindowViewModel: Base.ViewModel
+    public class MainWindowViewModel : Base.ViewModel
     {
         #region Задание
-        private static Models.Task _Task = new Models.Task
-        {
-            Code = "",
-            Object = "",
-            Name = "Комплексный объект",
-            Class = Class.Базовый,
-            Stage = Stage.РД,
-            Areas = new ObservableCollection<Area>()
-        };
+        private static Models.Task _Task = new Models.Task();
         public Models.Task Task
         {
             get => _Task;
             set => Set(ref _Task, value);
-        } 
+        }
         #endregion
 
-        private ObservableCollection<Models.Task> _MainTable = new ObservableCollection<Models.Task> { _Task};
+        #region Источник для списков с заданиями
+        private ObservableCollection<Models.Task> _Tasks = new ObservableCollection<Models.Task> { _Task };
 
-        public ObservableCollection<Models.Task> MainTable
+        public ObservableCollection<Models.Task> Tasks
         {
-            get => _MainTable;
-            set => Set(ref _MainTable, value);
-        }
+            get => _Tasks;
+            set => Set(ref _Tasks, value);
+        } 
+        #endregion
 
         #region Окно для выбранного комплексного объекта (1 уровень дерева)
         private TaskTemplate _TaskTemplate = new TaskTemplate(_Task, _Task.Areas);
@@ -48,6 +46,7 @@ namespace TaskAutomation.ViewModels
             set => Set(ref _TaskTemplate, value);
         }
         #endregion
+
         #region Окно для выбранной площадки (2 уровень дерева)
         private AreaTemplate _AreaTemplate = new AreaTemplate();
 
@@ -79,25 +78,72 @@ namespace TaskAutomation.ViewModels
         #endregion
 
         #region Выбранный объект в дереве
-        private BaseModel _SelectedObject;
+        private BaseModel _SelectedTreeViewItem;
 
-        public BaseModel SelectedObject
+        public BaseModel SelectedTreeViewItem
         {
-            get => _SelectedObject;
-            set => Set(ref _SelectedObject, value);
+            get => _SelectedTreeViewItem;
+            set => Set(ref _SelectedTreeViewItem, value);
         }
         #endregion
 
+        #region Тип выбранного объекта в дереве
         private TypeSelectedItem _TypeSelectedItem = TypeSelectedItem.None;
         public TypeSelectedItem TypeSelectedItem
         {
             get => _TypeSelectedItem;
             set => Set(ref _TypeSelectedItem, value);
         }
+        #endregion
+
+        #region Выбранная площадка 
+        private Area _SelectedArea;
+        public Area SelectedArea
+        {
+            get => _SelectedArea;
+            set => Set<Area>(ref _SelectedArea, value);
+        }
+        #endregion
+
+        #region Выбранный объект 
+        private Models.Object _SelectedObject;
+        public Models.Object SelectedObject
+        {
+            get => _SelectedObject;
+            set => Set<Models.Object>(ref _SelectedObject, value);
+        }
+        #endregion
+
+        #region Выбранный параметр 
+        private Parameter _SelectedParameter;
+        public Parameter SelectedParameter
+        {
+            get => _SelectedParameter;
+            set => Set<Parameter>(ref _SelectedParameter, value);
+        }
+        #endregion
+
+        #region Выбранная сигнализация 
+        private Signaling _SelectedSignaling;
+        public Signaling SelectedSignaling
+        {
+            get => _SelectedSignaling;
+            set => Set<Signaling>(ref _SelectedSignaling, value);
+        }
+        #endregion
+
+        #region Выбранный алгоритм 
+        private Algorithm _SelectedAlgorithm;
+        public Algorithm SelectedAlgorithm
+        {
+            get => _SelectedAlgorithm;
+            set => Set<Algorithm>(ref _SelectedAlgorithm, value);
+        }
+        #endregion
 
         public void SelectTemplate()
         {
-            switch (SelectedObject)
+            switch (SelectedTreeViewItem)
             {
                 case Models.Task:
                     TaskTemplate.SetTemplate(this);
@@ -117,10 +163,28 @@ namespace TaskAutomation.ViewModels
             }
         }
 
+        #region Настройки по умолчанию
+        public ICommand SetDefaultSettingsCommand { get; }
+
+        private bool CanSetDefaultSettingsCommandExecute(object p) => true;
+
+        private void OnSetDefaultSettingsCommandExecuted(object p) => SetDefaultSettings(); 
+        #endregion
 
         public MainWindowViewModel()
         {
-
+            SetDefaultSettingsCommand = new LambdaCommand(OnSetDefaultSettingsCommandExecuted, CanSetDefaultSettingsCommandExecute);
+            SetDefaultSettings();
+        }
+        private void SetDefaultSettings()
+        {
+            Task.Name = "Комплексный объект";
+            Task.Code = "";
+            Task.Object = "";
+            Task.Class = Class.Базовый;
+            Task.Stage = Stage.РД;
+            Task.Areas.Clear();
+            SelectTemplate();
         }
     }
 }

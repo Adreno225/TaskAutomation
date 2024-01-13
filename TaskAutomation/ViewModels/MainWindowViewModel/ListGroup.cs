@@ -7,7 +7,7 @@ using TaskAutomation.ViewModels.Base;
 namespace TaskAutomation.ViewModels
 {
     public class ListGroup<T>: ViewModel
-        where T:TaskAutomation.Models.BaseModel,new()
+        where T:BaseModel,new()
     {
         #region Подпись в списке
         private string _Text;
@@ -17,6 +17,7 @@ namespace TaskAutomation.ViewModels
             set => Set(ref _Text, value);
         }
         #endregion
+
         #region Выбранный айтем
         private T _SelectedItem;
         public T SelectedItem
@@ -58,6 +59,7 @@ namespace TaskAutomation.ViewModels
 
         private void OnCopySelectedItemCommandExecuted(object p) => Items.Add(SelectedItem);
         #endregion
+
         public ListGroup(ObservableCollection<T> items)
         {
             Items = items;

@@ -15,15 +15,6 @@ namespace TaskAutomation
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            var vM = (MainWindowViewModel)((TreeView)sender).DataContext;
-            vM.SelectedObject = (e.NewValue is TreeViewItem)
-                ? ((MainWindowViewModel)((TreeView)sender).DataContext).Task
-                : (BaseModel)((TreeView)sender).SelectedItem;
-            vM.SelectTemplate();
         }       
     }
 }

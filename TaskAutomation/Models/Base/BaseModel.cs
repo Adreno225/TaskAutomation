@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TaskAutomation.Models
+﻿namespace TaskAutomation.Models
 {
     public enum Mode
     {
@@ -12,8 +6,9 @@ namespace TaskAutomation.Models
         Remote,
         Both
     }
-    public abstract class BaseModel
+    public abstract class BaseModel: ViewModels.Base.ViewModel
     {
-        public string Name { get; set; }
+        private string _Name;
+        public string Name { get => _Name; set => Set<string>(ref _Name,value); }
     }
 }

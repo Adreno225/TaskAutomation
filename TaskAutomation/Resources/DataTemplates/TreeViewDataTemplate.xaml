@@ -1,16 +1,4 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <DataTemplate x:Key="parameterTreeTemplate">
-        <TextBlock Text="{Binding Name}"/>
-    </DataTemplate>
-    <HierarchicalDataTemplate x:Key="objectTreeTemplate"
-                                  ItemTemplate="{StaticResource parameterTreeTemplate}"
-                                  ItemsSource="{Binding Parameters}">
-        <TextBlock Text="{Binding Name}"/>
-    </HierarchicalDataTemplate>
-    <HierarchicalDataTemplate x:Key="areaTreeTemplate"
-                              ItemTemplate="{StaticResource objectTreeTemplate}"
-                              ItemsSource="{Binding Objects}">
-        <TextBlock Text="{Binding Name}"/>
-    </HierarchicalDataTemplate>
+    
 </ResourceDictionary>
