@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using TaskAutomation.Infrastructure.Commands;
 using System.ComponentModel;
+using TaskAutomation.Services;
 
 namespace TaskAutomation.ViewModels
 {
@@ -17,7 +18,9 @@ namespace TaskAutomation.ViewModels
         None
     }
     public class MainWindowViewModel : Base.ViewModel
-    {
+    { 
+        private ExcelCreator _ExcelCreator;
+
         #region Задание
         private static Models.Task _Task = new Models.Task();
         public Models.Task Task
@@ -168,12 +171,24 @@ namespace TaskAutomation.ViewModels
 
         private bool CanSetDefaultSettingsCommandExecute(object p) => true;
 
-        private void OnSetDefaultSettingsCommandExecuted(object p) => SetDefaultSettings(); 
+        private void OnSetDefaultSettingsCommandExecuted(object p) => SetDefaultSettings();
         #endregion
 
-        public MainWindowViewModel()
+        #region Создание задания
+        public ICommand CreateExcelCommand { get; }
+
+        private bool CanCreateExcelCommandExecute(object p) => true;
+
+        private void OnCreateExcelExecuted(object p) => _ExcelCreator.Create();
+        #endregion
+
+
+        public MainWindowViewModel(ExcelCreator creator)
         {
+            _ExcelCreator = creator;
+            _ExcelCreator.MainModel = this;
             SetDefaultSettingsCommand = new LambdaCommand(OnSetDefaultSettingsCommandExecuted, CanSetDefaultSettingsCommandExecute);
+            CreateExcelCommand = new LambdaCommand(OnCreateExcelExecuted, CanCreateExcelCommandExecute);
             SetDefaultSettings();
         }
         private void SetDefaultSettings()

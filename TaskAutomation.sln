@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31105.61
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33712.159
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskAutomation", "TaskAutomation\TaskAutomation.csproj", "{5F3D2EDD-B3A0-4556-8B3D-D564524159DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskAutomation", "TaskAutomation\TaskAutomation.csproj", "{5F3D2EDD-B3A0-4556-8B3D-D564524159DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelLibrary", "ExcelLibrary\ExcelLibrary.csproj", "{B9A78C59-A7F4-46F4-BA46-163F6EFE9686}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{5F3D2EDD-B3A0-4556-8B3D-D564524159DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F3D2EDD-B3A0-4556-8B3D-D564524159DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F3D2EDD-B3A0-4556-8B3D-D564524159DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9A78C59-A7F4-46F4-BA46-163F6EFE9686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9A78C59-A7F4-46F4-BA46-163F6EFE9686}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9A78C59-A7F4-46F4-BA46-163F6EFE9686}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9A78C59-A7F4-46F4-BA46-163F6EFE9686}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

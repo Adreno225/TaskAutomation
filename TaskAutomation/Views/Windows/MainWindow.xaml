@@ -120,7 +120,7 @@
                         <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
                     <ContentControl Grid.Row="0" Style="{StaticResource selectTemplate}"/>
-                    <Button Grid.Row="1" Margin="5" Padding="5" Width="200">Сформировать задание</Button>
+                    <Button Grid.Row="1" Margin="5" Padding="5" Width="200" Command="{Binding CreateExcelCommand}">Сформировать задание</Button>
                 </Grid>
             </Border>
         </Grid>
