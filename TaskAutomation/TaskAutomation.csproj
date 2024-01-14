@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ExcelLibrary\ExcelLibrary.csproj" />
+    <ProjectReference Include="..\ExcelLib\ExcelLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>
