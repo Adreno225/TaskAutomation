@@ -9,11 +9,12 @@ namespace ExcelLib
     {
         private readonly ExcelPackage _Package;
         private readonly ExcelWorkbook _Workbook;
+        private readonly string _PathSave;
 
         public Package(string pathTemlate, string newPath)
         {
             var fileInfoTemplate = new FileInfo(pathTemlate);
-            var fileInfoNew = new FileInfo(newPath);
+            _PathSave = newPath;
             _Package = new ExcelPackage(fileInfoTemplate);
             _Package.Compatibility.IsWorksheets1Based = true;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -32,7 +33,7 @@ namespace ExcelLib
             {
                 try
                 {
-                    _Package.SaveAs("C:\\Wpf\\TaskAutomation\\1.xlsx");
+                    _Package.SaveAs(_PathSave);
                     break;
                 }
                 catch (InvalidOperationException)

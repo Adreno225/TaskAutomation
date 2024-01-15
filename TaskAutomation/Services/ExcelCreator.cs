@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using TaskAutomation.Infrastructure.DialogWindows;
 using TaskAutomation.Models;
 using TaskAutomation.ViewModels;
 
@@ -31,9 +32,9 @@ namespace TaskAutomation.Services
         const string MainTextAlg = "Алгоритмы";
         const string Actions = "Действия";
         const string Automation = "Автоматизация";
-        
-        private string PathExcelTemplate = Environment.CurrentDirectory + "\\TemplateExcel.xlsx";
-        private string PathNew = "C:\\Wpf\\TaskAutomation\\TaskAutomation" + "\\TemplateExcel.xlsx";
+        const string FiltersDialogWindow = "Excel Worksheets|*.xlsx";
+
+        private string PathExcelTemplate = Environment.CurrentDirectory + "\\Templates\\TemplateExcel.xlsx";
         private static System.Drawing.Color _Color = System.Drawing.Color.LightGreen;
         private static Dictionary<object, int> _ColumnsSignalingsAlgs = new Dictionary<object, int>();
         private static int _EndColumn;
@@ -41,13 +42,15 @@ namespace TaskAutomation.Services
 
         public MainWindowViewModel MainModel { get; internal set; }
 
-        
-
-
-
         public void Create()
         {
-            using (var excel = new Package(PathExcelTemplate, PathNew))
+            var dialog = new SaveDialog();
+            dialog.Save(MainMethod, filter: FiltersDialogWindow);
+        }
+
+        private void MainMethod(string pathSave)
+        {
+            using (var excel = new Package(PathExcelTemplate, pathSave))
             {
                 _ColumnsSignalingsAlgs.Clear();
                 var workSheet = excel.SelectSheet(1);
@@ -111,7 +114,7 @@ namespace TaskAutomation.Services
             if (countAlg != 0)
                 SetAlgorithms(sheet, ref columnHeader, countAlg);
             sheet.GetCell(HeaderRow, FirstColumnParam).SetValue(Automation);
-            _EndColumn = columnHeader - 1;
+            _EndColumn = columnHeader;
             var range = sheet.GetCellRange(HeaderRow, FirstColumnParam, HeaderRow, columnHeader - 1);
             range.Merge = true;
             range.SetBoldFont().SetCenterHAlign().SetWideBoard().SetColor(_Color);
