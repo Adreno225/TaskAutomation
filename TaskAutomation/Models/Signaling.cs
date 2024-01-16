@@ -42,7 +42,7 @@ namespace TaskAutomation.Models
 
         public Signaling()
         {
-            Mode = Mode.Both;
+            Mode = Mode.Дистанционный;
             SetPoint = "";
             Type = TypeSignaling.H;
         }

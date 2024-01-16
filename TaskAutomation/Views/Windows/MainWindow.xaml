@@ -76,7 +76,7 @@
                 </Border.Resources>
                 <TreeView x:Name="MainTree" Margin="5" BorderThickness="0" ItemsSource="{Binding Tasks}" ItemTemplate="{StaticResource treeTask}">
                     <i:Interaction.Behaviors>
-                        <beh:TreeViewSelectedItem SelectedItem="{Binding SelectedTreeViewItem}"/>
+                        <beh:TreeViewSelectedItem SelectedItem="{Binding SelectedTreeViewItem, Mode=TwoWay}"/>
                     </i:Interaction.Behaviors>
                 </TreeView>
             </Border>

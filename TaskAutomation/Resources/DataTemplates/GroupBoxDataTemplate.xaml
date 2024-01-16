@@ -2,7 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:models="clr-namespace:TaskAutomation.Models"
                     xmlns:vm ="clr-namespace:TaskAutomation.ViewModels"
-                    xmlns:conv="clr-namespace:TaskAutomation.Infrastructure.Converters">
+                    xmlns:conv="clr-namespace:TaskAutomation.Infrastructure.Converters"
+                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                    xmlns:beh="clr-namespace:TaskAutomation.Infrastructure.Behaviours">
     <Style TargetType="Border" x:Key="border">
         <Setter Property="BorderBrush" Value="Gray"/>
         <Setter Property="BorderThickness" Value="1"/>
@@ -16,7 +18,7 @@
     <Style BasedOn="{StaticResource textBlock}" TargetType="TextBlock" x:Key="textBlockName">
         <Setter Property="Text" Value="{Binding DataContext.SelectedItem.Name, RelativeSource={RelativeSource  Mode=FindAncestor, AncestorType=ContentControl}}"/>
     </Style>
-    <!--Шаблон панели с наименоваием-->
+    <!--Шаблон панели с наименованием-->
     <DataTemplate x:Key="nameStackPanel" DataType="vm:BaseTemplate">
         <StackPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
                     Orientation="Horizontal" >
@@ -69,7 +71,11 @@
                     <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row ="0" Grid.Column ="0" Grid.ColumnSpan ="2" Style ="{StaticResource textBlock}" Text ="{Binding Text}"/>
-                <ListBox Grid.Row ="1" Grid.Column ="0" Style="{StaticResource actualList}"/>
+                <ListBox Grid.Row ="1" Grid.Column ="0" Style="{StaticResource actualList}">
+                    <i:Interaction.Behaviors>
+                        <beh:ListBoxBehavior SelectedItem="{Binding SelectedItem}"/>
+                    </i:Interaction.Behaviors>
+                </ListBox>
                 <ContentControl Grid.Row ="1" Grid.Column="1"
                                 ContentTemplate="{StaticResource buttonsStackPanel}"/>
             </Grid>
@@ -250,11 +256,9 @@
     <DataTemplate x:Key="parametersAreaTemplate" DataType="vm:ParametersAreaTemplate">
         <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <ContentControl Grid.Row="0" ContentTemplate="{StaticResource nameGroup}"/>
-            <ContentControl Grid.Row="1" DataContext="{Binding ListParameters}" ContentTemplate="{StaticResource listGrop}"/>
+            <ContentControl Grid.Row="0" DataContext="{Binding ListParameters}" ContentTemplate="{StaticResource listGrop}"/>
         </Grid>
     </DataTemplate>
 

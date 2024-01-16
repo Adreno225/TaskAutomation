@@ -2,9 +2,9 @@
 {
     public enum Mode
     {
-        Manual,
-        Remote,
-        Both
+        Местный,
+        Дистанционный,
+        Оба
     }
     public abstract class BaseModel: ViewModels.Base.ViewModel
     {

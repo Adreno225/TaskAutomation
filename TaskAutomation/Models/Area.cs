@@ -39,14 +39,30 @@ namespace TaskAutomation.Models
             Name = "Площадка";
             Objects = new ObservableCollection<Object>();
             _ParametersArea= new ParametersArea() { Parameters=_Parameters};
-            ((ObservableCollection<Object>)_ObjectsParameters).Add(_ParametersArea);
-            Parameters.CollectionChanged += _ObjectsParameters_CollectionChanged;
-            Objects.CollectionChanged += _ObjectsParameters_CollectionChanged;
+            _ObjectsParameters.Add(_ParametersArea);
+            Parameters.CollectionChanged += _Parameters_CollectionChanged;
+            Objects.CollectionChanged += Objects_CollectionChanged;
         }
 
-        private void _ObjectsParameters_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Objects_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             OnPropertyChanged(nameof(ObjectsParameters));
+        }
+
+        private void _Parameters_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            var newCount = Parameters.Count;
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            {
+                var countAdding = e.NewItems.Count;
+                if (countAdding == newCount)
+                    OnPropertyChanged(nameof(ObjectsParameters));
+            }
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+            {
+                if (newCount==0)
+                    OnPropertyChanged(nameof(ObjectsParameters));
+            }
         }
 
         private IEnumerable SetObjParams()

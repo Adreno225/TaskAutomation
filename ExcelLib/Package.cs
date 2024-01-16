@@ -29,26 +29,29 @@ namespace ExcelLib
 
         public void Dispose()
         {
+            _Package.Dispose();
+        }
+
+        public bool Save()
+        {
             while (true)
             {
                 try
                 {
                     _Package.SaveAs(_PathSave);
-                    break;
+                    return true;
                 }
                 catch (InvalidOperationException)
                 {
                     var result = MessageBox.
-                        Show("Отказано в доступе к файлу. Попробуйте закрыть данный файл и далее нажать на кнопку \"ОК\"","Отказ в доступе", 
-                        MessageBoxButton.OKCancel,icon: MessageBoxImage.Warning);
+                        Show("Отказано в доступе к файлу. Попробуйте закрыть данный файл и далее нажать на кнопку \"ОК\"", "Отказ в доступе",
+                        MessageBoxButton.OKCancel, icon: MessageBoxImage.Warning);
                     if (result == MessageBoxResult.OK) continue;
                     MessageBox.Show("Не удалось сохранить задание в связи с отсутсвием доступа к файлу!", "Ошибка записи файла",
                         MessageBoxButton.OK, icon: MessageBoxImage.Error);
-                    break;
+                    return false;
                 }
             }
-            _Package.Dispose();
-            MessageBox.Show("Файл задания успешно создан!");
         }
     }
 }

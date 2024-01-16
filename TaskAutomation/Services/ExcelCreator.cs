@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using TaskAutomation.Infrastructure.DialogWindows;
 using TaskAutomation.Models;
 using TaskAutomation.ViewModels;
@@ -90,6 +92,11 @@ namespace TaskAutomation.Services
                         }
                         MergeCells(workSheet, countRowsArea, firstRowArea, 1);
                     }
+                }
+                if (excel.Save())
+                {
+                    if (MessageBox.Show("Файл задания успешно создан! Откыть файл с заданием?", "Задание создано", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes) 
+                        Process.Start(new ProcessStartInfo { FileName = pathSave, UseShellExecute = true });
                 }
             }
         }
@@ -237,7 +244,8 @@ namespace TaskAutomation.Services
                 workSheet.GetCell(numRow, FirstColumnParam).SetValue(parameter.Name).SetCenterHAlign();
                 workSheet.GetCell(numRow, FirstColumnParam + 1).SetValue(parameter.Unit).SetCenterHAlign();
                 //Сделать преобразование bool to string
-                workSheet.GetCell(numRow, FirstColumnParam + 2).SetValue(parameter.ESD.ToString()).SetCenterHAlign();
+                var texBool = parameter.ESD ? "+":"-";
+                workSheet.GetCell(numRow, FirstColumnParam + 2).SetValue(texBool).SetCenterHAlign();
                 workSheet.GetCell(numRow, FirstColumnParam + 3).SetValue(parameter.Mode.ToString()).SetCenterHAlign();
                 workSheet.GetCell(numRow, FirstColumnParam + 4).SetValue(parameter.RangeMeasure).SetCenterHAlign();
                 workSheet.GetCell(numRow, FirstColumnParam + 5).SetValue(parameter.CalculatedValue).SetCenterHAlign();

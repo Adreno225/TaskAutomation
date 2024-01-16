@@ -101,7 +101,7 @@ namespace TaskAutomation.Models
             IsControl = true;
             Unit = "";
             ESD = false;
-            Mode = Mode.Both;
+            Mode = Mode.Дистанционный;
             RangeMeasure = "";
             CalculatedValue = "";
             RangeControl = "";
