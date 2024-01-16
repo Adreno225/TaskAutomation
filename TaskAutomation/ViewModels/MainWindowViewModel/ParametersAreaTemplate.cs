@@ -14,8 +14,8 @@ namespace TaskAutomation.ViewModels
         #endregion
         public override void SetTemplate(MainWindowViewModel vM)
         {
-            SelectedItem = vM.SelectedObject;
-            ListParameters = new ListGroup<Parameter>(((Models.Object)SelectedItem).Parameters);
+            SelectedItem = vM.SelectedTreeViewItem;
+            ListParameters = new ListGroup<Parameter>(((Models.Object)SelectedItem).Parameters, SelectedItem);
             vM.TypeSelectedItem = TypeSelectedItem.ParametersArea;
         }
     }

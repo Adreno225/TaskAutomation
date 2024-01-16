@@ -35,7 +35,7 @@ namespace TaskAutomation.ViewModels
         public override void SetTemplate(MainWindowViewModel vM)
         {
             SelectedItem = vM.SelectedTreeViewItem;
-            ListParameters = new ListGroup<Parameter>(((Object)SelectedItem).Parameters);
+            ListParameters = new ListGroup<Parameter>(((Object)SelectedItem).Parameters, SelectedItem);
             MainTableObject[0] = (Object)SelectedItem;
             vM.TypeSelectedItem = TypeSelectedItem.Object;
         }

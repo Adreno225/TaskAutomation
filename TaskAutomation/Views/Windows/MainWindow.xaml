@@ -10,8 +10,8 @@
         xmlns:beh="clr-namespace:TaskAutomation.Infrastructure.Behaviours"
         mc:Ignorable="d"
         Title="Задание на автоматизацию"
-        MinHeight="800"
-        Height="800"
+        MinHeight="720"
+        Height="720"
         MinWidth="1200"
         Width="1200"
         DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}">
@@ -52,23 +52,26 @@
             </Grid>
             <Border Grid.Row="1" Grid.Column="0" Margin="0 5 5 0" Style="{StaticResource border}">
                 <Border.Resources>
+                    <Style x:Key="treeTexblock" TargetType="TextBlock">
+                        <Setter Property="MinWidth" Value="50"/>
+                    </Style>
                     <DataTemplate x:Key="treeParameter" DataType="models:Parameter">
-                        <TextBlock Text="{Binding Name}"/>
+                        <TextBlock Style="{StaticResource treeTexblock}" Text="{Binding Name}"/>
                     </DataTemplate>
                     <HierarchicalDataTemplate x:Key="treeObject" DataType="models:Object"
                                   ItemsSource="{Binding Parameters}"
                                   ItemTemplate="{StaticResource treeParameter}">
-                        <TextBlock Text="{Binding Name}"/>
+                        <TextBlock Style="{StaticResource treeTexblock}" Text="{Binding Name}"/>
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate x:Key="treeArea"  DataType="models:Area"
-                              ItemsSource="{Binding Objects}"
+                              ItemsSource="{Binding ObjectsParameters}"
                               ItemTemplate="{StaticResource treeObject}">
-                        <TextBlock Text="{Binding Name}"/>
+                        <TextBlock Style="{StaticResource treeTexblock}" Text="{Binding Name}"/>
                     </HierarchicalDataTemplate>
                     <HierarchicalDataTemplate x:Key="treeTask" DataType="models:Task"
                               ItemsSource="{Binding Areas}"
                               ItemTemplate="{StaticResource treeArea}">
-                        <TextBlock Text="{Binding Name}"/>
+                        <TextBlock Style="{StaticResource treeTexblock}" Text="{Binding Name}"/>
                     </HierarchicalDataTemplate>
                 </Border.Resources>
                 <TreeView x:Name="MainTree" Margin="5" BorderThickness="0" ItemsSource="{Binding Tasks}" ItemTemplate="{StaticResource treeTask}">
@@ -102,6 +105,10 @@
                             <DataTrigger Binding="{Binding DataContext.TypeSelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="{x:Static vm:TypeSelectedItem.Area}">
                                 <Setter Property="ContentTemplate" Value="{StaticResource areaTemplate}"/>
                                 <Setter Property="DataContext" Value="{Binding DataContext.AreaTemplate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DataContext.TypeSelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="{x:Static vm:TypeSelectedItem.ParametersArea}">
+                                <Setter Property="ContentTemplate" Value="{StaticResource parametersAreaTemplate}"/>
+                                <Setter Property="DataContext" Value="{Binding DataContext.ParametersAreaTemplate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding DataContext.TypeSelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="{x:Static vm:TypeSelectedItem.Object}">
                                 <Setter Property="ContentTemplate" Value="{StaticResource objectTemplate}"/>

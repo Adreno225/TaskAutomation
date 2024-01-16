@@ -18,6 +18,15 @@ namespace TaskAutomation.ViewModels
         }
         #endregion
 
+        #region Родитель
+        private BaseModel _Parent;
+        public BaseModel Parent
+        {
+            get => _Parent;
+            set => Set(ref _Parent, value);
+        }
+        #endregion
+
         #region Выбранный айтем
         private T _SelectedItem;
         public T SelectedItem
@@ -41,15 +50,21 @@ namespace TaskAutomation.ViewModels
 
         private bool CanAddItemCommandExecute(object p) => true;
 
-        private void OnAddItemCommandExecuted(object p) => Items.Add(new T());
+        private void OnAddItemCommandExecuted(object p) 
+        {
+            Items.Add(new T());
+        } 
         #endregion
 
-        #region Добавление удаление выбранного айтема
+        #region Удаление выбранного айтема
         public ICommand RemoveSelectedItemCommand { get; }
 
         private bool CanRemoveSelectedItemCommandExecute(object p) => SelectedItem != null;
 
-        private void OnRemoveSelectedItemCommandExecuted(object p) => Items.Remove(SelectedItem);
+        private void OnRemoveSelectedItemCommandExecuted(object p) 
+        {
+            Items.Remove(SelectedItem);
+        } 
         #endregion
 
         #region Копирование выбранного айтема
@@ -57,17 +72,49 @@ namespace TaskAutomation.ViewModels
 
         private bool CanCopySelectedItemCommandExecute(object p) => SelectedItem!=null;
 
-        private void OnCopySelectedItemCommandExecuted(object p) => Items.Add(SelectedItem);
+        private void OnCopySelectedItemCommandExecuted(object p) 
+        {
+            Items.Add(SelectedItem);
+            if (Parent is Area)
+                ((Area)Parent).Parameters = ((Area)Parent).Parameters;
+        }
         #endregion
 
-        public ListGroup(ObservableCollection<T> items)
+        #region Перемещение айтема вверх
+        public ICommand UpSelectedItemCommand { get; }
+
+        private bool CanUpSelectedItemExecute(object p) => SelectedItem!=null && Items.IndexOf(SelectedItem)!=0;
+
+        private void OnUpSelectedItemExecuted(object p)
+        {
+            var index = Items.IndexOf(SelectedItem);
+            Items.Move(index,index-1);
+        }
+        #endregion
+
+        #region Перемещение айтема вниз
+        public ICommand DownSelectedItemCommand { get; }
+
+        private bool CanDownSelectedItemExecute(object p) => SelectedItem != null && Items.IndexOf(SelectedItem) != Items.Count-1;
+
+        private void OnDownSelectedItemExecuted(object p)
+        {
+            var index = Items.IndexOf(SelectedItem);
+            Items.Move(index, index + 1);
+        }
+        #endregion
+
+        public ListGroup(ObservableCollection<T> items, BaseModel parent)
         {
             Items = items;
+            Parent = parent;
             DefineText(items);
             #region Команды
             AddItemCommand = new LambdaCommand(OnAddItemCommandExecuted, CanAddItemCommandExecute);
             RemoveSelectedItemCommand = new LambdaCommand(OnRemoveSelectedItemCommandExecuted, CanRemoveSelectedItemCommandExecute);
             CopySelectedItemCommand = new LambdaCommand(OnCopySelectedItemCommandExecuted, CanCopySelectedItemCommandExecute);
+            UpSelectedItemCommand = new LambdaCommand(OnUpSelectedItemExecuted, CanUpSelectedItemExecute);
+            DownSelectedItemCommand = new LambdaCommand(OnDownSelectedItemExecuted, CanDownSelectedItemExecute);
             #endregion
         }
         private void DefineText(ObservableCollection<T> items)

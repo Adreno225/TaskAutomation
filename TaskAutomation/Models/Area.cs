@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace TaskAutomation.Models
 {
@@ -26,29 +28,10 @@ namespace TaskAutomation.Models
         private ParametersArea _ParametersArea;
             
         #region Объекты 
-        private ObservableCollection<Models.Object> _ObjectsParameters = new ObservableCollection<Object>();
-        public ObservableCollection<Models.Object> ObjectsParameters
+        private ObservableCollection<Object> _ObjectsParameters = new ObservableCollection<Object>();
+        public IEnumerable ObjectsParameters
         {
-            get
-            {
-                _ObjectsParameters.Clear();
-                _ObjectsParameters.Add(_ParametersArea);
-                var count = Objects.Count;
-                for (int i = 0; i < count; i++)
-                    _ObjectsParameters.Add(Objects[i]);
-                return _ObjectsParameters;
-                //if (_Parameters.Count != 0)
-                //{
-                //    _ObjectsParameters.Clear();
-                //    _ObjectsParameters[0] = new Object() { Name = "Параметры площадки", Parameters = _Parameters };
-                //    var count = _Objects.Count;
-                //    for (int i = 0; i < count; i++)
-                //        _ObjectsParameters[i+1] = Objects[i];
-                //    return _ObjectsParameters;
-                //}
-                //else { return _Objects; }
-            }
-            set => Set<ObservableCollection<Models.Object>>(ref _ObjectsParameters, value);
+            get => SetObjParams();
         }
         #endregion
         public Area()
@@ -56,6 +39,26 @@ namespace TaskAutomation.Models
             Name = "Площадка";
             Objects = new ObservableCollection<Object>();
             _ParametersArea= new ParametersArea() { Parameters=_Parameters};
+            ((ObservableCollection<Object>)_ObjectsParameters).Add(_ParametersArea);
+            Parameters.CollectionChanged += _ObjectsParameters_CollectionChanged;
+            Objects.CollectionChanged += _ObjectsParameters_CollectionChanged;
+        }
+
+        private void _ObjectsParameters_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(ObjectsParameters));
+        }
+
+        private IEnumerable SetObjParams()
+        {
+            _ObjectsParameters.Clear();
+            if (Parameters.Count != 0)
+            {
+                _ObjectsParameters.Add(_ParametersArea);
+                return _ObjectsParameters.Concat(Objects);
+            }
+            else
+                return Objects;
         }
     }
 }

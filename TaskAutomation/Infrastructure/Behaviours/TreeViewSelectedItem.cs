@@ -23,7 +23,6 @@ namespace TaskAutomation.Infrastructure.Behaviours
 
         protected override void OnAttached() => AssociatedObject.SelectedItemChanged += OnTreeViewSelectedItemChanged;
 
-
         protected override void OnDetaching()
         {
             if (AssociatedObject != null)
@@ -36,7 +35,6 @@ namespace TaskAutomation.Infrastructure.Behaviours
             var vM = (MainWindowViewModel)((TreeView)sender).DataContext;
             vM.SelectTemplate();
         } 
-
 
         //private static void OnSelectedItemChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         //{
@@ -58,5 +56,6 @@ namespace TaskAutomation.Infrastructure.Behaviours
         //    /* Refer to http://msdn.microsoft.com/en-us/library/ff407130(v=vs.110).aspx 
         //     * for implementation details of this method */
         //}
+
     }
 }

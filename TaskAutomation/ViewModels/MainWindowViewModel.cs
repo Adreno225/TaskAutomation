@@ -70,6 +70,15 @@ namespace TaskAutomation.ViewModels
         }
         #endregion
 
+        #region Окно для выбранных параметров площадки (3 уровень дерева) 
+        private ParametersAreaTemplate _ParametersAreaTemplate = new ParametersAreaTemplate();
+        public ParametersAreaTemplate ParametersAreaTemplate
+        {
+            get => _ParametersAreaTemplate;
+            set => Set<ParametersAreaTemplate>(ref _ParametersAreaTemplate, value);
+        }
+        #endregion
+
         #region Окно для выбранного параметра (4 уровень дерева)
         private ParameterTemplate _ParameterTemplate = new ParameterTemplate();
 
@@ -105,15 +114,6 @@ namespace TaskAutomation.ViewModels
         {
             get => _SelectedArea;
             set => Set<Area>(ref _SelectedArea, value);
-        }
-        #endregion
-
-        #region Выбранный объект 
-        private Models.Object _SelectedObject;
-        public Models.Object SelectedObject
-        {
-            get => _SelectedObject;
-            set => Set<Models.Object>(ref _SelectedObject, value);
         }
         #endregion
 
@@ -153,6 +153,9 @@ namespace TaskAutomation.ViewModels
                     break;
                 case Area:
                     AreaTemplate.SetTemplate(this);
+                    break;
+                case Models.ParametersArea:
+                    ParametersAreaTemplate.SetTemplate(this);
                     break;
                 case Models.Object:
                     ObjectTemplate.SetTemplate(this);
@@ -199,6 +202,7 @@ namespace TaskAutomation.ViewModels
             Task.Class = Class.Базовый;
             Task.Stage = Stage.РД;
             Task.Areas.Clear();
+            SelectedTreeViewItem = Task;
             SelectTemplate();
         }
     }

@@ -16,7 +16,7 @@ namespace TaskAutomation.ViewModels
         public TaskTemplate(BaseModel item, ObservableCollection<Area> listAreas )
         {
             SelectedItem = item;
-            ListAreas = new ListGroup<Area>(listAreas);
+            ListAreas = new ListGroup<Area>(listAreas, null);
         }
 
         public override void SetTemplate(MainWindowViewModel vM)

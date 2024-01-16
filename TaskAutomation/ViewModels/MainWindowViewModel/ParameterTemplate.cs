@@ -33,8 +33,8 @@ namespace TaskAutomation.ViewModels
         {
             SelectedItem = vM.SelectedTreeViewItem;
             MainTableParameter[0] = (Parameter)SelectedItem;
-            ListAlgorithms = new ListGroup<Algorithm>(((Parameter)SelectedItem).Algorithms);
-            ListSignalings = new ListGroup<Signaling>(((Parameter)SelectedItem).Signalings);
+            ListAlgorithms = new ListGroup<Algorithm>(((Parameter)SelectedItem).Algorithms, SelectedItem);
+            ListSignalings = new ListGroup<Signaling>(((Parameter)SelectedItem).Signalings, SelectedItem);
             vM.TypeSelectedItem = TypeSelectedItem.Parameter;
         }
     }

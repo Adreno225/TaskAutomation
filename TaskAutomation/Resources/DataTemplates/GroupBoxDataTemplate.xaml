@@ -35,6 +35,8 @@
             <Button Style="{StaticResource buttonStackPanel}" Command="{Binding AddItemCommand}">Добавить</Button>
             <Button Style="{StaticResource buttonStackPanel}" Command="{Binding RemoveSelectedItemCommand}">Удалить</Button>
             <Button Style="{StaticResource buttonStackPanel}" Command="{Binding CopySelectedItemCommand}">Копировать</Button>
+            <Button Style="{StaticResource buttonStackPanel}" Command="{Binding UpSelectedItemCommand}">Up</Button>
+            <Button Style="{StaticResource buttonStackPanel}" Command="{Binding DownSelectedItemCommand}">Down</Button>
         </StackPanel>
     </DataTemplate>
 
@@ -241,6 +243,18 @@
             <ContentControl Grid.Row="0" ContentTemplate="{StaticResource nameGroup}"/>
             <ContentControl Grid.Row="1" ContentTemplate="{StaticResource tableObject}"/>
             <ContentControl Grid.Row="2" DataContext="{Binding ListParameters}" ContentTemplate="{StaticResource listGrop}"/>
+        </Grid>
+    </DataTemplate>
+
+    <!--Шаблон параметров площадки-->
+    <DataTemplate x:Key="parametersAreaTemplate" DataType="vm:ParametersAreaTemplate">
+        <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ContentControl Grid.Row="0" ContentTemplate="{StaticResource nameGroup}"/>
+            <ContentControl Grid.Row="1" DataContext="{Binding ListParameters}" ContentTemplate="{StaticResource listGrop}"/>
         </Grid>
     </DataTemplate>
 

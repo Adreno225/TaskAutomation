@@ -5,6 +5,7 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>TaskAutomation.App</StartupObject>
+    <Configurations>Debug;Release;Proj</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
