@@ -5,6 +5,10 @@ using System.Windows.Input;
 using TaskAutomation.Infrastructure.Commands;
 using System.ComponentModel;
 using TaskAutomation.Services;
+using TaskAutomationInterfaces;
+using TaskAutomationDB.Entities;
+using System.Linq;
+using Class = TaskAutomationDB.Entities.Class;
 
 namespace TaskAutomation.ViewModels
 {
@@ -86,6 +90,22 @@ namespace TaskAutomation.ViewModels
         {
             get => _ParameterTemplate;
             set => Set(ref _ParameterTemplate, value);
+        }
+        #endregion
+
+        #region Перечень классов автоматизации 
+        private IRepository<TaskAutomationDB.Entities.Class> _RepositoryClasses;
+        public string[] Classes
+        {
+            get => _RepositoryClasses.Items.Select(x=>x.Name).ToArray();
+        }
+        #endregion
+
+        #region Перечень стадий 
+        private IRepository<TaskAutomationDB.Entities.Stage> _RepositoryStages;
+        public string[] Stages
+        {
+            get => _RepositoryStages.Items.Select(x => x.Name).ToArray();
         }
         #endregion
 
@@ -186,9 +206,11 @@ namespace TaskAutomation.ViewModels
         #endregion
 
 
-        public MainWindowViewModel(ExcelCreator creator)
+        public MainWindowViewModel(ExcelCreator creator, IRepository<TaskAutomationDB.Entities.Class> repositoryClasses, IRepository<TaskAutomationDB.Entities.Stage> repositoryStages)
         {
             _ExcelCreator = creator;
+            _RepositoryClasses = repositoryClasses;
+            _RepositoryStages = repositoryStages;
             _ExcelCreator.MainModel = this;
             SetDefaultSettingsCommand = new LambdaCommand(OnSetDefaultSettingsCommandExecuted, CanSetDefaultSettingsCommandExecute);
             CreateExcelCommand = new LambdaCommand(OnCreateExcelExecuted, CanCreateExcelCommandExecute);
@@ -199,8 +221,8 @@ namespace TaskAutomation.ViewModels
             Task.Name = "Комплексный объект";
             Task.Code = "";
             Task.Object = "";
-            Task.Class = Class.Базовый;
-            Task.Stage = Stage.РД;
+            Task.Class = "";
+            Task.Stage = "";
             Task.Areas.Clear();
             SelectedTreeViewItem = Task;
             SelectTemplate();

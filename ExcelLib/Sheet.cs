@@ -1,11 +1,12 @@
 ﻿using OfficeOpenXml;
+using System.Linq;
 
 namespace ExcelLib
 {
     public class Sheet
     {
         private readonly ExcelWorksheet _Worksheet;
-
+        public int CountRows { get => _Worksheet.Rows.Count(); }
         public Sheet(ExcelWorksheet worksheet)
         {
             _Worksheet = worksheet;

@@ -2,6 +2,8 @@
 {
     public abstract class NamedEntity:Entity
     {
-        public int Name { get; set; }
+        public string? Name { get; set; }
+        public override string ToString() => Name;
+
     }
 }

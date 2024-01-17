@@ -37,20 +37,20 @@ namespace TaskAutomation.Models
         #endregion
 
         #region Стадия 
-        private Stage _Stage;
-        public Stage Stage
+        private string _Stage;
+        public string Stage
         {
             get => _Stage;
-            set => Set<Stage>(ref _Stage, value);
+            set => Set<string>(ref _Stage, value);
         }
         #endregion
 
         #region Класс 
-        private Class _Class;
-        public Class Class
+        private string _Class;
+        public string Class
         {
             get => _Class;
-            set => Set<Class>(ref _Class, value);
+            set => Set<string>(ref _Class, value);
         }
         #endregion
 
@@ -68,8 +68,8 @@ namespace TaskAutomation.Models
             Name = "Комплексный объект";
             Code = "";
             Object = "";
-            Stage = Stage.РД;
-            Class = Class.Базовый;
+            Stage = "";
+            Class = "";
         }
         public void AddArea()
         {

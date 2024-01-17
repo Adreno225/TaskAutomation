@@ -90,8 +90,8 @@
                     <DataGridTextColumn FontSize="14" Header="Шифр" Width="100" Binding="{Binding Code, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <DataGridTextColumn FontSize="14" Header="Наименование проекта" Width="350" Binding="{Binding DataContext.TaskTemplate.SelectedItem.Name, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"/>
                     <DataGridTextColumn FontSize="14" Header="Объект" Width="200" Binding="{Binding Object, UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridComboBoxColumn Header="Стадия" ItemsSource="{Binding Source={StaticResource EnumDataSourceStage}, UpdateSourceTrigger=PropertyChanged}" SelectedItemBinding="{Binding Stage, UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridComboBoxColumn Header="Класс автоматизации" ItemsSource="{Binding Source={StaticResource EnumDataSourceClass}, UpdateSourceTrigger=PropertyChanged}" SelectedItemBinding="{Binding Class, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
+                    <DataGridComboBoxColumn Header="Стадия" ItemsSource="{Binding MainWindowViewModel.Stages, Source={StaticResource Locator}, UpdateSourceTrigger=PropertyChanged}" SelectedItemBinding="{Binding Stage, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridComboBoxColumn Header="Класс автоматизации" ItemsSource="{Binding MainWindowViewModel.Classes, Source={StaticResource Locator}, UpdateSourceTrigger=PropertyChanged}" SelectedItemBinding="{Binding Class, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
             <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource border}"  Margin="0 5 5 0" Padding="10 5">

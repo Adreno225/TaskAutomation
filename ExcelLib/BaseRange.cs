@@ -18,9 +18,9 @@ namespace ExcelLib
             return this;
         }
 
-        public virtual string? GetValue(string value)
+        public virtual string? GetValue()
         {
-            return _ExcelRange.Value.ToString();
+            return _ExcelRange?.Value?.ToString() ?? "";
         }
 
         public BaseRange SetCenterHAlign() 

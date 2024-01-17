@@ -11,10 +11,10 @@ namespace ExcelLib
         private readonly ExcelWorkbook _Workbook;
         private readonly string _PathSave;
 
-        public Package(string pathTemlate, string newPath)
+        public Package(string pathOpen, string? pathSave = null)
         {
-            var fileInfoTemplate = new FileInfo(pathTemlate);
-            _PathSave = newPath;
+            var fileInfoTemplate = new FileInfo(pathOpen);
+            _PathSave = pathSave ?? pathOpen;
             _Package = new ExcelPackage(fileInfoTemplate);
             _Package.Compatibility.IsWorksheets1Based = true;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;

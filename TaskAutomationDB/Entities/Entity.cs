@@ -1,6 +1,8 @@
-﻿namespace TaskAutomationDB.Entities
+﻿using TaskAutomationInterfaces;
+
+namespace TaskAutomationDB.Entities
 {
-    public abstract class Entity
+    public abstract class Entity:IEntity
     {
         public int Id { get; set; }
     }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskAutomationDB.Context;
 
@@ -10,9 +11,11 @@ using TaskAutomationDB.Context;
 namespace TaskAutomationDB.Migrations
 {
     [DbContext(typeof(TaskAutomationContext))]
-    partial class TaskAutomationContextModelSnapshot : ModelSnapshot
+    [Migration("20240117082643_2")]
+    partial class _2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
