@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using TaskAutomation.Data;
 using TaskAutomation.Services;
 using TaskAutomation.ViewModels;
 
@@ -37,11 +38,10 @@ namespace TaskAutomation
             __Host = null;
         }
 
-        public static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
-        {
-            services.AddSingleton<MainWindowViewModel>();
-            services.AddSingleton<ExcelCreator>();
-        }
-
+        public static void ConfigureServices(HostBuilderContext host, IServiceCollection services) => services
+            .AddDatabase(host.Configuration.GetSection("Database"))
+            .RegisterServices()
+            .RegisterViewModels()
+            ;
     }
 }

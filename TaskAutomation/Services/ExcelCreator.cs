@@ -95,7 +95,8 @@ namespace TaskAutomation.Services
                 }
                 if (excel.Save())
                 {
-                    if (MessageBox.Show("Файл задания успешно создан! Откыть файл с заданием?", "Задание создано", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes) 
+                    if (MessageBox.Show("Файл задания успешно создан! Откыть файл с заданием?",
+                        "Задание создано", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes) 
                         Process.Start(new ProcessStartInfo { FileName = pathSave, UseShellExecute = true });
                 }
             }
