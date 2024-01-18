@@ -37,8 +37,11 @@ namespace TaskAutomation.Infrastructure.Behaviours
         private void AssociatedObject_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var selItem = (BaseModel)((ListBox)sender).SelectedItem;
-            var vM = App.Host.Services.GetRequiredService<MainWindowViewModel>();
-            vM.SelectedTreeViewItem = selItem;
+            if (selItem != null)
+            {
+                var vM = App.Host.Services.GetRequiredService<MainWindowViewModel>();
+                vM.SelectedTreeViewItem = selItem;
+            } 
         }
 
         private void OnTreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

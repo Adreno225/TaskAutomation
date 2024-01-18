@@ -14,11 +14,11 @@ namespace TaskAutomation.Models
     {
 
         #region Режим 
-        private Mode _Mode;
-        public Mode Mode
+        private string _Mode;
+        public string Mode
         {
             get => _Mode;
-            set => Set<Mode>(ref _Mode, value);
+            set => Set<string>(ref _Mode, value);
         }
         #endregion
 
@@ -42,16 +42,9 @@ namespace TaskAutomation.Models
 
         public Signaling()
         {
-            Mode = Mode.Дистанционный;
+            Mode = "";
             SetPoint = "";
             Type = TypeSignaling.H;
-        }
-
-        public Signaling(Mode mode, string setpoint, TypeSignaling type)
-        {
-            Mode = mode;
-            SetPoint = setpoint;
-            Type = type;
         }
 
     }

@@ -17,6 +17,8 @@ namespace TaskAutomation.Data
         const int NumSheetClasses = 1;
         const int NumSheetStages = 2;
         const int NumSheetModes = 3;
+        const int NumSheetCustomers = 4;
+        const int NumSheetTypesCO = 5;
 
         private readonly TaskAutomationContext _db;
         private readonly ILogger<DbInitializer> _logger;
@@ -25,6 +27,8 @@ namespace TaskAutomation.Data
         private Class[] _classes;
         private Stage[] _stages;
         private Mode[] _modes;
+        private Customer[] _customers;
+        private TypeCO[] _typesCO;
 
         public DbInitializer(TaskAutomationContext db, ILogger<DbInitializer> logger)
         {
@@ -40,7 +44,7 @@ namespace TaskAutomation.Data
             await _db.Database.EnsureDeletedAsync().ConfigureAwait(false);
             _logger.LogInformation("Удаление существующей БД выполнено за {0} мс", timer.ElapsedMilliseconds);
             _logger.LogInformation("Миграция БД...");
-            await _db.Database.MigrateAsync();
+            await _db.Database.MigrateAsync().ConfigureAwait(false);
             _logger.LogInformation("Миграция БД выполнено за {0} с", timer.ElapsedMilliseconds);
             if (await _db.Classes.AnyAsync()) return;
             using (var excel = new Package(_pathInitializator))
@@ -48,6 +52,8 @@ namespace TaskAutomation.Data
                 await WriteColumn(excel,NumSheetClasses,_classes);
                 await WriteColumn(excel, NumSheetStages, _stages);
                 await WriteColumn(excel, NumSheetModes, _modes);
+                await WriteColumn(excel, NumSheetCustomers, _customers);
+                await WriteColumn(excel, NumSheetTypesCO, _typesCO);
             }
             _logger.LogInformation("Инициализация БД выполнено за {0} с", timer.Elapsed.TotalSeconds);
         }

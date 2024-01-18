@@ -33,11 +33,11 @@ namespace TaskAutomation.Models
         #endregion
 
         #region Режим 
-        private Mode _Mode;
-        public Mode Mode
+        private string _Mode;
+        public string Mode
         {
             get => _Mode;
-            set => Set<Mode>(ref _Mode, value);
+            set => Set<string>(ref _Mode, value);
         }
         #endregion
 
@@ -101,7 +101,7 @@ namespace TaskAutomation.Models
             IsControl = true;
             Unit = "";
             ESD = false;
-            Mode = Mode.Дистанционный;
+            Mode = "";
             RangeMeasure = "";
             CalculatedValue = "";
             RangeControl = "";

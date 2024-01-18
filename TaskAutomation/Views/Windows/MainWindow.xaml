@@ -20,27 +20,44 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Button Margin="5">
-                <TextBlock Padding="5" Text="Сохранить проект" FontSize="12"/>
-            </Button>
-            <Button Margin="5">
-                <TextBlock Padding="5" Text="Загрузить проект" FontSize="12"/>
-            </Button>
-            <Button Margin="5" Command="{Binding SetDefaultSettingsCommand}">
-                <TextBlock Padding="5" Text="Сброс данных" FontSize="12" />
-            </Button>
-        </StackPanel>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="110"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel  DockPanel.Dock="Top" Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Height" Value="30"/>
+                        <Setter Property="Margin" Value="5"/>
+                    </Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Padding" Value="5"/>
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                </StackPanel.Resources>
+                <Button Margin="10 5 5 5">
+                    <TextBlock Text="Сохранить проект"/>
+                </Button>
+                <Button>
+                    <TextBlock Text="Загрузить проект"/>
+                </Button>
+                <Button Command="{Binding SetDefaultSettingsCommand}">
+                    <TextBlock Text="Сброс данных"/>
+                </Button>
+            </StackPanel>
+            <Image Grid.Column="1" Source="Logo.png" Height="100" Width="100" Margin="5"/>
+        </Grid>
         <Grid Grid.Row="1" Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="90"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid Margin="5" Grid.Column="0" Grid.Row="0">
@@ -48,9 +65,8 @@
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Image Grid.Column="0" Source="Logo.png" Height="100" Width="100"/>
             </Grid>
-            <Border Grid.Row="1" Grid.Column="0" Margin="0 5 5 0" Style="{StaticResource border}">
+            <Border Grid.Row="1" Grid.Column="0" Margin="5 5 5 0" Style="{StaticResource border}">
                 <Border.Resources>
                     <Style x:Key="treeTexblock" TargetType="TextBlock">
                         <Setter Property="MinWidth" Value="50"/>
@@ -80,18 +96,24 @@
                     </i:Interaction.Behaviors>
                 </TreeView>
             </Border>
-            <DataGrid Grid.Row="0" Grid.Column="1"
+            <DataGrid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                       Margin="5"
                       ItemsSource="{Binding Tasks}"
-                      RowHeight="55"  
-                      Height="80"
+                      Height="47"
                       VerticalGridLinesBrush="DarkGray">
+                <DataGrid.Resources>
+                    <Style TargetType="TableColumn">
+                        
+                    </Style>
+                </DataGrid.Resources>
                 <DataGrid.Columns>
-                    <DataGridTextColumn FontSize="14" Header="Шифр" Width="100" Binding="{Binding Code, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridTextColumn FontSize="14" Header="Наименование проекта" Width="350" Binding="{Binding DataContext.TaskTemplate.SelectedItem.Name, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridTextColumn FontSize="14" Header="Объект" Width="200" Binding="{Binding Object, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn FontSize="14" Header="Шифр" Width="70" Binding="{Binding Code, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridComboBoxColumn Header="Заказчик" ItemsSource="{Binding MainWindowViewModel.Customers, Source={StaticResource Locator}, UpdateSourceTrigger=PropertyChanged}" SelectedItemBinding="{Binding Customer, UpdateSourceTrigger=PropertyChanged}" Width="180"/>
+                    <DataGridComboBoxColumn Header="Тип КО" ItemsSource="{Binding MainWindowViewModel.TypesCO, Source={StaticResource Locator}, UpdateSourceTrigger=PropertyChanged}" SelectedItemBinding="{Binding TypeCO, UpdateSourceTrigger=PropertyChanged}" Width="180"/>
                     <DataGridComboBoxColumn Header="Стадия" ItemsSource="{Binding MainWindowViewModel.Stages, Source={StaticResource Locator}, UpdateSourceTrigger=PropertyChanged}" SelectedItemBinding="{Binding Stage, UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridComboBoxColumn Header="Класс автоматизации" ItemsSource="{Binding MainWindowViewModel.Classes, Source={StaticResource Locator}, UpdateSourceTrigger=PropertyChanged}" SelectedItemBinding="{Binding Class, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
+                    <DataGridComboBoxColumn Header="Класс автоматизации" Width="160" ItemsSource="{Binding MainWindowViewModel.Classes, Source={StaticResource Locator}, UpdateSourceTrigger=PropertyChanged}" SelectedItemBinding="{Binding Class, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Наименование проекта" Width="3*" Binding="{Binding DataContext.TaskTemplate.SelectedItem.Name, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn FontSize="14" Header="Объект" Width="2*" Binding="{Binding Object, UpdateSourceTrigger=PropertyChanged}"/>
                 </DataGrid.Columns>
             </DataGrid>
             <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource border}"  Margin="0 5 5 0" Padding="10 5">
@@ -127,7 +149,7 @@
                         <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
                     <ContentControl Grid.Row="0" Style="{StaticResource selectTemplate}"/>
-                    <Button Grid.Row="1" Margin="5" Padding="5" Width="200" Command="{Binding CreateExcelCommand}">Сформировать задание</Button>
+                    <Button Grid.Row="1" Margin="5" Padding="5" Width="150" Command="{Binding CreateExcelCommand}">Сформировать задание</Button>
                 </Grid>
             </Border>
         </Grid>

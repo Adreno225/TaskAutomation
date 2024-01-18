@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style TargetType="DataGrid">
-        <Setter Property="RowHeaderWidth" Value="0"/>
+        <Setter Property="RowHeaderWidth" Value="1"/>
         <Setter Property="AutoGenerateColumns" Value="False"/>
         <Setter Property="CanUserAddRows" Value="False"/>
         <Setter Property="CanUserDeleteRows" Value="False"/>
@@ -12,6 +12,8 @@
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="HorizontalScrollBarVisibility" Value="Hidden"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="DarkGray"/>
     </Style>
     <!--<Style TargetType="DataGridCell">
         <Style.Triggers>

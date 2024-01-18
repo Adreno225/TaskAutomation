@@ -15,6 +15,8 @@ namespace TaskAutomationDB
             .AddTransient<IRepository<Class>, DbRepository<Class>>()
             .AddTransient<IRepository<Stage>, DbRepository<Stage>>()
             .AddTransient<IRepository<Mode>, DbRepository<Mode>>()
+            .AddTransient<IRepository<Customer>, DbRepository<Customer>>()
+            .AddTransient<IRepository<TypeCO>, DbRepository<TypeCO>>()
             ;
     }
 }

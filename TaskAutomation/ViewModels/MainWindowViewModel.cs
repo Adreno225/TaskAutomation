@@ -109,6 +109,30 @@ namespace TaskAutomation.ViewModels
         }
         #endregion
 
+        #region Перечень режимов 
+        private IRepository<TaskAutomationDB.Entities.Mode> _RepositoryModes;
+        public string[] Modes
+        {
+            get => _RepositoryModes.Items.Select(x => x.Name).ToArray();
+        }
+        #endregion
+
+        #region Перечень Заказчиков 
+        private IRepository<Customer> _RepositoryCustomers;
+        public string[] Customers
+        {
+            get => _RepositoryCustomers.Items.Select(x => x.Name).ToArray();
+        }
+        #endregion
+
+        #region Перечень типов КО 
+        private IRepository<TypeCO> _RepositoryTypesCO;
+        public string[] TypesCO
+        {
+            get => _RepositoryTypesCO.Items.Select(x => x.Name).ToArray();
+        }
+        #endregion
+
         #region Выбранный объект в дереве
         private BaseModel _SelectedTreeViewItem;
 
@@ -206,11 +230,17 @@ namespace TaskAutomation.ViewModels
         #endregion
 
 
-        public MainWindowViewModel(ExcelCreator creator, IRepository<TaskAutomationDB.Entities.Class> repositoryClasses, IRepository<TaskAutomationDB.Entities.Stage> repositoryStages)
+        public MainWindowViewModel(ExcelCreator creator,
+            IRepository<TaskAutomationDB.Entities.Class> repositoryClasses,
+            IRepository<TaskAutomationDB.Entities.Stage> repositoryStages, IRepository<TaskAutomationDB.Entities.Mode> repositoryModes,
+            IRepository<Customer> repositoryCustomers, IRepository<TypeCO> repositoryTypesCO)
         {
             _ExcelCreator = creator;
             _RepositoryClasses = repositoryClasses;
             _RepositoryStages = repositoryStages;
+            _RepositoryModes = repositoryModes;
+            _RepositoryCustomers = repositoryCustomers;
+            _RepositoryTypesCO = repositoryTypesCO;
             _ExcelCreator.MainModel = this;
             SetDefaultSettingsCommand = new LambdaCommand(OnSetDefaultSettingsCommandExecuted, CanSetDefaultSettingsCommandExecute);
             CreateExcelCommand = new LambdaCommand(OnCreateExcelExecuted, CanCreateExcelCommandExecute);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using TaskAutomationInterfaces;
 
 namespace TaskAutomation.Models
 {
@@ -54,6 +55,24 @@ namespace TaskAutomation.Models
         }
         #endregion
 
+        #region Заказчик 
+        private string _Customer;
+        public string Customer
+        {
+            get => _Customer;
+            set => Set<string>(ref _Customer, value);
+        }
+        #endregion
+
+        #region Тип КО 
+        private string _TypeCO;
+        public string TypeCO
+        {
+            get => _TypeCO;
+            set => Set<string>(ref _TypeCO, value);
+        }
+        #endregion
+
         #region Площадки 
         private ObservableCollection<Area> _Areas = new ObservableCollection<Area>();
         public ObservableCollection<Area> Areas
@@ -71,9 +90,5 @@ namespace TaskAutomation.Models
             Stage = "";
             Class = "";
         }
-        public void AddArea()
-        {
-            Areas.Add(new Area { });
-        }  
     }
 }

@@ -4,12 +4,15 @@
                     xmlns:vm ="clr-namespace:TaskAutomation.ViewModels"
                     xmlns:conv="clr-namespace:TaskAutomation.Infrastructure.Converters"
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-                    xmlns:beh="clr-namespace:TaskAutomation.Infrastructure.Behaviours">
+                    xmlns:beh="clr-namespace:TaskAutomation.Infrastructure.Behaviours"
+                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
+    <vm:ViewModelLocator x:Key="Locator"/>
     <Style TargetType="Border" x:Key="border">
         <Setter Property="BorderBrush" Value="Gray"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="5"/>
     </Style>
+    <iconPacks:FileIconsImage x:Key="dsd" Kind="AdobeIncopy" />
     <!--Общий стиль текстблока-->
     <Style TargetType="TextBlock" x:Key="textBlock">
         <Setter Property="Margin" Value="5"/>
@@ -18,27 +21,22 @@
     <Style BasedOn="{StaticResource textBlock}" TargetType="TextBlock" x:Key="textBlockName">
         <Setter Property="Text" Value="{Binding DataContext.SelectedItem.Name, RelativeSource={RelativeSource  Mode=FindAncestor, AncestorType=ContentControl}}"/>
     </Style>
-    <!--Шаблон панели с наименованием-->
-    <DataTemplate x:Key="nameStackPanel" DataType="vm:BaseTemplate">
-        <StackPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
-                    Orientation="Horizontal" >
-            <TextBlock Style="{StaticResource textBlock}"  Text="Наименование:"/>
-            <TextBox Margin="5" Text="{Binding SelectedItem.Name, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
-        </StackPanel>
-    </DataTemplate>
+
     <!--Стиль кнопок-->
-    <Style x:Key="buttonStackPanel">
-        <Setter Property="Control.Width" Value="100" />
-        <Setter Property="Control.Margin" Value="5" />
+    <Style x:Key="buttonStackPanel" TargetType="Button">
+        <Setter Property="Width" Value="20" />
+        <Setter Property="Height" Value="20" />
+        <Setter Property="Margin" Value="5 5 10 5" />
     </Style>
+    
     <!--Шаблон панелей кнопок-->
     <DataTemplate x:Key="buttonsStackPanel" DataType="x:Type vm:ListGroup">
         <StackPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
-            <Button Style="{StaticResource buttonStackPanel}" Command="{Binding AddItemCommand}">Добавить</Button>
-            <Button Style="{StaticResource buttonStackPanel}" Command="{Binding RemoveSelectedItemCommand}">Удалить</Button>
-            <Button Style="{StaticResource buttonStackPanel}" Command="{Binding CopySelectedItemCommand}">Копировать</Button>
-            <Button Style="{StaticResource buttonStackPanel}" Command="{Binding UpSelectedItemCommand}">Up</Button>
-            <Button Style="{StaticResource buttonStackPanel}" Command="{Binding DownSelectedItemCommand}">Down</Button>
+            <Button Style="{StaticResource buttonStackPanel}" ToolTip="Добавить" Command="{Binding AddItemCommand}">+</Button>
+            <Button Style="{StaticResource buttonStackPanel}" ToolTip="Удалить" Command="{Binding RemoveSelectedItemCommand}">-</Button>
+            <Button Style="{StaticResource buttonStackPanel}" ToolTip="Копировать" Command="{Binding CopySelectedItemCommand}" Content=""></Button>
+            <!--<Button Style="{StaticResource buttonStackPanel}" Command="{Binding UpSelectedItemCommand}">Up</Button>
+            <Button Style="{StaticResource buttonStackPanel}" Command="{Binding DownSelectedItemCommand}">Down</Button>-->
         </StackPanel>
     </DataTemplate>
 
@@ -46,8 +44,8 @@
     <Style TargetType="ListBox" x:Key="actualList">
         <Setter Property="ItemsSource" Value="{Binding DataContext.Items, RelativeSource={RelativeSource Mode=Self}}"/>
         <Setter Property="SelectedItem" Value="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource Mode=Self}}"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Margin" Value="5"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Margin" Value="10 5 5 10"/>
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate DataType="models:BaseModel">
@@ -68,7 +66,7 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row ="0" Grid.Column ="0" Grid.ColumnSpan ="2" Style ="{StaticResource textBlock}" Text ="{Binding Text}"/>
                 <ListBox Grid.Row ="1" Grid.Column ="0" Style="{StaticResource actualList}">
@@ -84,21 +82,18 @@
 
     <!--Шаблон группы наименование-->
     <DataTemplate x:Key="nameGroup" DataType="x:Type vm:ListGroup">
-        <Border Grid.Row="0" Style="{StaticResource border}" Margin="0 5">
-            <StackPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
-                <TextBlock Style="{StaticResource textBlock}"
-                               Text="{Binding SelectedItem.Name}"/>
-                <ContentControl ContentTemplate="{StaticResource nameStackPanel}"/>
-            </StackPanel>
-        </Border>
+        <StackPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
+                    Orientation="Horizontal" >
+            <TextBlock Style="{StaticResource textBlock}"  Text="Наименование:"/>
+            <TextBox Margin="5" Text="{Binding SelectedItem.Name, UpdateSourceTrigger=PropertyChanged}" Width="450"/>
+        </StackPanel>
     </DataTemplate>
     
     <!--Шаблон основной таблицы объекта-->
     <DataTemplate x:Key="tableObject">
         <DataGrid ItemsSource="{Binding MainTableObject}"
                   Margin="0 5"
-                  RowHeight="50" 
-                  Height="74"
+                  Height="44"
                   DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
             <DataGrid.Columns>
                 <!--Забиндить эту ячейку!!!!-->
@@ -115,14 +110,14 @@
     <DataTemplate x:Key="tableParameter">
         <DataGrid ItemsSource="{Binding MainTableParameter}"
                   Margin="0 5"
-                  RowHeight="50" 
-                  Height="74"
+                  Height="46"
                   DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Header="Измеримость" Binding="{Binding IsControl, UpdateSourceTrigger=PropertyChanged}" Width="90" />
                 <DataGridTextColumn Header="Ед. изм." Binding="{Binding Unit, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
                 <DataGridCheckBoxColumn Header="ПАЗ" Binding="{Binding ESD, UpdateSourceTrigger=PropertyChanged}" Width="50"/>
-                <DataGridComboBoxColumn Header="Режим контроля"  ItemsSource="{Binding Source={StaticResource EnumDataSourceMode},UpdateSourceTrigger=PropertyChanged}"
+                <DataGridComboBoxColumn Header="Режим контроля"
+                                        ItemsSource="{Binding MainWindowViewModel.Modes, Source={StaticResource Locator},UpdateSourceTrigger=PropertyChanged}"
                                         SelectedItemBinding="{Binding Mode, UpdateSourceTrigger=PropertyChanged}" Width="230"/>
                 <DataGridTextColumn Header="Диапазон изм." Binding="{Binding RangeMeasure, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
                 <DataGridTextColumn Header="Расч. значение" Binding="{Binding CalculatedValue, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
@@ -134,7 +129,7 @@
     <!--Таблица сигнализаций-->
     <DataTemplate x:Key="tableSignalings">
         <DataGrid ItemsSource="{Binding Items}"
-                  Margin="10 5"
+                  Margin="10 5 5 10"
                   RowHeight="20"
                   MinHeight="110"
                   VerticalScrollBarVisibility="Auto"
@@ -144,7 +139,7 @@
                 <DataGridComboBoxColumn Header="Тип сигнализации"  ItemsSource="{Binding Source={StaticResource EnumDataSourceTypeSignaling},UpdateSourceTrigger=PropertyChanged}"
                                         SelectedItemBinding="{Binding Type, UpdateSourceTrigger=PropertyChanged}" Width="120"/>
                 <DataGridTextColumn Header="Уставка сигнализации" Binding="{Binding SetPoint, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
-                <DataGridComboBoxColumn Header="Режим сигнализации"  ItemsSource="{Binding Source={StaticResource EnumDataSourceMode},UpdateSourceTrigger=PropertyChanged}"
+                <DataGridComboBoxColumn Header="Режим сигнализации"  ItemsSource="{Binding MainWindowViewModel.Modes, Source={StaticResource Locator},UpdateSourceTrigger=PropertyChanged}"
                                         SelectedItemBinding="{Binding Mode, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
@@ -153,7 +148,7 @@
     <!--Таблица алгоритмов-->
     <DataTemplate x:Key="tableAlgorithms">
         <DataGrid ItemsSource="{Binding Items}"
-                  Margin="10 5"
+                  Margin="10 5 5 10"
                   RowHeight="20" 
                   VerticalScrollBarVisibility="Auto"
                   DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
@@ -166,7 +161,6 @@
     </DataTemplate>
 
     <!--Шаблон блока сигнализаций-->
-
     <DataTemplate x:Key="listSignalings" DataType="x:Type vm:ListGroup">
         <Border DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
                 Style="{StaticResource border}"
@@ -178,7 +172,7 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row ="0" Grid.Column ="0" Grid.ColumnSpan ="2" Style ="{StaticResource textBlock}" Text ="{Binding Text}"/>
                 <ContentControl Grid.Row ="1" Grid.Column ="0" ContentTemplate="{StaticResource tableSignalings}"/>
@@ -189,7 +183,6 @@
     </DataTemplate>
 
     <!--Шаблон блока алгоритмов-->
-
     <DataTemplate x:Key="listAlgorithms" DataType="x:Type vm:ListGroup">
         <Border DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
                 Style="{StaticResource border}"
@@ -201,7 +194,7 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row ="0" Grid.Column ="0" Grid.ColumnSpan ="2" Style ="{StaticResource textBlock}" Text ="{Binding Text}"/>
                 <ContentControl Grid.Row ="1" Grid.Column ="0" ContentTemplate="{StaticResource tableAlgorithms}"/>
@@ -211,16 +204,13 @@
         </Border>
     </DataTemplate>
 
-
     <!--Шаблон комплесного объекта-->
     <DataTemplate x:Key="taskTemplate" DataType="vm:TaskTemplate">
         <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <ContentControl Grid.Row="0" ContentTemplate="{StaticResource nameGroup}"/>
-            <ContentControl Grid.Row="1" DataContext="{Binding ListAreas}" ContentTemplate="{StaticResource listGrop}"/>
+            <ContentControl Grid.Row="0" DataContext="{Binding ListAreas}" ContentTemplate="{StaticResource listGrop}"/>
         </Grid>
     </DataTemplate>
 
