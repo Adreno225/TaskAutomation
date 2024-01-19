@@ -54,29 +54,35 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <!--Шаблон листбокса-->
+    <DataTemplate x:Key="listBox">
+        <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row ="0" Grid.Column ="0" Grid.ColumnSpan ="2" Style ="{StaticResource textBlock}" Text ="{Binding Text}"/>
+            <ListBox Grid.Row ="1" Grid.Column ="0" Style="{StaticResource actualList}">
+                <i:Interaction.Behaviors>
+                    <beh:ListBoxBehavior SelectedItem="{Binding SelectedItem}"/>
+                </i:Interaction.Behaviors>
+            </ListBox>
+            <ContentControl Grid.Row ="1" Grid.Column="1"
+                                ContentTemplate="{StaticResource buttonsStackPanel}"/>
+        </Grid>
+    </DataTemplate>
+    
     <!--Шаблон группы с перечнем айтемов-->
     <DataTemplate x:Key="listGrop" DataType="x:Type vm:ListGroup">
         <Border DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
                 Style="{StaticResource border}"
                 Margin="0 5">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row ="0" Grid.Column ="0" Grid.ColumnSpan ="2" Style ="{StaticResource textBlock}" Text ="{Binding Text}"/>
-                <ListBox Grid.Row ="1" Grid.Column ="0" Style="{StaticResource actualList}">
-                    <i:Interaction.Behaviors>
-                        <beh:ListBoxBehavior SelectedItem="{Binding SelectedItem}"/>
-                    </i:Interaction.Behaviors>
-                </ListBox>
-                <ContentControl Grid.Row ="1" Grid.Column="1"
-                                ContentTemplate="{StaticResource buttonsStackPanel}"/>
-            </Grid>
+            <ContentControl ContentTemplate="{StaticResource listBox}"/>
         </Border>
     </DataTemplate>
 
@@ -93,7 +99,6 @@
     <DataTemplate x:Key="tableObject">
         <DataGrid ItemsSource="{Binding MainTableObject}"
                   Margin="0 5"
-                  Height="44"
                   DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
             <DataGrid.Columns>
                 <!--Забиндить эту ячейку!!!!-->
@@ -110,7 +115,6 @@
     <DataTemplate x:Key="tableParameter">
         <DataGrid ItemsSource="{Binding MainTableParameter}"
                   Margin="0 5"
-                  Height="46"
                   DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Header="Измеримость" Binding="{Binding IsControl, UpdateSourceTrigger=PropertyChanged}" Width="90" />
@@ -210,7 +214,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <ContentControl Grid.Row="0" DataContext="{Binding ListAreas}" ContentTemplate="{StaticResource listGrop}"/>
+            <ContentControl Grid.Row="0" DataContext="{Binding ListAreas}" ContentTemplate="{StaticResource listBox}"/>
         </Grid>
     </DataTemplate>
 
@@ -248,7 +252,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <ContentControl Grid.Row="0" DataContext="{Binding ListParameters}" ContentTemplate="{StaticResource listGrop}"/>
+            <ContentControl Grid.Row="0" DataContext="{Binding ListParameters}" ContentTemplate="{StaticResource listBox}"/>
         </Grid>
     </DataTemplate>
 

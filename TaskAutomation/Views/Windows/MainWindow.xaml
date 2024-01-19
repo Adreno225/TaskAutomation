@@ -99,7 +99,7 @@
             <DataGrid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                       Margin="5"
                       ItemsSource="{Binding Tasks}"
-                      Height="47"
+                      RowHeight="60"
                       VerticalGridLinesBrush="DarkGray">
                 <DataGrid.Resources>
                     <Style TargetType="TableColumn">
