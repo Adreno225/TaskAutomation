@@ -10,11 +10,7 @@ namespace TaskAutomation.ViewModels
         public ListGroup<Object> ListObjects
         {
             get => _ListObjects;
-            set
-            {
-                Set(ref _ListObjects, value);
-                ListObjects.Items = ListObjects.Items;
-            } 
+            set => Set(ref _ListObjects, value);
         }
         #endregion
 
@@ -30,8 +26,9 @@ namespace TaskAutomation.ViewModels
         public override void SetTemplate(MainWindowViewModel vM)
         {
             SelectedItem = vM.SelectedTreeViewItem;
-            ListParameters = new ListGroup<Parameter>(((Area)SelectedItem).Parameters, SelectedItem);
-            ListObjects = new ListGroup<Object>(((Area)SelectedItem).Objects, SelectedItem);
+            var area = (Area)SelectedItem.Object;
+            ListParameters = new ListGroup<Parameter> (area.Parameters);
+            ListObjects = new ListGroup<Object>(area.Objects);
             vM.TypeSelectedItem = TypeSelectedItem.Area;
         }
     }

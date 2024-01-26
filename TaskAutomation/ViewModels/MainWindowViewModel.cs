@@ -23,10 +23,10 @@ namespace TaskAutomation.ViewModels
     }
     public class MainWindowViewModel : Base.ViewModel
     { 
-        private ExcelCreator _ExcelCreator;
+        private readonly ExcelCreator _ExcelCreator;
 
         #region Задание
-        private static Models.Task _Task = new Models.Task();
+        private static Models.Task _Task = new();
         public Models.Task Task
         {
             get => _Task;
@@ -35,7 +35,7 @@ namespace TaskAutomation.ViewModels
         #endregion
 
         #region Источник для списков с заданиями
-        private ObservableCollection<Models.Task> _Tasks = new ObservableCollection<Models.Task> { _Task };
+        private ObservableCollection<Models.Task> _Tasks = new() { _Task };
 
         public ObservableCollection<Models.Task> Tasks
         {
@@ -45,7 +45,7 @@ namespace TaskAutomation.ViewModels
         #endregion
 
         #region Окно для выбранного комплексного объекта (1 уровень дерева)
-        private TaskTemplate _TaskTemplate = new TaskTemplate(_Task, _Task.Areas);
+        private TaskTemplate _TaskTemplate;
 
         public TaskTemplate TaskTemplate
         {
@@ -55,7 +55,7 @@ namespace TaskAutomation.ViewModels
         #endregion
 
         #region Окно для выбранной площадки (2 уровень дерева)
-        private AreaTemplate _AreaTemplate = new AreaTemplate();
+        private AreaTemplate _AreaTemplate = new();
 
         public AreaTemplate AreaTemplate
         {
@@ -65,7 +65,7 @@ namespace TaskAutomation.ViewModels
         #endregion
 
         #region Окно для выбранного объекта (3 уровень дерева)
-        private ObjectTemplate _ObjectTemplate = new ObjectTemplate();
+        private ObjectTemplate _ObjectTemplate = new();
 
         public ObjectTemplate ObjectTemplate
         {
@@ -75,7 +75,7 @@ namespace TaskAutomation.ViewModels
         #endregion
 
         #region Окно для выбранных параметров площадки (3 уровень дерева) 
-        private ParametersAreaTemplate _ParametersAreaTemplate = new ParametersAreaTemplate();
+        private ParametersAreaTemplate _ParametersAreaTemplate = new();
         public ParametersAreaTemplate ParametersAreaTemplate
         {
             get => _ParametersAreaTemplate;
@@ -84,7 +84,7 @@ namespace TaskAutomation.ViewModels
         #endregion
 
         #region Окно для выбранного параметра (4 уровень дерева)
-        private ParameterTemplate _ParameterTemplate = new ParameterTemplate();
+        private ParameterTemplate _ParameterTemplate = new();
 
         public ParameterTemplate ParameterTemplate
         {
@@ -94,7 +94,7 @@ namespace TaskAutomation.ViewModels
         #endregion
 
         #region Перечень классов автоматизации 
-        private IRepository<TaskAutomationDB.Entities.Class> _RepositoryClasses;
+        private readonly IRepository<TaskAutomationDB.Entities.Class> _RepositoryClasses;
         public string[] Classes
         {
             get => _RepositoryClasses.Items.Select(x=>x.Name).ToArray();
@@ -102,7 +102,7 @@ namespace TaskAutomation.ViewModels
         #endregion
 
         #region Перечень стадий 
-        private IRepository<TaskAutomationDB.Entities.Stage> _RepositoryStages;
+        private readonly IRepository<TaskAutomationDB.Entities.Stage> _RepositoryStages;
         public string[] Stages
         {
             get => _RepositoryStages.Items.Select(x => x.Name).ToArray();
@@ -110,7 +110,7 @@ namespace TaskAutomation.ViewModels
         #endregion
 
         #region Перечень режимов 
-        private IRepository<TaskAutomationDB.Entities.Mode> _RepositoryModes;
+        private readonly IRepository<TaskAutomationDB.Entities.Mode> _RepositoryModes;
         public string[] Modes
         {
             get => _RepositoryModes.Items.Select(x => x.Name).ToArray();
@@ -118,7 +118,7 @@ namespace TaskAutomation.ViewModels
         #endregion
 
         #region Перечень Заказчиков 
-        private IRepository<Customer> _RepositoryCustomers;
+        private readonly IRepository<Customer> _RepositoryCustomers;
         public string[] Customers
         {
             get => _RepositoryCustomers.Items.Select(x => x.Name).ToArray();
@@ -126,17 +126,28 @@ namespace TaskAutomation.ViewModels
         #endregion
 
         #region Перечень типов КО 
-        private IRepository<TypeCO> _RepositoryTypesCO;
+        private readonly IRepository<TypeCO> _RepositoryTypesCO;
         public string[] TypesCO
         {
             get => _RepositoryTypesCO.Items.Select(x => x.Name).ToArray();
         }
         #endregion
 
-        #region Выбранный объект в дереве
-        private BaseModel _SelectedTreeViewItem;
 
-        public BaseModel SelectedTreeViewItem
+        #region Первый уровень дерева 
+        private ObservableCollection<TreeItem> _FirstLevelTree = new() { new TreeItemTask(_Task)};
+        public ObservableCollection<TreeItem> FirstLevelTree
+        {
+            get => _FirstLevelTree;
+            set => Set<ObservableCollection<TreeItem>>(ref _FirstLevelTree, value);
+        }
+        #endregion
+
+
+        #region Выбранный объект в дереве
+        private TreeItem _SelectedTreeViewItem;
+
+        public TreeItem SelectedTreeViewItem
         {
             get => _SelectedTreeViewItem;
             set => Set(ref _SelectedTreeViewItem, value);
@@ -192,19 +203,19 @@ namespace TaskAutomation.ViewModels
         {
             switch (SelectedTreeViewItem)
             {
-                case Models.Task:
+                case TreeItemTask:
                     TaskTemplate.SetTemplate(this);
                     break;
-                case Area:
+                case TreeItemArea:
                     AreaTemplate.SetTemplate(this);
                     break;
-                case Models.ParametersArea:
+                case TreeItemMainList:
                     ParametersAreaTemplate.SetTemplate(this);
                     break;
-                case Models.Object:
+                case TreeItemObject:
                     ObjectTemplate.SetTemplate(this);
                     break;
-                case Parameter:
+                case TreeItemParameter:
                     ParameterTemplate.SetTemplate(this);
                     break;
                 default:
@@ -212,6 +223,54 @@ namespace TaskAutomation.ViewModels
                     break;
             }
         }
+
+        #region Command AddAreaCommand - Добавление площадки
+
+        /// <summary>Добавление площадки</summary>
+
+        public ICommand AddAreaCommand { get; }
+
+        /// <summary>Проверка возможности выполнения - Добавление площадки</summary>
+        private bool CanAddAreaCommandExecute(object p) => true;
+
+        /// <summary>Логика выполнения - Добавление площадки</summary>
+        private void OnAddAreaCommandExecuted(object p)
+        {
+            Task.Areas.Add(new Area());
+        }
+        #endregion
+
+        #region Command AddObjectCommand - Добавление объекта
+
+        /// <summary>Добавление объекта</summary>
+
+        public ICommand AddObjectCommand { get; }
+
+        /// <summary>Проверка возможности выполнения - Добавление объекта</summary>
+        private bool CanAddObjectCommandExecute(object p) => true;
+
+        /// <summary>Логика выполнения - Добавление объекта</summary>
+        private void OnAddObjectCommandExecuted(object p)
+        {
+            Task.Objects.Add(new Object());
+        }
+        #endregion
+
+        #region Command AddParameterCommand - Добавление параметра
+
+        /// <summary>Добавление параметра</summary>
+
+        public ICommand AddParameterCommand { get; }
+
+        /// <summary>Проверка возможности выполнения - Добавление параметра</summary>
+        private bool CanAddParameterCommandExecute(object p) => true;
+
+        /// <summary>Логика выполнения - Добавление параметра</summary>
+        private void OnAddParameterCommandExecuted(object p)
+        {
+            Task.Parameters.Add(new Parameter());
+        }
+        #endregion
 
         #region Настройки по умолчанию
         public ICommand SetDefaultSettingsCommand { get; }
@@ -229,7 +288,6 @@ namespace TaskAutomation.ViewModels
         private void OnCreateExcelExecuted(object p) => _ExcelCreator.Create();
         #endregion
 
-
         public MainWindowViewModel(ExcelCreator creator,
             IRepository<TaskAutomationDB.Entities.Class> repositoryClasses,
             IRepository<TaskAutomationDB.Entities.Stage> repositoryStages, IRepository<TaskAutomationDB.Entities.Mode> repositoryModes,
@@ -244,6 +302,10 @@ namespace TaskAutomation.ViewModels
             _ExcelCreator.MainModel = this;
             SetDefaultSettingsCommand = new LambdaCommand(OnSetDefaultSettingsCommandExecuted, CanSetDefaultSettingsCommandExecute);
             CreateExcelCommand = new LambdaCommand(OnCreateExcelExecuted, CanCreateExcelCommandExecute);
+            AddAreaCommand = new LambdaCommand(OnAddAreaCommandExecuted, CanAddAreaCommandExecute);
+            AddObjectCommand = new LambdaCommand(OnAddObjectCommandExecuted, CanAddObjectCommandExecute);
+            AddParameterCommand = new LambdaCommand(OnAddParameterCommandExecuted, CanAddParameterCommandExecute);
+            TaskTemplate = new TaskTemplate(_FirstLevelTree[0], _Task.Areas);
             SetDefaultSettings();
         }
         private void SetDefaultSettings()
@@ -254,8 +316,13 @@ namespace TaskAutomation.ViewModels
             Task.Class = "";
             Task.Stage = "";
             Task.Areas.Clear();
-            SelectedTreeViewItem = Task;
+            Task.Parameters.Clear();
+            Task.Objects.Clear();
+            FirstLevelTree[0] = new TreeItemTask(Task);
+            SelectedTreeViewItem = FirstLevelTree[0];
+            FirstLevelTree[0].Update();
             SelectTemplate();
+            //FirstLevelTree[0].Update();
         }
     }
 }

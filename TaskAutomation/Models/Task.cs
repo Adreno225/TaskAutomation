@@ -82,13 +82,32 @@ namespace TaskAutomation.Models
         }
         #endregion
 
+        #region Объекты 
+        private ObservableCollection<Object> _Objects = new ObservableCollection<Object>();
+        public ObservableCollection<Object> Objects
+        {
+            get => _Objects;
+            set => Set<ObservableCollection<Object>>(ref _Objects, value);
+        }
+        #endregion
+
+        #region Параметры 
+        private ObservableCollection<Parameter> _Parameters = new ObservableCollection<Parameter>();
+        public ObservableCollection<Parameter> Parameters
+        {
+            get => _Parameters;
+            set => Set<ObservableCollection<Parameter>>(ref _Parameters, value);
+        }
+        #endregion
+
+
         public Task()
         {
             Name = "Комплексный объект";
             Code = "";
             Object = "";
-            Stage = "";
-            Class = "";
+            Stage = null;
+            Class = null;
         }
     }
 }

@@ -42,7 +42,7 @@
 
     <!--Стиль листбокса в шаблоне-->
     <Style TargetType="ListBox" x:Key="actualList">
-        <Setter Property="ItemsSource" Value="{Binding DataContext.Items, RelativeSource={RelativeSource Mode=Self}}"/>
+        <Setter Property="ItemsSource" Value="{Binding DataContext.Items, RelativeSource={RelativeSource Mode=Self} }"/>
         <Setter Property="SelectedItem" Value="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource Mode=Self}}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="10 5 5 10"/>

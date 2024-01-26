@@ -13,10 +13,10 @@ namespace TaskAutomation.ViewModels
             set => Set(ref _ListAreas, value);
         }
         #endregion
-        public TaskTemplate(BaseModel item, ObservableCollection<Area> listAreas )
+        public TaskTemplate(TreeItem treeItem, ObservableCollection<Area> listAreas )
         {
-            SelectedItem = item;
-            ListAreas = new ListGroup<Area>(listAreas, null);
+            SelectedItem = treeItem;
+            ListAreas = new ListGroup<Area>(listAreas);
         }
 
         public override void SetTemplate(MainWindowViewModel vM)

@@ -6,8 +6,8 @@ namespace TaskAutomation.ViewModels
     public abstract class BaseTemplate: ViewModel
     {
         #region Поле наименование айтема
-        private BaseModel _SelectedItem;
-        public BaseModel SelectedItem
+        private TreeItem _SelectedItem;
+        public TreeItem SelectedItem
         {
             get => _SelectedItem;
             set => Set(ref _SelectedItem, value);

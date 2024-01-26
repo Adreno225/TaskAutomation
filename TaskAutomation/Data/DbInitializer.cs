@@ -19,16 +19,18 @@ namespace TaskAutomation.Data
         const int NumSheetModes = 3;
         const int NumSheetCustomers = 4;
         const int NumSheetTypesCO = 5;
-
+        private const string MessageDeleteDB = "Удаление существующей БД выполнено за {0} мс";
+        private const string MessageMigrationDB = "Миграция БД выполнено за {0} с";
+        private const string MessageInitializationDB = "Инициализация БД выполнено за {0} с";
         private readonly TaskAutomationContext _db;
         private readonly ILogger<DbInitializer> _logger;
-        private string _pathInitializator = Environment.CurrentDirectory + @"\Data\Initializator.xlsx";
+        private readonly string _pathInitializator = Environment.CurrentDirectory + @"\Data\Initializator.xlsx";
 
-        private Class[] _classes;
-        private Stage[] _stages;
-        private Mode[] _modes;
-        private Customer[] _customers;
-        private TypeCO[] _typesCO;
+        private readonly Class[] _classes = default;
+        private readonly Stage[] _stages = default;
+        private readonly Mode[] _modes = default;
+        private readonly Customer[] _customers = default;
+        private readonly TypeCO[] _typesCO = default;
 
         public DbInitializer(TaskAutomationContext db, ILogger<DbInitializer> logger)
         {
@@ -42,10 +44,10 @@ namespace TaskAutomation.Data
             _logger.LogInformation("Инициализация БД...");
             _logger.LogInformation("Удаление существующей БД...");
             await _db.Database.EnsureDeletedAsync().ConfigureAwait(false);
-            _logger.LogInformation("Удаление существующей БД выполнено за {0} мс", timer.ElapsedMilliseconds);
+            _logger.LogInformation(MessageDeleteDB, timer.ElapsedMilliseconds);
             _logger.LogInformation("Миграция БД...");
             await _db.Database.MigrateAsync().ConfigureAwait(false);
-            _logger.LogInformation("Миграция БД выполнено за {0} с", timer.ElapsedMilliseconds);
+            _logger.LogInformation(MessageMigrationDB, timer.ElapsedMilliseconds);
             if (await _db.Classes.AnyAsync()) return;
             using (var excel = new Package(_pathInitializator))
             {
@@ -55,7 +57,7 @@ namespace TaskAutomation.Data
                 await WriteColumn(excel, NumSheetCustomers, _customers);
                 await WriteColumn(excel, NumSheetTypesCO, _typesCO);
             }
-            _logger.LogInformation("Инициализация БД выполнено за {0} с", timer.Elapsed.TotalSeconds);
+            _logger.LogInformation(MessageInitializationDB, timer.Elapsed.TotalSeconds);
         }
 
         private async Task WriteColumn<T>(Package package, int numSheet, T[] items) where T : NamedEntity, new()

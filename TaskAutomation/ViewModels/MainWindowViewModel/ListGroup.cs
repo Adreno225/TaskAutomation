@@ -9,21 +9,21 @@ namespace TaskAutomation.ViewModels
     public class ListGroup<T>: ViewModel
         where T:BaseModel,new()
     {
+        #region Выбранный элемент дерева 
+        private TreeItem _MainItem;
+        public TreeItem MainItem
+        {
+            get => _MainItem;
+            set => Set<TreeItem>(ref _MainItem, value);
+        }
+        #endregion
+
         #region Подпись в списке
         private string _Text;
         public string Text
         {
             get => _Text;
             set => Set(ref _Text, value);
-        }
-        #endregion
-
-        #region Родитель
-        private BaseModel _Parent;
-        public BaseModel Parent
-        {
-            get => _Parent;
-            set => Set(ref _Parent, value);
         }
         #endregion
 
@@ -75,8 +75,7 @@ namespace TaskAutomation.ViewModels
         private void OnCopySelectedItemCommandExecuted(object p) 
         {
             Items.Add(SelectedItem);
-            if (Parent is Area)
-                ((Area)Parent).Parameters = ((Area)Parent).Parameters;
+            
         }
         #endregion
 
@@ -104,10 +103,10 @@ namespace TaskAutomation.ViewModels
         }
         #endregion
 
-        public ListGroup(ObservableCollection<T> items, BaseModel parent)
+        public ListGroup(ObservableCollection<T> items)
         {
+            //MainItem = mainItem;
             Items = items;
-            Parent = parent;
             DefineText(items);
             #region Команды
             AddItemCommand = new LambdaCommand(OnAddItemCommandExecuted, CanAddItemCommandExecute);

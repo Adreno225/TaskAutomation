@@ -1,10 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xaml.Behaviors;
-using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using TaskAutomation.Models;
@@ -36,19 +33,19 @@ namespace TaskAutomation.Infrastructure.Behaviours
 
         private void AssociatedObject_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var selItem = (BaseModel)((ListBox)sender).SelectedItem;
+            var selItem = ((ListBox)sender).SelectedItem;
             if (selItem != null)
             {
                 var vM = App.Host.Services.GetRequiredService<MainWindowViewModel>();
-                vM.SelectedTreeViewItem = selItem;
+                var actTreeItem = vM.SelectedTreeViewItem;
+                if ((selItem is Parameter)&&((actTreeItem.Object is Area)||(actTreeItem.Object is Models.Task))) 
+                {
+                    var temp = actTreeItem .Items.Single(x => x is TreeItemMainList);
+                    vM.SelectedTreeViewItem = temp.Items.Single(x => x.Object == selItem);
+                }
+                else
+                    vM.SelectedTreeViewItem = actTreeItem.Items.Single(x => x.Object == selItem);
             } 
-        }
-
-        private void OnTreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            SelectedItem = e.NewValue;
-            var vM = (MainWindowViewModel)((TreeView)sender).DataContext;
-            vM.SelectTemplate();
         }
     }
 }

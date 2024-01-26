@@ -13,13 +13,13 @@ namespace TaskAutomation.Infrastructure.Behaviours
         public static readonly DependencyProperty SelectedItemProperty =
             DependencyProperty.Register(
                 nameof(SelectedItem),
-                typeof(BaseModel),
+                typeof(TreeItem),
                 typeof(TreeViewSelectedItem),
                 new FrameworkPropertyMetadata(null, OnSelectedItemChanged) { BindsTwoWayByDefault = true });
 
-        public BaseModel SelectedItem
+        public TreeItem SelectedItem
         {
-            get => (BaseModel)GetValue(SelectedItemProperty);
+            get => (TreeItem)GetValue(SelectedItemProperty);
             set => SetValue(SelectedItemProperty, value); 
         }
 
@@ -38,7 +38,7 @@ namespace TaskAutomation.Infrastructure.Behaviours
 
         private void OnTreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) 
         {
-            SelectedItem = (BaseModel)e.NewValue;
+            SelectedItem = (TreeItem)e.NewValue;
             var vM = (MainWindowViewModel)((TreeView)sender).DataContext;
             vM.SelectTemplate();
         }

@@ -1,4 +1,5 @@
-﻿using TaskAutomation.Models;
+﻿using System.Collections.ObjectModel;
+using TaskAutomation.Models;
 
 namespace TaskAutomation.ViewModels
 {
@@ -15,7 +16,7 @@ namespace TaskAutomation.ViewModels
         public override void SetTemplate(MainWindowViewModel vM)
         {
             SelectedItem = vM.SelectedTreeViewItem;
-            ListParameters = new ListGroup<Parameter>(((Models.Object)SelectedItem).Parameters, SelectedItem);
+            ListParameters = new ListGroup<Parameter>(((ObservableCollection<Parameter>)SelectedItem.Object));
             vM.TypeSelectedItem = TypeSelectedItem.ParametersArea;
         }
     }
