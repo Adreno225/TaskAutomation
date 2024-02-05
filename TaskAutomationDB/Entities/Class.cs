@@ -1,7 +1,3 @@
-﻿namespace TaskAutomationDB.Entities
-{
-    public class Class:NamedEntity
-    {
+﻿namespace TaskAutomationDB.Entities;
 
-    }
-}
+public class Class: NamedEntity { }

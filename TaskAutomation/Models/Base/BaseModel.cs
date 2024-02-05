@@ -1,14 +1,15 @@
-﻿namespace TaskAutomation.Models
+﻿namespace TaskAutomation.Models;
+
+public interface IItem
 {
-    public enum Mode
+    string Name { get; set; }
+}
+public abstract class BaseModel : ViewModels.Base.ViewModel<object>, IItem
+{
+    private string _Name;
+    public string Name { get => _Name; set => Set(ref _Name, value); }
+    protected BaseModel(string name)
     {
-        Местный,
-        Дистанционный,
-        Оба
-    }
-    public abstract class BaseModel: ViewModels.Base.ViewModel
-    {
-        private string _Name;
-        public string Name { get => _Name; set => Set<string>(ref _Name,value); }
+        Name = name; 
     }
 }

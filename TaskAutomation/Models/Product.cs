@@ -1,21 +1,17 @@
-﻿namespace TaskAutomation.Models
+﻿namespace TaskAutomation.Models;
+
+public class Product:BaseModel
 {
-    public class Product:BaseModel
+    private const string Text = "Продукт";
+
+    #region Параметры среды 
+    private string _Parameters = "";
+    public string Parameters
     {
-
-        #region Параметры среды 
-        private string _Parameters;
-        public string Parameters
-        {
-            get => _Parameters;
-            set => Set<string>(ref _Parameters, value);
-        }
-        #endregion
-
-        public Product()
-        {
-            Name = "";
-            Parameters = "";
-        }
+        get => _Parameters;
+        set => Set(ref _Parameters, value);
     }
+    #endregion
+
+    public Product():base(Text) { }
 }

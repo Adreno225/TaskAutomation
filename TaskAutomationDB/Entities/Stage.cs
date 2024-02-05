@@ -1,6 +1,5 @@
-﻿namespace TaskAutomationDB.Entities
+﻿namespace TaskAutomationDB.Entities;
+
+public class Stage : NamedEntity
 {
-    public class Stage : NamedEntity
-    {
-    }
 }

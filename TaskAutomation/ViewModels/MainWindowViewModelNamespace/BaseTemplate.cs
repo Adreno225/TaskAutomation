@@ -3,11 +3,11 @@ using TaskAutomation.ViewModels.Base;
 
 namespace TaskAutomation.ViewModels
 {
-    public abstract class BaseTemplate: ViewModel
+    public abstract class BaseTemplate: ViewModel<object>
     {
         #region Поле наименование айтема
-        private TreeItem _SelectedItem;
-        public TreeItem SelectedItem
+        private ITreeItem _SelectedItem;
+        public ITreeItem SelectedItem
         {
             get => _SelectedItem;
             set => Set(ref _SelectedItem, value);

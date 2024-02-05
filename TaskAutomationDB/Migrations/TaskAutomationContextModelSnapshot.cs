@@ -30,6 +30,7 @@ namespace TaskAutomationDB.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -46,11 +47,29 @@ namespace TaskAutomationDB.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("TaskAutomationDB.Entities.FunctionParameter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FunctionsParameters");
                 });
 
             modelBuilder.Entity("TaskAutomationDB.Entities.Mode", b =>
@@ -62,11 +81,79 @@ namespace TaskAutomationDB.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Modes");
+                });
+
+            modelBuilder.Entity("TaskAutomationDB.Entities.ObjectAutomation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ObjectsAutomation");
+                });
+
+            modelBuilder.Entity("TaskAutomationDB.Entities.Parameter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ObjectAutomationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ObjectAutomationId");
+
+                    b.ToTable("Parameters");
+                });
+
+            modelBuilder.Entity("TaskAutomationDB.Entities.ParameterClassFunction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClassId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FunctionParameterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ParameterId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("FunctionParameterId");
+
+                    b.HasIndex("ParameterId");
+
+                    b.ToTable("ParameterClassFunction");
                 });
 
             modelBuilder.Entity("TaskAutomationDB.Entities.Stage", b =>
@@ -78,6 +165,7 @@ namespace TaskAutomationDB.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -94,11 +182,50 @@ namespace TaskAutomationDB.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("TypesCO");
+                });
+
+            modelBuilder.Entity("TaskAutomationDB.Entities.Parameter", b =>
+                {
+                    b.HasOne("TaskAutomationDB.Entities.ObjectAutomation", "ObjectAutomation")
+                        .WithMany()
+                        .HasForeignKey("ObjectAutomationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ObjectAutomation");
+                });
+
+            modelBuilder.Entity("TaskAutomationDB.Entities.ParameterClassFunction", b =>
+                {
+                    b.HasOne("TaskAutomationDB.Entities.Class", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TaskAutomationDB.Entities.FunctionParameter", "FunctionParameter")
+                        .WithMany()
+                        .HasForeignKey("FunctionParameterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TaskAutomationDB.Entities.Parameter", "Parameter")
+                        .WithMany()
+                        .HasForeignKey("ParameterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Class");
+
+                    b.Navigation("FunctionParameter");
+
+                    b.Navigation("Parameter");
                 });
 #pragma warning restore 612, 618
         }

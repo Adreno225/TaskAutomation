@@ -8,6 +8,7 @@
         xmlns:vm ="clr-namespace:TaskAutomation.ViewModels"
         xmlns:models="clr-namespace:TaskAutomation.Models"
         xmlns:beh="clr-namespace:TaskAutomation.Infrastructure.Behaviours"
+        xmlns:mainWindowViewModelNamespace="clr-namespace:TaskAutomation.ViewModels.MainWindowViewModelNamespace"
         mc:Ignorable="d"
         Title="Задание на автоматизацию"
         MinHeight="720"
@@ -39,26 +40,18 @@
                         <Setter Property="FontSize" Value="12"/>
                     </Style>
                 </StackPanel.Resources>
-                <Button Margin="10 5 5 5">
-                    <TextBlock Text="Сохранить проект"/>
-                </Button>
-                <Button>
-                    <TextBlock Text="Загрузить проект"/>
-                </Button>
-                <Button Command="{Binding SetDefaultSettingsCommand}">
-                    <TextBlock Text="Сброс данных"/>
-                </Button>
-                <Button Command="{Binding AddAreaCommand}">
-                    <TextBlock Text="Добавить площадку"/>
-                </Button>
-                <Button Command="{Binding AddObjectCommand}">
-                    <TextBlock Text="Добавить объект"/>
-                </Button>
-                <Button Command="{Binding AddParameterCommand}">
-                    <TextBlock Text="Добавить параметр"/>
-                </Button>
+                <Menu Background="White">
+                    <Menu.Resources>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Margin" Value="5"/>
+                            <Setter Property="FontSize" Value="12"/>
+                        </Style>
+                    </Menu.Resources>
+                    <MenuItem Header="Сохранить проект"></MenuItem>
+                    <MenuItem Header="Загрузить проект"></MenuItem>
+                    <MenuItem Command="{Binding SetDefaultSettingsCommand}" Header="Сброс данных"></MenuItem>
+                </Menu>
             </StackPanel>
-            <Image Grid.Column="1" Source="Logo.png" Height="100" Width="100" Margin="5"/>
         </Grid>
         <Grid Grid.Row="1" Margin="5">
             <Grid.ColumnDefinitions>
@@ -101,12 +94,12 @@
                     
                 </Border.Resources>
                 <!--ItemTemplate="{StaticResource treeTask}"-->
-                <TreeView x:Name="MainTree" Margin="5" BorderThickness="0" ItemsSource="{Binding FirstLevelTree}">
+                <TreeView x:Name="MainTree" Margin="5" BorderThickness="0" ItemsSource="{Binding FirstLevelTree.Item}">
                     <i:Interaction.Behaviors>
                         <beh:TreeViewSelectedItem SelectedItem="{Binding SelectedTreeViewItem, Mode=TwoWay}"/>
                     </i:Interaction.Behaviors>
                     <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate  DataType="vm:TreeItem"
+                        <HierarchicalDataTemplate  DataType="mainWindowViewModelNamespace:TreeItem"
                               ItemsSource="{Binding Items}">
                             <TextBlock Style="{StaticResource treeTexblock}" Text="{Binding Name}" TextWrapping="Wrap"/>
                         </HierarchicalDataTemplate>
@@ -115,7 +108,7 @@
             </Border>
             <DataGrid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                       Margin="5"
-                      ItemsSource="{Binding Tasks}"
+                      ItemsSource="{Binding Tasks.Item}"
                       VerticalGridLinesBrush="DarkGray">
                 <DataGrid.Resources>
                     <Style TargetType="TextBlock" x:Key="WrapText">
@@ -151,8 +144,8 @@
                                             SelectedItemBinding="{Binding Class, UpdateSourceTrigger=PropertyChanged}"
                                             />
                     <DataGridTextColumn Header="Наименование проекта" Width="3*" 
-                                        Binding="{Binding DataContext.TaskTemplate.SelectedItem.Name, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window},
-                                        UpdateSourceTrigger=PropertyChanged}"
+                                        Binding="{Binding MainWindowViewModel.FirstLevelTree.Item[0].Name, Source={StaticResource Locator},
+                                        UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                         ElementStyle="{StaticResource WrapText}"
                                         EditingElementStyle="{StaticResource WrapTextBox}"/>
                     <DataGridTextColumn Header="Объект" Width="2*"
@@ -167,23 +160,18 @@
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding DataContext.TypeSelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="{x:Static vm:TypeSelectedItem.Task}">
                                 <Setter Property="ContentTemplate" Value="{StaticResource taskTemplate}"/>
-                                <Setter Property="DataContext" Value="{Binding DataContext.TaskTemplate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding DataContext.TypeSelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="{x:Static vm:TypeSelectedItem.Area}">
                                 <Setter Property="ContentTemplate" Value="{StaticResource areaTemplate}"/>
-                                <Setter Property="DataContext" Value="{Binding DataContext.AreaTemplate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding DataContext.TypeSelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="{x:Static vm:TypeSelectedItem.ParametersArea}">
                                 <Setter Property="ContentTemplate" Value="{StaticResource parametersAreaTemplate}"/>
-                                <Setter Property="DataContext" Value="{Binding DataContext.ParametersAreaTemplate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding DataContext.TypeSelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="{x:Static vm:TypeSelectedItem.Object}">
                                 <Setter Property="ContentTemplate" Value="{StaticResource objectTemplate}"/>
-                                <Setter Property="DataContext" Value="{Binding DataContext.ObjectTemplate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding DataContext.TypeSelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Value="{x:Static vm:TypeSelectedItem.Parameter}">
                                 <Setter Property="ContentTemplate" Value="{StaticResource parameterTemplate}"/>
-                                <Setter Property="DataContext" Value="{Binding DataContext.ParameterTemplate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -193,7 +181,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
-                    <ContentControl Grid.Row="0" Style="{StaticResource selectTemplate}"/>
+                    <ContentControl DataContext="{Binding SelectedTreeViewItem}" Grid.Row="0" Style="{StaticResource selectTemplate}"/>
                     <Button Grid.Row="1" Margin="5" Padding="5" Width="150" Command="{Binding CreateExcelCommand}">Сформировать задание</Button>
                 </Grid>
             </Border>

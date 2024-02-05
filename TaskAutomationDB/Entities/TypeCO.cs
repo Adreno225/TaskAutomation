@@ -1,6 +1,5 @@
-﻿namespace TaskAutomationDB.Entities
+﻿namespace TaskAutomationDB.Entities;
+
+public class TypeCO:NamedEntity
 {
-    public class TypeCO:NamedEntity
-    {
-    }
 }

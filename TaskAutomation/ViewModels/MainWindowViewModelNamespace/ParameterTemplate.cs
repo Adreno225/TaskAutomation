@@ -15,29 +15,29 @@ namespace TaskAutomation.ViewModels
         #endregion
 
         #region Cписок алгоритмов        
-        private ListGroup<Algorithm> _ListAlgorithms;
-        public ListGroup<Algorithm> ListAlgorithms
-        {
-            get => _ListAlgorithms;
-            set => Set(ref _ListAlgorithms, value);
-        }
+        //private ListGroup<Algorithm> _ListAlgorithms;
+        //public ListGroup<Algorithm> ListAlgorithms
+        //{
+        //    get => _ListAlgorithms;
+        //    set => Set(ref _ListAlgorithms, value);
+        //}
         #endregion
 
         #region Cписок сигнализаций        
-        private ListGroup<Signaling> _ListSignalings;
-        public ListGroup<Signaling> ListSignalings
-        {
-            get => _ListSignalings;
-            set => Set(ref _ListSignalings, value);
-        }
+        //private ListGroup<Signaling> _ListSignalings;
+        //public ListGroup<Signaling> ListSignalings
+        //{
+        //    get => _ListSignalings;
+        //    set => Set(ref _ListSignalings, value);
+        //}
         #endregion
 
         public override void SetTemplate(MainWindowViewModel vM)
         {
             SelectedItem = vM.SelectedTreeViewItem;
             MainTableParameter[0] = (Parameter)SelectedItem.Object;
-            ListAlgorithms = new ListGroup<Algorithm>(((Parameter)SelectedItem.Object).Algorithms);
-            ListSignalings = new ListGroup<Signaling>(((Parameter)SelectedItem.Object).Signalings);
+            //ListAlgorithms = new ListGroup<Algorithm>(((Parameter)SelectedItem.Object).Algorithms);
+            //ListSignalings = new ListGroup<Signaling>(((Parameter)SelectedItem.Object).Signalings);
             vM.TypeSelectedItem = TypeSelectedItem.Parameter;
         }
     }

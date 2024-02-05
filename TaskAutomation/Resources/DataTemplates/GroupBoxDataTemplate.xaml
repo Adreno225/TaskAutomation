@@ -35,14 +35,22 @@
             <Button Style="{StaticResource buttonStackPanel}" ToolTip="Добавить" Command="{Binding AddItemCommand}">+</Button>
             <Button Style="{StaticResource buttonStackPanel}" ToolTip="Удалить" Command="{Binding RemoveSelectedItemCommand}">-</Button>
             <Button Style="{StaticResource buttonStackPanel}" ToolTip="Копировать" Command="{Binding CopySelectedItemCommand}" Content=""></Button>
-            <!--<Button Style="{StaticResource buttonStackPanel}" Command="{Binding UpSelectedItemCommand}">Up</Button>
-            <Button Style="{StaticResource buttonStackPanel}" Command="{Binding DownSelectedItemCommand}">Down</Button>-->
+        </StackPanel>
+    </DataTemplate>
+
+    <!--Шаблон панелей кнопок(2 кнопки добавления)-->
+    <DataTemplate x:Key="buttons2StackPanel" DataType="x:Type vm:ListGroup">
+        <StackPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
+            <Button Style="{StaticResource buttonStackPanel}" ToolTip="Добавить площадку" Command="{Binding AddItemCommand}">+</Button>
+            <Button Style="{StaticResource buttonStackPanel}" ToolTip="Добавить объект" Command="{Binding AddItemCommand2}">+</Button>
+            <Button Style="{StaticResource buttonStackPanel}" ToolTip="Удалить" Command="{Binding RemoveSelectedItemCommand}">-</Button>
+            <Button Style="{StaticResource buttonStackPanel}" ToolTip="Копировать" Command="{Binding CopySelectedItemCommand}"></Button>
         </StackPanel>
     </DataTemplate>
 
     <!--Стиль листбокса в шаблоне-->
     <Style TargetType="ListBox" x:Key="actualList">
-        <Setter Property="ItemsSource" Value="{Binding DataContext.Items, RelativeSource={RelativeSource Mode=Self} }"/>
+        <Setter Property="ItemsSource" Value="{Binding DataContext.OutputTreeItems, RelativeSource={RelativeSource Mode=Self} }"/>
         <Setter Property="SelectedItem" Value="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource Mode=Self}}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="10 5 5 10"/>
@@ -55,7 +63,23 @@
         </Setter>
     </Style>
     
-    <!--Шаблон листбокса-->
+    <!--Шаблон текстблока листбокса-->
+    <DataTemplate x:Key="textBlockListBox">
+        <TextBlock DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
+                   Style ="{StaticResource textBlock}" Text ="{Binding Text}"/>
+    </DataTemplate>
+    
+    <!--Шаблон поведения листбокса-->
+    <DataTemplate x:Key="listBoxControl">
+        <ListBox DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
+            Style="{StaticResource actualList}">
+            <i:Interaction.Behaviors>
+                <beh:ListBoxBehavior SelectedItem="{Binding SelectedItem}"/>
+            </i:Interaction.Behaviors>
+        </ListBox>
+    </DataTemplate>
+
+        <!--Шаблон листбокса-->
     <DataTemplate x:Key="listBox">
         <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
             <Grid.RowDefinitions>
@@ -66,17 +90,29 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row ="0" Grid.Column ="0" Grid.ColumnSpan ="2" Style ="{StaticResource textBlock}" Text ="{Binding Text}"/>
-            <ListBox Grid.Row ="1" Grid.Column ="0" Style="{StaticResource actualList}">
-                <i:Interaction.Behaviors>
-                    <beh:ListBoxBehavior SelectedItem="{Binding SelectedItem}"/>
-                </i:Interaction.Behaviors>
-            </ListBox>
-            <ContentControl Grid.Row ="1" Grid.Column="1"
-                                ContentTemplate="{StaticResource buttonsStackPanel}"/>
+            <ContentControl Grid.Row ="0" Grid.Column ="0" Grid.ColumnSpan ="2" ContentTemplate="{StaticResource textBlockListBox}"/>
+            <ContentControl Grid.Row ="1" Grid.Column ="0" ContentTemplate="{StaticResource listBoxControl}"/>
+            <ContentControl Grid.Row ="1" Grid.Column="1" ContentTemplate="{StaticResource buttonsStackPanel}"/>
         </Grid>
     </DataTemplate>
-    
+
+    <!--Шаблон листбокса2-->
+    <DataTemplate x:Key="listBox2">
+        <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ContentControl Grid.Row ="0" Grid.Column ="0" Grid.ColumnSpan ="2" ContentTemplate="{StaticResource textBlockListBox}"/>
+            <ContentControl Grid.Row ="1" Grid.Column ="0" ContentTemplate="{StaticResource listBoxControl}"/>
+            <ContentControl Grid.Row ="1" Grid.Column="1" ContentTemplate="{StaticResource buttons2StackPanel}"/>
+        </Grid>
+    </DataTemplate>
+
     <!--Шаблон группы с перечнем айтемов-->
     <DataTemplate x:Key="listGrop" DataType="x:Type vm:ListGroup">
         <Border DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
@@ -91,13 +127,13 @@
         <StackPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
                     Orientation="Horizontal" >
             <TextBlock Style="{StaticResource textBlock}"  Text="Наименование:"/>
-            <TextBox Margin="5" Text="{Binding SelectedItem.Name, UpdateSourceTrigger=PropertyChanged}" Width="450"/>
+            <TextBox Margin="5" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Width="450"/>
         </StackPanel>
     </DataTemplate>
     
     <!--Шаблон основной таблицы объекта-->
     <DataTemplate x:Key="tableObject">
-        <DataGrid ItemsSource="{Binding MainTableObject}"
+        <DataGrid ItemsSource="{Binding TableObject.Item}"
                   Margin="0 5"
                   DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
             <DataGrid.Columns>
@@ -113,7 +149,7 @@
 
     <!--Шаблон основной таблицы параметра-->
     <DataTemplate x:Key="tableParameter">
-        <DataGrid ItemsSource="{Binding MainTableParameter}"
+        <DataGrid ItemsSource="{Binding TableParameter.Item}"
                   Margin="0 5"
                   DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
             <DataGrid.Columns>
@@ -209,31 +245,29 @@
     </DataTemplate>
 
     <!--Шаблон комплесного объекта-->
-    <DataTemplate x:Key="taskTemplate" DataType="vm:TaskTemplate">
+    <DataTemplate x:Key="taskTemplate">
         <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <ContentControl Grid.Row="0" DataContext="{Binding ListAreas}" ContentTemplate="{StaticResource listBox}"/>
+            <ContentControl Grid.Row="0" DataContext="{Binding Objects}" ContentTemplate="{StaticResource listBox2}"/>
         </Grid>
     </DataTemplate>
 
     <!--Шаблон площадки-->
-    <DataTemplate x:Key="areaTemplate" DataType="vm:AreaTemplate">
+    <DataTemplate x:Key="areaTemplate">
         <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <ContentControl Grid.Row="0" ContentTemplate="{StaticResource nameGroup}"/>
-            <ContentControl Grid.Row="1" DataContext="{Binding ListObjects}" ContentTemplate="{StaticResource listGrop}"/>
-            <ContentControl Grid.Row="2" DataContext="{Binding ListParameters}" ContentTemplate="{StaticResource listGrop}"/>
+            <ContentControl Grid.Row="1" DataContext="{Binding Objects}" ContentTemplate="{StaticResource listGrop}"/>
         </Grid>
     </DataTemplate>
 
     <!--Шаблон объекта-->
-    <DataTemplate x:Key="objectTemplate" DataType="vm:ObjectTemplate">
+    <DataTemplate x:Key="objectTemplate">
         <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -242,17 +276,17 @@
             </Grid.RowDefinitions>
             <ContentControl Grid.Row="0" ContentTemplate="{StaticResource nameGroup}"/>
             <ContentControl Grid.Row="1" ContentTemplate="{StaticResource tableObject}"/>
-            <ContentControl Grid.Row="2" DataContext="{Binding ListParameters}" ContentTemplate="{StaticResource listGrop}"/>
+            <ContentControl Grid.Row="2" DataContext="{Binding Parameters}" ContentTemplate="{StaticResource listGrop}"/>
         </Grid>
     </DataTemplate>
 
     <!--Шаблон параметров площадки-->
-    <DataTemplate x:Key="parametersAreaTemplate" DataType="vm:ParametersAreaTemplate">
+    <DataTemplate x:Key="parametersAreaTemplate">
         <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <ContentControl Grid.Row="0" DataContext="{Binding ListParameters}" ContentTemplate="{StaticResource listBox}"/>
+            <ContentControl Grid.Row="0" DataContext="{Binding Parameters}" ContentTemplate="{StaticResource listBox}"/>
         </Grid>
     </DataTemplate>
 
@@ -267,8 +301,8 @@
             </Grid.RowDefinitions>
             <ContentControl Grid.Row="0" ContentTemplate="{StaticResource nameGroup}"/>
             <ContentControl Grid.Row="1" ContentTemplate="{StaticResource tableParameter}"/>
-            <ContentControl Grid.Row="2" DataContext="{Binding ListSignalings}" ContentTemplate="{StaticResource listSignalings}"/>
-            <ContentControl Grid.Row="3" DataContext="{Binding ListAlgorithms}" ContentTemplate="{StaticResource listAlgorithms}"/>
+            <ContentControl Grid.Row="2" DataContext="{Binding Signalings}" ContentTemplate="{StaticResource listSignalings}"/>
+            <ContentControl Grid.Row="3" DataContext="{Binding Algorithms}" ContentTemplate="{StaticResource listAlgorithms}"/>
         </Grid>
     </DataTemplate>
     

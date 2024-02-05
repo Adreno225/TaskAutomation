@@ -1,14 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace TaskAutomation.ViewModels
+namespace TaskAutomation.ViewModels;
+
+internal class ViewModelLocator
 {
-    internal class ViewModelLocator
-    {
-        public MainWindowViewModel MainWindowViewModel => App.Host.Services.GetRequiredService<MainWindowViewModel>();
-    }
+    public MainWindowViewModel MainWindowViewModel => App.Host.Services.GetRequiredService<MainWindowViewModel>();
 }
