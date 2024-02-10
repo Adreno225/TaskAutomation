@@ -21,6 +21,9 @@ public static class DbRegistrator
                 case "MSSQL":
                     opt.UseSqlServer(configuration.GetConnectionString(type));
                     break;
+                case "POSGRESQL":
+                    opt.UseNpgsql(configuration.GetConnectionString(type));
+                    break;
             }
         });
         services.AddTransient<DbInitializer>();

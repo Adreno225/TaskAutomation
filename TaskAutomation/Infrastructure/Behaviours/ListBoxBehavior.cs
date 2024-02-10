@@ -3,9 +3,7 @@ using Microsoft.Xaml.Behaviors;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using TaskAutomation.Models;
 using TaskAutomation.ViewModels;
-using TaskAutomation.ViewModels.MainWindowViewModelNamespace;
 
 namespace TaskAutomation.Infrastructure.Behaviours;
 
@@ -38,13 +36,7 @@ public class ListBoxBehavior: Behavior<ListBox>
         {
             var vM = App.Host.Services.GetRequiredService<MainWindowViewModel>();
             var actTreeItem = vM.SelectedTreeViewItem;
-            if ((selItem is ParameterTreeItem)&&((actTreeItem.Object is Area)||(actTreeItem.Object is TaskClass))&& (actTreeItem is not SubTreeItem)) 
-            {
-                var temp = actTreeItem .Items.Single(x => x is SubTreeItem);
-                vM.SelectedTreeViewItem = temp.Items.Single(x => x == selItem);
-            }
-            else
-                vM.SelectedTreeViewItem = actTreeItem.Items.Single(x => x == selItem);
+            vM.SelectedTreeViewItem = actTreeItem.Items.Single(x => x == selItem);
         } 
     }
 }

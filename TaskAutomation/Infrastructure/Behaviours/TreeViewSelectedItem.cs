@@ -40,6 +40,7 @@ public class TreeViewSelectedItem : Behavior<TreeView>
         SelectedItem = (ITreeItem)e.NewValue;
         var vM = (MainWindowViewModel)((TreeView)sender).DataContext;
         vM.SelectTemplate();
+        vM.IsChangedTreeItem = true;
     }
 
     private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

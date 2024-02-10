@@ -5,5 +5,9 @@
         public Parameter Parameter { get; set; } = null!;
         public Class Class { get; set; } = null!;
         public FunctionParameter FunctionParameter { get; set; } = null!;
+        public override string ToString()
+        {
+            return $"{Parameter?.Name}; {Class?.Name}; {FunctionParameter?.Name}";
+        }
     }
 }

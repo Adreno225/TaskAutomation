@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using TaskAutomation.Infrastructure.Commands;
 using TaskAutomation.Models;
@@ -44,18 +46,17 @@ public class MainWindowViewModel : Base.ViewModel<object>
 
     #region Перечень классов автоматизации 
     private readonly IRepository<Class> _RepositoryClasses;
-    public string[] Classes
-    {
-        get => _RepositoryClasses.Items.Select(x=>x.Name).ToArray();
-    }
+    public IRepository<Class> RepositoryClasses => _RepositoryClasses;
+
+    public Class[] Classes => _RepositoryClasses.Items.ToArray();
+   
     #endregion
 
     #region Перечень стадий 
-    private readonly IRepository<TaskAutomationDB.Entities.Stage> _RepositoryStages;
-    public string[] Stages
-    {
-        get => _RepositoryStages.Items.Select(x => x.Name).ToArray();
-    }
+    private readonly IRepository<Stage> _RepositoryStages;
+    public IRepository<Stage> RepositoryStages => _RepositoryStages;
+    public Stage[] Stages => _RepositoryStages.Items.ToArray();
+
     #endregion
 
     #region Перечень режимов 
@@ -81,6 +82,24 @@ public class MainWindowViewModel : Base.ViewModel<object>
         get => _RepositoryTypesCO.Items.Select(x => x.Name).ToArray();
     }
     #endregion
+
+    #region Функции параметра
+    private readonly IRepository<FunctionParameter> _RepositoryFunctionsParameter;
+    public IRepository<FunctionParameter> RepositoryFunctionsParameter => _RepositoryFunctionsParameter;
+    #endregion
+    #region Объекты автоматизации из ЛНД
+    private readonly IRepository<ObjectAutomation> _RepositoryObjectsAutomation;
+    public IRepository<ObjectAutomation> RepositoryObjectsAutomation => _RepositoryObjectsAutomation;
+    #endregion
+    #region Параметры из ЛНД
+    private readonly IRepository<TaskAutomationDB.Entities.Parameter> _RepositoryParameters;
+    public IRepository<TaskAutomationDB.Entities.Parameter> RepositoryParameters => _RepositoryParameters;
+    #endregion
+    #region Главная таблица параметров ЛНД (связывающая)
+    private readonly IRepository<ParameterClassFunction> _RepositoryParametersClassFunction;
+    public IRepository<ParameterClassFunction> RepositoryParametersClassFunction => _RepositoryParametersClassFunction;
+    #endregion
+    public bool IsChangedTreeItem { get; set; } = false;
 
     #region Первый уровень дерева 
     private TableOneRow<TaskTreeItem> _FirstLevelTree;
@@ -131,7 +150,7 @@ public class MainWindowViewModel : Base.ViewModel<object>
 
     private bool CanSetDefaultSettingsCommandExecute(object p) => true;
 
-    private void OnSetDefaultSettingsCommandExecuted(object p) => SetDefaultSettings();
+    private void OnSetDefaultSettingsCommandExecuted(object p) => SetDefaultSettings(RepositoryClasses, RepositoryStages);
     #endregion
 
     #region Создание задания
@@ -144,8 +163,10 @@ public class MainWindowViewModel : Base.ViewModel<object>
 
     public MainWindowViewModel(ICreatorTask creator,
         IRepository<Class> repositoryClasses,
-        IRepository<TaskAutomationDB.Entities.Stage> repositoryStages, IRepository<Mode> repositoryModes,
-        IRepository<Customer> repositoryCustomers, IRepository<TypeCO> repositoryTypesCO)
+        IRepository<Stage> repositoryStages, IRepository<Mode> repositoryModes,
+        IRepository<Customer> repositoryCustomers, IRepository<TypeCO> repositoryTypesCO,
+        IRepository<FunctionParameter> repositoryFunctionsParameter, IRepository<ObjectAutomation> repositoryObjectsAutomation,
+        IRepository<TaskAutomationDB.Entities.Parameter> repositoryParameters, IRepository<ParameterClassFunction> repositoryParametersClassFunction)
     {
         _ExcelCreator = creator;
         _RepositoryClasses = repositoryClasses;
@@ -153,17 +174,20 @@ public class MainWindowViewModel : Base.ViewModel<object>
         _RepositoryModes = repositoryModes;
         _RepositoryCustomers = repositoryCustomers;
         _RepositoryTypesCO = repositoryTypesCO;
+        _RepositoryFunctionsParameter = repositoryFunctionsParameter;
+        _RepositoryObjectsAutomation = repositoryObjectsAutomation;
+        _RepositoryParameters = repositoryParameters;
+        _RepositoryParametersClassFunction = repositoryParametersClassFunction;
         _ExcelCreator.MainModel = this;
-            
-
-
         SetDefaultSettingsCommand = new LambdaCommand(OnSetDefaultSettingsCommandExecuted, CanSetDefaultSettingsCommandExecute);
         CreateExcelCommand = new LambdaCommand(OnCreateExcelExecuted, CanCreateExcelCommandExecute);
-        SetDefaultSettings();
+        SetDefaultSettings(RepositoryClasses, RepositoryStages);
+       
+
     }
-    private void SetDefaultSettings()
+    private void SetDefaultSettings(IRepository<Class> repositoryClasses, IRepository<Stage> repositoryStages)
     {
-        Task = new ();
+        Task = new() { Class = repositoryClasses.Get(2), Stage = repositoryStages.Get(5)};
         Tasks = new (Task);
         FirstLevelTree = new (new TaskTreeItem(_Task));
         SelectedTreeViewItem = FirstLevelTree.Item[0];

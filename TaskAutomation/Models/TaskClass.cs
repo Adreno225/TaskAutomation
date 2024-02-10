@@ -1,21 +1,9 @@
 ﻿using System.Collections.Generic;
 using TaskAutomation.Models.Base;
+using TaskAutomationDB.Entities;
 
 namespace TaskAutomation.Models;
 
-public enum Stage
-{
-    ОПР,
-    ПД,
-    РД,
-    ПиР
-}
-public enum Class
-{
-    Минимальный,
-    Базовый,
-    Перспективный
-}
 public class TaskClass: ComplexModel
 {
     private const string Text = "Комплексный объект";
@@ -39,8 +27,8 @@ public class TaskClass: ComplexModel
     #endregion
 
     #region Стадия 
-    private string _Stage = "";
-    public string Stage
+    private Stage _Stage;
+    public Stage Stage
     {
         get => _Stage;
         set => Set(ref _Stage, value);
@@ -48,8 +36,8 @@ public class TaskClass: ComplexModel
     #endregion
 
     #region Класс 
-    private string _Class = "";
-    public string Class
+    private Class _Class;
+    public Class Class
     {
         get => _Class;
         set => Set(ref _Class, value);
@@ -86,5 +74,5 @@ public class TaskClass: ComplexModel
     public IEnumerable<Parameter> Parameters => DefineTypeObjects<Parameter>(SubItems);
     #endregion
 
-    public TaskClass():base(Text) { }
+    public TaskClass() : base(Text) { }
 }

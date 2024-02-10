@@ -12,5 +12,9 @@ public static class RegistratorRepository
         .AddTransient<IRepository<Mode>, DbRepository<Mode>>()
         .AddTransient<IRepository<Customer>, DbRepository<Customer>>()
         .AddTransient<IRepository<TypeCO>, DbRepository<TypeCO>>()
+        .AddTransient<IRepository<FunctionParameter>, DbRepository<FunctionParameter>>()
+        .AddTransient<IRepository<ObjectAutomation>, DbRepository<ObjectAutomation>>()
+        .AddTransient<IRepository<Parameter>, DbRepository<Parameter>>()
+        .AddTransient<IRepository<ParameterClassFunction>, DbRepository<ParameterClassFunction>>()
     ;
 }
