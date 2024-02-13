@@ -24,6 +24,7 @@ public enum TypeSelectedItem
 public class MainWindowViewModel : Base.ViewModel<object>
 { 
     private readonly ICreatorTask _ExcelCreator;
+    public IQueryCreator QueryCreator { get; }
 
     #region Задание
     private TaskClass _Task;
@@ -95,10 +96,6 @@ public class MainWindowViewModel : Base.ViewModel<object>
     private readonly IRepository<TaskAutomationDB.Entities.Parameter> _RepositoryParameters;
     public IRepository<TaskAutomationDB.Entities.Parameter> RepositoryParameters => _RepositoryParameters;
     #endregion
-    #region Главная таблица параметров ЛНД (связывающая)
-    private readonly IRepository<ParameterClassFunction> _RepositoryParametersClassFunction;
-    public IRepository<ParameterClassFunction> RepositoryParametersClassFunction => _RepositoryParametersClassFunction;
-    #endregion
     public bool IsChangedTreeItem { get; set; } = false;
 
     #region Первый уровень дерева 
@@ -150,7 +147,7 @@ public class MainWindowViewModel : Base.ViewModel<object>
 
     private bool CanSetDefaultSettingsCommandExecute(object p) => true;
 
-    private void OnSetDefaultSettingsCommandExecuted(object p) => SetDefaultSettings(RepositoryClasses, RepositoryStages);
+    private void OnSetDefaultSettingsCommandExecuted(object p) => SetDefaultSettings();
     #endregion
 
     #region Создание задания
@@ -161,14 +158,17 @@ public class MainWindowViewModel : Base.ViewModel<object>
     private void OnCreateExcelExecuted(object p) => _ExcelCreator.Create();
     #endregion
 
-    public MainWindowViewModel(ICreatorTask creator,
+    public MainWindowViewModel(ICreatorTask creator, IQueryCreator queryCreator,
         IRepository<Class> repositoryClasses,
         IRepository<Stage> repositoryStages, IRepository<Mode> repositoryModes,
         IRepository<Customer> repositoryCustomers, IRepository<TypeCO> repositoryTypesCO,
         IRepository<FunctionParameter> repositoryFunctionsParameter, IRepository<ObjectAutomation> repositoryObjectsAutomation,
-        IRepository<TaskAutomationDB.Entities.Parameter> repositoryParameters, IRepository<ParameterClassFunction> repositoryParametersClassFunction)
+        IRepository<TaskAutomationDB.Entities.Parameter> repositoryParameters)
     {
         _ExcelCreator = creator;
+        _ExcelCreator.MainModel = this;
+        QueryCreator = queryCreator;
+        QueryCreator.MainWindowViewModel = this;
         _RepositoryClasses = repositoryClasses;
         _RepositoryStages = repositoryStages;
         _RepositoryModes = repositoryModes;
@@ -177,17 +177,13 @@ public class MainWindowViewModel : Base.ViewModel<object>
         _RepositoryFunctionsParameter = repositoryFunctionsParameter;
         _RepositoryObjectsAutomation = repositoryObjectsAutomation;
         _RepositoryParameters = repositoryParameters;
-        _RepositoryParametersClassFunction = repositoryParametersClassFunction;
-        _ExcelCreator.MainModel = this;
         SetDefaultSettingsCommand = new LambdaCommand(OnSetDefaultSettingsCommandExecuted, CanSetDefaultSettingsCommandExecute);
         CreateExcelCommand = new LambdaCommand(OnCreateExcelExecuted, CanCreateExcelCommandExecute);
-        SetDefaultSettings(RepositoryClasses, RepositoryStages);
-       
-
+        SetDefaultSettings(); 
     }
-    private void SetDefaultSettings(IRepository<Class> repositoryClasses, IRepository<Stage> repositoryStages)
+    private void SetDefaultSettings()
     {
-        Task = new() { Class = repositoryClasses.Get(2), Stage = repositoryStages.Get(5)};
+        Task = new(this) {Class = _RepositoryClasses.Get(2), Stage = _RepositoryStages.Get(5)};
         Tasks = new (Task);
         FirstLevelTree = new (new TaskTreeItem(_Task));
         SelectedTreeViewItem = FirstLevelTree.Item[0];

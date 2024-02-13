@@ -4,5 +4,5 @@ namespace TaskAutomation.ViewModels;
 
 public class ViewModelLocator
 {
-    public MainWindowViewModel MainWindowViewModel => App.Host.Services.GetRequiredService<MainWindowViewModel>();
+    public static MainWindowViewModel MainWindowViewModel => App.Host.Services.GetRequiredService<MainWindowViewModel>();
 }

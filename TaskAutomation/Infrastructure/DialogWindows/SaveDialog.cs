@@ -17,7 +17,7 @@ public class SaveDialog:BaseDialog
     public void Save(Action<string> action, string messageFail = MessageFail, string filter = Filter, string initialDirectory = null)
     {
         _FileDialog.Filter = filter;
-        _FileDialog.InitialDirectory = initialDirectory == null ? Environment.CurrentDirectory : initialDirectory;
+        _FileDialog.InitialDirectory = initialDirectory ?? Environment.CurrentDirectory;
         if (_FileDialog.ShowDialog() == true)
             action(_FileDialog.FileName);
         else

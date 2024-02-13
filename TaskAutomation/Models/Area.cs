@@ -11,7 +11,7 @@ public class Area: ComplexModel
     #endregion
 
     #region Параметры 
-    public IEnumerable<Parameter> Parameters => DefineTypeObjects<Parameter>(MainItems);
+    public IEnumerable<Parameter> Parameters => DefineTypeObjects<Parameter>(SubItems);
     #endregion
 
     public Area():base(Text) { }

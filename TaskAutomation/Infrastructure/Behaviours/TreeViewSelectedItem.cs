@@ -38,7 +38,7 @@ public class TreeViewSelectedItem : Behavior<TreeView>
     private void OnTreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) 
     {
         SelectedItem = (ITreeItem)e.NewValue;
-        var vM = (MainWindowViewModel)((TreeView)sender).DataContext;
+        var vM = ViewModelLocator.MainWindowViewModel;
         vM.SelectTemplate();
         vM.IsChangedTreeItem = true;
     }
@@ -54,12 +54,9 @@ public class TreeViewSelectedItem : Behavior<TreeView>
     {
         if (container != null)
         {
-            if (container.DataContext == item)
-            {
-                return container as TreeViewItem;
-            }
+            if (container.DataContext == item) return container as TreeViewItem;
 
-            if (container is TreeViewItem && !((TreeViewItem)container).IsExpanded)
+            if (container is TreeViewItem treeViewItem && !treeViewItem.IsExpanded)
             {
                 container.SetValue(TreeViewItem.IsExpandedProperty, true);
             }
@@ -83,16 +80,13 @@ public class TreeViewSelectedItem : Behavior<TreeView>
             }
 
             Panel itemsHostPanel = (Panel)VisualTreeHelper.GetChild(itemsPresenter, 0);
+            _ = itemsHostPanel.Children;
 
-            UIElementCollection children = itemsHostPanel.Children;
-
-            MyVirtualizingStackPanel virtualizingPanel =
-                itemsHostPanel as MyVirtualizingStackPanel;
 
             for (int i = 0, count = container.Items.Count; i < count; i++)
             {
                 TreeViewItem subContainer;
-                if (virtualizingPanel != null)
+                if (itemsHostPanel is MyVirtualizingStackPanel virtualizingPanel)
                 {
                     virtualizingPanel.BringIntoView(i);
 
@@ -111,18 +105,12 @@ public class TreeViewSelectedItem : Behavior<TreeView>
                 if (subContainer != null)
                 {
                     TreeViewItem resultContainer = GetTreeViewItem(subContainer, item);
-                    if (resultContainer != null)
-                    {
-                        return resultContainer;
-                    }
+                    if (resultContainer != null) return resultContainer;
                     else
-                    {
                         subContainer.IsExpanded = false;
-                    }
                 }
             }
         }
-
         return null;
     }
 

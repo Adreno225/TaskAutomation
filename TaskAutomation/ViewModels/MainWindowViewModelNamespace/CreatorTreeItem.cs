@@ -13,7 +13,7 @@ public class CreatorTreeItem
             Area area => new AreaTreeItem(area),
             ObjectInf obj => new ObjectTreeItem(obj),
             Parameter parameter => new ParameterTreeItem(parameter),
-            _ => throw new ArgumentException("Не поддерживаемый тип айтема дерева!"),
+            _ => throw new ArgumentException($"Не поддерживаемый тип айтема дерева:{item.GetType()}!"),
         };
     }
 }

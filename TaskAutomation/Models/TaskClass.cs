@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using TaskAutomation.Models.Base;
+using TaskAutomation.ViewModels;
 using TaskAutomationDB.Entities;
 
 namespace TaskAutomation.Models;
 
-public class TaskClass: ComplexModel
+public class TaskClass : ComplexModel
 {
     private const string Text = "Комплексный объект";
+    private readonly MainWindowViewModel _MainModel;
+
 
     #region Шифр 
     private string _Code = "";
@@ -40,7 +43,12 @@ public class TaskClass: ComplexModel
     public Class Class
     {
         get => _Class;
-        set => Set(ref _Class, value);
+        set
+        {
+            Set(ref _Class, value);
+            _MainModel.QueryCreator.SetParametersAllObjects();
+        }
+            
     }
     #endregion
 
@@ -74,5 +82,5 @@ public class TaskClass: ComplexModel
     public IEnumerable<Parameter> Parameters => DefineTypeObjects<Parameter>(SubItems);
     #endregion
 
-    public TaskClass() : base(Text) { }
+    public TaskClass(MainWindowViewModel mainWindowViewModel) : base(Text) { _MainModel = mainWindowViewModel; }
 }

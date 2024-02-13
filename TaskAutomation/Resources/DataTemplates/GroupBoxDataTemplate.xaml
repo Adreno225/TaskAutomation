@@ -6,6 +6,9 @@
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                     xmlns:beh="clr-namespace:TaskAutomation.Infrastructure.Behaviours"
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="..\Styles\Table.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
     <vm:ViewModelLocator x:Key="Locator"/>
     <Style TargetType="Border" x:Key="border">
         <Setter Property="BorderBrush" Value="Gray"/>
@@ -149,21 +152,77 @@
 
     <!--Шаблон основной таблицы параметра-->
     <DataTemplate x:Key="tableParameter">
-        <DataGrid ItemsSource="{Binding TableParameter.Item}"
-                  Margin="0 5"
-                  DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
+        <Grid Margin="0 5"
+              DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Row="0" Grid.Column="0" BorderThickness="1 1 0.5 0.5" Style="{StaticResource BorderTable}">
+                <TextBlock  Text="Измеримость" Style="{StaticResource HeaderTable}"/>
+            </Border>
+            <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource BorderCheckBoxTable}">
+                <CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding Object.IsControl}" Style="{StaticResource CheckBoxTable}"/>
+            </Border>
+            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource BorderTable}">
+                <TextBlock  Text="ПАЗ" Style="{StaticResource HeaderTable}"/>
+            </Border>
+            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource BorderCheckBoxTable}">
+                <CheckBox  IsChecked="{Binding Object.ESD}" Style="{StaticResource CheckBoxTable}"/>
+            </Border>
+            <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource BorderTable}">
+                <TextBlock  Text="Местн. изм." Style="{StaticResource HeaderTable}"/>
+            </Border>
+            <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource BorderCheckBoxTable}">
+                <CheckBox  IsChecked="{Binding Object.IsManualMeasure}" Style="{StaticResource CheckBoxTable}"/>
+            </Border>
+            <Border Grid.Row="0" Grid.Column="3" Style="{StaticResource BorderTable}">
+                <TextBlock  Text="Дист. изм." Style="{StaticResource HeaderTable}"/>
+            </Border>
+            <Border Grid.Row="1" Grid.Column="3" Style="{StaticResource BorderCheckBoxTable}">
+                <CheckBox IsChecked="{Binding Object.IsRemoteMeasure}" Style="{StaticResource CheckBoxTable}"/>
+            </Border>
+            <Border Grid.Row="0" Grid.Column="4" Style="{StaticResource BorderTable}">
+                <TextBlock  Text="Ед. изм." Style="{StaticResource HeaderTable}"/>
+            </Border>
+            <TextBox Grid.Row="1" Grid.Column="4" Style="{StaticResource TextBoxTable}" Text="{Binding Object.Unit, UpdateSourceTrigger=PropertyChanged}"/>
+            <Border Grid.Row="0" Grid.Column="5" Style="{StaticResource BorderTable}">
+                <TextBlock  Text="Диапазон изм." Style="{StaticResource HeaderTable}"/>
+            </Border>
+            <TextBox Grid.Row="1" Grid.Column="5" Style="{StaticResource TextBoxTable}" Text="{Binding Object.RangeMeasure, UpdateSourceTrigger=PropertyChanged}"/>
+            <Border Grid.Row="0" Grid.Column="6" Style="{StaticResource BorderTable}">
+                <TextBlock  Text="Расч. значение" Style="{StaticResource HeaderTable}"/>
+            </Border>
+            <TextBox Grid.Row="1" Grid.Column="6" Style="{StaticResource TextBoxTable}" Text="{Binding Object.CalculatedValue, UpdateSourceTrigger=PropertyChanged}"/>
+            <Border Grid.Row="0" Grid.Column="7" BorderThickness="0.5 1 1 0.5" Style="{StaticResource BorderTable}">
+                <TextBlock  Text="Примечание" Style="{StaticResource HeaderTable}"/>
+            </Border>
+            <TextBox Grid.Row="1" Grid.Column="7" BorderThickness="0.5 0.5 1 1" Style="{StaticResource TextBoxTable}" Text="{Binding Object.Note, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+        <!--<DataGrid ItemsSource="{Binding TableParameter.Item}"
+                  
+                  >
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn Header="Измеримость" Binding="{Binding IsControl, UpdateSourceTrigger=PropertyChanged}" Width="90" />
-                <DataGridTextColumn Header="Ед. изм." Binding="{Binding Unit, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
                 <DataGridCheckBoxColumn Header="ПАЗ" Binding="{Binding ESD, UpdateSourceTrigger=PropertyChanged}" Width="50"/>
-                <DataGridComboBoxColumn Header="Режим контроля"
-                                        ItemsSource="{Binding MainWindowViewModel.Modes, Source={StaticResource Locator},UpdateSourceTrigger=PropertyChanged}"
-                                        SelectedItemBinding="{Binding Mode, UpdateSourceTrigger=PropertyChanged}" Width="230"/>
+                <DataGridCheckBoxColumn Header="Местн. изм." Binding="{Binding IsManualMeasure,  UpdateSourceTrigger=PropertyChanged }"  Width="80"/>
+                <DataGridCheckBoxColumn Header="Дист. изм." Binding="{Binding IsRemoteMeasure,  UpdateSourceTrigger=PropertyChanged }"  Width="80"/>
+                <DataGridTextColumn Header="Ед. изм." Binding="{Binding Unit, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
                 <DataGridTextColumn Header="Диапазон изм." Binding="{Binding RangeMeasure, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
                 <DataGridTextColumn Header="Расч. значение" Binding="{Binding CalculatedValue, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
                 <DataGridTextColumn Header="Примечание" Binding="{Binding Note, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
             </DataGrid.Columns>
-        </DataGrid>
+        </DataGrid>-->
     </DataTemplate>
 
     <!--Таблица сигнализаций-->

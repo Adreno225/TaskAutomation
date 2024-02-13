@@ -15,12 +15,12 @@ public interface ICreatorTask
     void Create();
     MainWindowViewModel MainModel { get; set; }
 }
-public class ExcelCreator:ICreatorTask
+public class ExcelCreator : ICreatorTask
 {
     const int StartRow = 9;
     const int FirstColumnObj = 2;
     const int FirstColumnParam = 8;
-    const int StartColumn = 15;
+    const int StartColumn = 16;
     const int HeaderRow = 6;
     const int Width1ColumnSign = 16;
     const int Width2ColumnSign = 11;
@@ -56,72 +56,107 @@ public class ExcelCreator:ICreatorTask
 
     private void MainMethod(string pathSave)
     {
-        using (var excel = new Package(PathExcelTemplate, pathSave))
+        using var excel = new Package(PathExcelTemplate, pathSave);
+        _ColumnsSignalingsAlgs.Clear();
+        var workSheet = excel.SelectSheet(1);
+        CreateHeaderRow(_Task, workSheet);
+        WriteMainData(workSheet);
+        var numRow = StartRow;
+        var Parameters = _Task.Parameters.Where(x => x.IsControl);
+        if (Parameters.Any())
         {
-            _ColumnsSignalingsAlgs.Clear();
-            var workSheet = excel.SelectSheet(1);
-            CreateHeaderRow(_Task, workSheet);
-            WriteMainData(workSheet);
-            var areas = _Task.Areas;
-            var numRow = StartRow;
-            foreach (Area area in areas)
+            workSheet.GetCell(numRow, 1).SetValue("Общие параметры").SetLeftHorAling().SetTopVAlign();
+            var countRows1 = 0;
+            var countRows2 = 0;
+            foreach (var parameter in Parameters)
+                WriteMainDataParameter(workSheet, ref numRow, parameter, ref countRows1, ref countRows2);
+            if (countRows1 > 0)
             {
-                if (area.Parameters.Where(x => x.IsControl).Any() || area.Objects.Where(x => x.Parameters.Where(y => y.IsControl).Any()).Any())
+                MergeCellsObject(workSheet, StartRow, countRows1);
+                WriteEmptyData(workSheet, StartRow);
+            }
+            MergeCells(workSheet, countRows1, StartRow, 1);
+        }
+        var mainItems = _Task.MainItems
+            .Where(x => (x is ObjectInf objectInf && IsObjectContainsControledParameters(objectInf)) ||
+            (x is Area area && IsAreaContainsControledParameters(area)));
+        foreach (var mainItem in mainItems)
+        {
+            if (mainItem is Area area)
+                WriteDataArea(workSheet, ref numRow, area);
+            if (mainItem is ObjectInf objectInf)
+            {
+                var startRow = numRow;
+                var countRows1 = 0;
+                var countRows2 = 0;
+                workSheet.GetCell(startRow, 1).SetValue("-").SetLeftHorAling().SetTopVAlign();
+                WriteDataObject(workSheet, ref numRow, ref countRows1, ref countRows2, objectInf);
+                if (countRows1 > 0)
                 {
-                    var firstRowArea = numRow;
-                    var countRowsArea = 0;
-                    var countRowsObj = 0;
-                    workSheet.GetCell(numRow, 1).SetValue(area.Name).SetCenterHAlign();
-                    var areaParams = area.Parameters;
-                    foreach (Parameter parameter in areaParams)
-                        WriteMainDataParameter(workSheet, ref numRow, parameter, ref countRowsObj, ref countRowsArea);
-                    if (countRowsObj > 0)
-                    {
-                        MergeCellsObject(workSheet, firstRowArea, countRowsArea);
-                        WriteEmptyData(workSheet, firstRowArea);
-                    }
-                    var objects = area.Objects;
-                    foreach (ObjectInf obj in objects)
-                    {
-                        if (obj.Parameters.Where(x => x.IsControl).Any())
-                        {
-                            var firstRowObj = numRow;
-                            countRowsObj = 0;
-                            WriteMainDataObject(workSheet, numRow, obj);
-                            var parameters = obj.Parameters;
-                            foreach (Parameter par in parameters)
-                                WriteMainDataParameter(workSheet, ref numRow, par, ref countRowsObj, ref countRowsArea);
-                            MergeCellsObject(workSheet, firstRowObj, countRowsObj);
-                        }
-                    }
-                    MergeCells(workSheet, countRowsArea, firstRowArea, 1);
+                    MergeCells(workSheet, countRows1, startRow, 1);
                 }
             }
-            if (excel.Save())
-            {
-                if (MessageBox.Show("Файл задания успешно создан! Откыть файл с заданием?",
-                        "Задание создано", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes) 
-                    Process.Start(new ProcessStartInfo { FileName = pathSave, UseShellExecute = true });
-            }
         }
+        if (excel.Save())
+            if (MessageBox.Show("Файл задания успешно создан! Откыть файл с заданием?", "Задание создано", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                Process.Start(new ProcessStartInfo { FileName = pathSave, UseShellExecute = true });
     }
 
-    private static void CreateHeaderRow (TaskClass task, Sheet sheet)
+    private static bool IsAreaContainsControledParameters(Area area) =>
+        IsContainsControledParameters(area.Parameters) || area.Objects.Where(IsObjectContainsControledParameters).Any();
+
+    private static bool IsObjectContainsControledParameters(ObjectInf objectInf) => IsContainsControledParameters(objectInf.Parameters);
+
+    private static bool IsContainsControledParameters(IEnumerable<Parameter> parameters) => parameters.Where(y => y.IsControl).Any();
+
+    private static void WriteDataArea(Sheet workSheet, ref int numRow, Area area)
     {
-        var par1= task.Areas.SelectMany(x => x.Parameters).Where(x=>x.IsControl);
-        var par2 = task.Areas.SelectMany(x => x.Objects).SelectMany(x=> x.Parameters).Where(x => x.IsControl);
+        var firstRowArea = numRow;
+        var countRowsArea = 0;
+        var countRowsObj = 0;
+        workSheet.GetCell(numRow, 1).SetValue(area.Name).SetLeftHorAling();
+        var areaParams = area.Parameters;
+        foreach (Parameter parameter in areaParams)
+            WriteMainDataParameter(workSheet, ref numRow, parameter, ref countRowsObj, ref countRowsArea);
+        if (countRowsObj > 0)
+        {
+            MergeCellsObject(workSheet, firstRowArea, countRowsArea);
+            WriteEmptyData(workSheet, firstRowArea);
+        }
+        var objects = area.Objects;
+        foreach (ObjectInf obj in objects)
+            WriteDataObject(workSheet, ref numRow, ref countRowsArea, ref countRowsObj, obj);
+        MergeCells(workSheet, countRowsArea, firstRowArea, 1);
+    }
+
+    private static void WriteDataObject(Sheet workSheet, ref int numRow, ref int countRowsArea, ref int countRowsObj, ObjectInf obj)
+    {
+        var firstRowObj = numRow;
+        countRowsObj = 0;
+        WriteMainDataObject(workSheet, numRow, obj);
+        var parameters = obj.Parameters;
+        foreach (Parameter par in parameters)
+            WriteMainDataParameter(workSheet, ref numRow, par, ref countRowsObj, ref countRowsArea);
+        if (countRowsObj > 0)
+            MergeCellsObject(workSheet, firstRowObj, countRowsObj);
+    }
+
+    private static void CreateHeaderRow(TaskClass task, Sheet sheet)
+    {
+        var par1 = task.Areas.SelectMany(x => x.Parameters).Where(x => x.IsControl);
+        var par2 = task.Areas.SelectMany(x => x.Objects).SelectMany(x => x.Parameters).Where(x => x.IsControl);
         var parameters = par1.Concat(par2);
         var signalings = parameters.SelectMany(x => x.Signalings);
         var columnHeader = StartColumn;
         if (signalings.Where(x => x.Type == TypeSignaling.L).Any() || signalings.Where(x => x.Type == TypeSignaling.H).Any())
-            SetWarnSignaling(sheet,signalings,ref columnHeader);
+            SetWarnSignaling(sheet, signalings, ref columnHeader);
         if (signalings.Where(x => x.Type == TypeSignaling.LL).Any() || signalings.Where(x => x.Type == TypeSignaling.HH).Any())
             SetAlarms(sheet, signalings, ref columnHeader);
         var temp = parameters.Select(x => x.Signalings).Select(x => x.Where(y => y.Type == TypeSignaling.Other).Count());
         var countOtherSign = (temp == null || !temp.Any()) ? 0 : temp.Max();
-        if (countOtherSign!=0)
+        if (countOtherSign != 0)
             SetOtherSignalings(sheet, ref columnHeader, countOtherSign);
-        temp = parameters.Select(x => x.Algorithms).Select(x=>x.Count());
+        temp = parameters.Select(x => x.Algorithms).Select(x => x.Count());
         var countAlg = (temp == null || !temp.Any()) ? 0 : temp.Max();
         if (countAlg != 0)
             SetAlgorithms(sheet, ref columnHeader, countAlg);
@@ -139,7 +174,7 @@ public class ExcelCreator:ICreatorTask
         sheet.GetCell(HeaderRow + 1, columnHeader).SetValue(MainTextAlg).SetBoldFont();
         for (int i = 0; i < count; i++)
             SetHeaderAlg(sheet, ref columnHeader);
-        var range = sheet.GetCellRange(HeaderRow+1, firstCol, HeaderRow+1, columnHeader - 1);
+        var range = sheet.GetCellRange(HeaderRow + 1, firstCol, HeaderRow + 1, columnHeader - 1);
         range.Merge = true;
         range.SetBorder();
     }
@@ -151,7 +186,7 @@ public class ExcelCreator:ICreatorTask
         SetKeyDictionaryColumns(TypeSignaling.Other, columnHeader);
         for (int i = 0; i < countOtherSign; i++)
             SetHeaderSinglaing(sheet, ref columnHeader, SetPoint);
-        var range = sheet.GetCellRange(HeaderRow+1, firstCol, HeaderRow+1, columnHeader - 1);
+        var range = sheet.GetCellRange(HeaderRow + 1, firstCol, HeaderRow + 1, columnHeader - 1);
         range.Merge = true;
         range.SetBorder();
     }
@@ -171,8 +206,8 @@ public class ExcelCreator:ICreatorTask
             SetKeyDictionaryColumns(TypeSignaling.H, columnHeader);
             SetHeaderSinglaing(sheet, ref columnHeader, HSign);
         }
-                
-        var range = sheet.GetCellRange(HeaderRow+1, firstCol, HeaderRow+1, columnHeader - 1);
+
+        var range = sheet.GetCellRange(HeaderRow + 1, firstCol, HeaderRow + 1, columnHeader - 1);
         range.Merge = true;
         range.SetBorder();
     }
@@ -193,13 +228,13 @@ public class ExcelCreator:ICreatorTask
         {
             SetKeyDictionaryColumns(TypeSignaling.LL, columnHeader);
             SetHeaderSinglaing(sheet, ref columnHeader, LLSign);
-        }   
+        }
         if (signalings.Where(x => x.Type == TypeSignaling.HH).Any())
         {
             SetKeyDictionaryColumns(TypeSignaling.HH, columnHeader);
             SetHeaderSinglaing(sheet, ref columnHeader, HHSign);
-        } 
-        var range = sheet.GetCellRange(HeaderRow+1, firstCol, HeaderRow+1, columnHeader - 1);
+        }
+        var range = sheet.GetCellRange(HeaderRow + 1, firstCol, HeaderRow + 1, columnHeader - 1);
         range.Merge = true;
         range.SetBorder();
     }
@@ -224,46 +259,48 @@ public class ExcelCreator:ICreatorTask
 
     private static void WriteEmptyData(Sheet workSheet, int numRow)
     {
-        workSheet.GetCell(numRow, FirstColumnObj).SetValue("").SetCenterHAlign();
-        workSheet.GetCell(numRow, FirstColumnObj + 1).SetValue("").SetCenterHAlign();
-        workSheet.GetCell(numRow, FirstColumnObj + 2).SetValue("").SetCenterHAlign();
-        workSheet.GetCell(numRow, FirstColumnObj + 3).SetValue("").SetCenterHAlign();
-        workSheet.GetCell(numRow, FirstColumnObj + 4).SetValue("").SetCenterHAlign();
-        workSheet.GetCell(numRow, FirstColumnObj + 5).SetValue("").SetCenterHAlign();
+        workSheet.GetCell(numRow, FirstColumnObj).SetValue("").SetLeftHorAling().SetTopVAlign();
+        workSheet.GetCell(numRow, FirstColumnObj + 1).SetValue("").SetLeftHorAling().SetTopVAlign();
+        workSheet.GetCell(numRow, FirstColumnObj + 2).SetValue("").SetLeftHorAling().SetTopVAlign();
+        workSheet.GetCell(numRow, FirstColumnObj + 3).SetValue("").SetLeftHorAling().SetTopVAlign();
+        workSheet.GetCell(numRow, FirstColumnObj + 4).SetValue("").SetLeftHorAling().SetTopVAlign();
+        workSheet.GetCell(numRow, FirstColumnObj + 5).SetValue("").SetLeftHorAling().SetTopVAlign();
     }
 
     private static void WriteMainDataObject(Sheet workSheet, int numRow, ObjectInf obj)
     {
-        workSheet.GetCell(numRow, FirstColumnObj).SetValue(obj.Name).SetCenterHAlign();
-        workSheet.GetCell(numRow, FirstColumnObj + 1).SetValue(obj.ParametersEquipment).SetCenterHAlign();
-        workSheet.GetCell(numRow, FirstColumnObj + 2).SetValue(obj.Position).SetCenterHAlign();
+        workSheet.GetCell(numRow, FirstColumnObj).SetValue(obj.Name).SetLeftHorAling().SetTopVAlign();
+        workSheet.GetCell(numRow, FirstColumnObj + 1).SetValue(obj.ParametersEquipment).SetLeftHorAling().SetTopVAlign();
+        workSheet.GetCell(numRow, FirstColumnObj + 2).SetValue(obj.Position).SetLeftHorAling().SetTopVAlign();
         //Добавить сюда поле с подобъектами
-        workSheet.GetCell(numRow, FirstColumnObj + 4).SetValue(obj.Product.Name).SetCenterHAlign();
-        workSheet.GetCell(numRow, FirstColumnObj + 5).SetValue(obj.Product.Parameters).SetCenterHAlign();
+        workSheet.GetCell(numRow, FirstColumnObj + 4).SetValue(obj.Product.Name).SetLeftHorAling().SetTopVAlign();
+        workSheet.GetCell(numRow, FirstColumnObj + 5).SetValue(obj.Product.Parameters).SetLeftHorAling().SetTopVAlign();
     }
 
     private static void WriteMainDataParameter(Sheet workSheet, ref int numRow, Parameter parameter, ref int countRowsObj, ref int countRowsArea)
     {
         if (parameter.IsControl)
         {
-            workSheet.GetCell(numRow, FirstColumnParam).SetValue(parameter.Name).SetCenterHAlign();
-            workSheet.GetCell(numRow, FirstColumnParam + 1).SetValue(parameter.Unit).SetCenterHAlign();
-            //Сделать преобразование bool to string
-            var texBool = parameter.ESD ? "+":"-";
-            workSheet.GetCell(numRow, FirstColumnParam + 2).SetValue(texBool).SetCenterHAlign();
-            workSheet.GetCell(numRow, FirstColumnParam + 3).SetValue(parameter.Mode.ToString()).SetCenterHAlign();
-            workSheet.GetCell(numRow, FirstColumnParam + 4).SetValue(parameter.RangeMeasure).SetCenterHAlign();
-            workSheet.GetCell(numRow, FirstColumnParam + 5).SetValue(parameter.CalculatedValue).SetCenterHAlign();
-            workSheet.GetCell(numRow, FirstColumnParam + 6).SetValue(parameter.Note).SetCenterHAlign();
+            workSheet.GetCell(numRow, FirstColumnParam).SetValue(parameter.Name).SetLeftHorAling().SetTopVAlign();
+            workSheet.GetCell(numRow, FirstColumnParam + 1).SetValue(parameter.Unit).SetLeftHorAling().SetTopVAlign();
+            workSheet.GetCell(numRow, FirstColumnParam + 2).SetValue(GetTextBoll(parameter.ESD)).SetLeftHorAling().SetTopVAlign();
+            workSheet.GetCell(numRow, FirstColumnParam + 3).SetValue(GetTextBoll(parameter.IsManualMeasure)).SetLeftHorAling().SetTopVAlign();
+            workSheet.GetCell(numRow, FirstColumnParam + 4).SetValue(GetTextBoll(parameter.IsRemoteMeasure)).SetLeftHorAling().SetTopVAlign();
+            workSheet.GetCell(numRow, FirstColumnParam + 5).SetValue(parameter.RangeMeasure).SetLeftHorAling().SetTopVAlign();
+            workSheet.GetCell(numRow, FirstColumnParam + 6).SetValue(parameter.CalculatedValue).SetLeftHorAling().SetTopVAlign();
+            workSheet.GetCell(numRow, FirstColumnParam + 7).SetValue(parameter.Note).SetLeftHorAling().SetTopVAlign();
             WriteSignalingsData(workSheet, numRow, parameter);
             WriteAlgorithmData(workSheet, numRow, parameter);
             for (int i = StartColumn; i < _EndColumn; i++)
                 workSheet.GetCell(numRow, i).SetBorder();
+            workSheet.SetAutosizeHeightRow(numRow);
             numRow++;
             countRowsArea++;
             countRowsObj++;
         }
     }
+
+    private static string GetTextBoll(bool input) => input ? "+" : "-";
 
     private static void WriteAlgorithmData(Sheet workSheet, int numRow, Parameter parameter)
     {
@@ -273,8 +310,8 @@ public class ExcelCreator:ICreatorTask
             var column = _ColumnsSignalingsAlgs["Alg"];
             foreach (var alg in algorithms)
             {
-                workSheet.GetCell(numRow, column).SetValue(alg.SetPoint).SetCenterHAlign();
-                workSheet.GetCell(numRow, column + 1).SetValue(alg.Action).SetCenterHAlign();
+                workSheet.GetCell(numRow, column).SetValue(alg.SetPoint).SetLeftHorAling().SetTopVAlign();
+                workSheet.GetCell(numRow, column + 1).SetValue(alg.Action).SetLeftHorAling().SetTopVAlign();
                 column += 2;
             }
         }
@@ -288,13 +325,13 @@ public class ExcelCreator:ICreatorTask
         SetSignaling(workSheet, numRow, signalings, TypeSignaling.LL);
         SetSignaling(workSheet, numRow, signalings, TypeSignaling.HH);
         var signs = signalings.Where(x => x.Type == TypeSignaling.Other);
-        if (signs !=null && signs.Any())
+        if (signs != null && signs.Any())
         {
             var column = _ColumnsSignalingsAlgs[TypeSignaling.Other];
             foreach (var signaling in signs)
             {
-                workSheet.GetCell(numRow, column).SetValue(signaling.Mode.ToString()).SetCenterHAlign();
-                workSheet.GetCell(numRow, column+1).SetValue(signaling.SetPoint).SetCenterHAlign();
+                workSheet.GetCell(numRow, column).SetValue(signaling.Mode.ToString()).SetLeftHorAling().SetTopVAlign();
+                workSheet.GetCell(numRow, column + 1).SetValue(signaling.SetPoint).SetLeftHorAling().SetTopVAlign();
                 column += 2;
             }
         }
@@ -305,18 +342,18 @@ public class ExcelCreator:ICreatorTask
         var sign = signalings.FirstOrDefault(x => x.Type == type);
         if (sign != null)
         {
-            workSheet.GetCell(numRow, _ColumnsSignalingsAlgs[type]).SetValue(sign.Mode.ToString()).SetCenterHAlign();
-            workSheet.GetCell(numRow, _ColumnsSignalingsAlgs[type]+1).SetValue(sign.SetPoint).SetCenterHAlign();
+            workSheet.GetCell(numRow, _ColumnsSignalingsAlgs[type]).SetValue(sign.Mode.ToString()).SetLeftHorAling().SetTopVAlign();
+            workSheet.GetCell(numRow, _ColumnsSignalingsAlgs[type] + 1).SetValue(sign.SetPoint).SetLeftHorAling().SetTopVAlign();
         }
     }
 
     private void WriteMainData(Sheet workSheet)
     {
-        workSheet.GetCell(4, 1).SetValue(_Task.Code).SetCenterHAlign();
-        workSheet.GetCell(4, 2).SetValue(_Task.Name).SetCenterHAlign();
-        workSheet.GetCell(4, 3).SetValue(_Task.Object).SetCenterHAlign();
-        workSheet.GetCell(4, 4).SetValue(_Task.Stage.ToString()).SetCenterHAlign();
-        workSheet.GetCell(4, 5).SetValue(_Task.Class.ToString()).SetCenterHAlign();
+        workSheet.GetCell(4, 1).SetValue(_Task.Code).SetLeftHorAling().SetTopVAlign();
+        workSheet.GetCell(4, 2).SetValue(_Task.Name).SetLeftHorAling().SetTopVAlign();
+        workSheet.GetCell(4, 3).SetValue(_Task.Object).SetLeftHorAling().SetTopVAlign();
+        workSheet.GetCell(4, 4).SetValue(_Task.Stage.ToString()).SetLeftHorAling().SetTopVAlign();
+        workSheet.GetCell(4, 5).SetValue(_Task.Class.ToString()).SetLeftHorAling().SetTopVAlign();
     }
 
     private static void MergeCellsObject(Sheet workSheet, int numRow, int count)
@@ -331,8 +368,8 @@ public class ExcelCreator:ICreatorTask
 
     private static void MergeCells(Sheet workSheet, int count, int numRow, int numCol)
     {
-        var range = workSheet.GetCellRange(numRow, numCol, numRow + count-1, numCol);
-        range.Merge=true;
+        var range = workSheet.GetCellRange(numRow, numCol, numRow + count - 1, numCol);
+        range.Merge = true;
         range.SetBorder();
     }
 

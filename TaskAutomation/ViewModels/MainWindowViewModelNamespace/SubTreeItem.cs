@@ -7,9 +7,15 @@ public class SubTreeItem : TreeItem
 {
     private const string TextParameters = "Перечень параметров:";
     public ListGroup<Parameter> Parameters { get; }
-    public SubTreeItem(ComplexModel complexModel, string name) : base(complexModel)
+
+    public override string Name 
     {
-        Name = name;
+        get => base.Name; 
+        set => Set(ref _Name, value); 
+    }
+    public SubTreeItem(ComplexModel complexModel, string text) : base(complexModel)
+    {
+        Name = text;
         InitializeItems();
         Parameters = new (Items, TextParameters, complexModel.SubItems);
     }

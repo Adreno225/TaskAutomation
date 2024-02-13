@@ -91,9 +91,7 @@
                               ItemTemplate="{StaticResource treeArea}">
                         <TextBlock Style="{StaticResource treeTexblock}" Text="{Binding Name}"/>
                     </HierarchicalDataTemplate>
-                    
                 </Border.Resources>
-                <!--ItemTemplate="{StaticResource treeTask}"-->
                 <TreeView x:Name="MainTree" Margin="5" BorderThickness="0" ItemsSource="{Binding FirstLevelTree.Item}">
                     <i:Interaction.Behaviors>
                         <beh:TreeViewSelectedItem SelectedItem="{Binding SelectedTreeViewItem, Mode=TwoWay}"/>
@@ -106,54 +104,57 @@
                     </TreeView.ItemTemplate>
                 </TreeView>
             </Border>
-            <DataGrid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                      Margin="5"
-                      ItemsSource="{Binding Tasks.Item}"
-                      VerticalGridLinesBrush="DarkGray">
-                <DataGrid.Resources>
-                    <Style TargetType="TextBlock" x:Key="WrapText">
-                        <Setter Property="TextWrapping" Value="Wrap"/>
-                        <Setter Property="Padding" Value="5 3 0 0"/>
-                        <Setter Property="Margin" Value="0"/>
-                    </Style>
-                    <Style TargetType="TextBox" x:Key="WrapTextBox">
-                        <Setter Property="TextWrapping" Value="Wrap"/>
-                        <Setter Property="Padding" Value="2 2 0 0"/>
-                        <Setter Property="Margin" Value="0"/>
-                    </Style>
-                </DataGrid.Resources>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Шифр" Width="70"
-                                        Binding="{Binding Code, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        ElementStyle="{StaticResource WrapText}"
-                                        EditingElementStyle="{StaticResource WrapTextBox}"/>
-                    <DataGridComboBoxColumn Header="Заказчик"  Width="180"
-                                            ItemsSource="{Binding MainWindowViewModel.Customers, Source={StaticResource Locator}, UpdateSourceTrigger=PropertyChanged}"
-                                            SelectedItemBinding="{Binding Customer, UpdateSourceTrigger=PropertyChanged}"
-                                           />
-                    <DataGridComboBoxColumn Header="Тип КО" Width="180"
-                                            ItemsSource="{Binding MainWindowViewModel.TypesCO, Source={StaticResource Locator}, UpdateSourceTrigger=PropertyChanged}"
-                                            SelectedItemBinding="{Binding TypeCO, UpdateSourceTrigger=PropertyChanged}"
-                                            />
-                    <DataGridComboBoxColumn Width="70" Header="Стадия"
-                                            ItemsSource="{Binding MainWindowViewModel.Stages, Source={StaticResource Locator}, UpdateSourceTrigger=PropertyChanged}"
-                                            SelectedItemBinding="{Binding Stage, UpdateSourceTrigger=PropertyChanged}"
-                                            />
-                    <DataGridComboBoxColumn Header="Класс автоматизации" Width="180" 
-                                            ItemsSource="{Binding MainWindowViewModel.Classes, Source={StaticResource Locator}, UpdateSourceTrigger=PropertyChanged}"
-                                            SelectedItemBinding="{Binding Class, UpdateSourceTrigger=PropertyChanged}"
-                                            />
-                    <DataGridTextColumn Header="Наименование проекта" Width="3*" 
-                                        Binding="{Binding MainWindowViewModel.FirstLevelTree.Item[0].Name, Source={StaticResource Locator},
-                                        UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                        ElementStyle="{StaticResource WrapText}"
-                                        EditingElementStyle="{StaticResource WrapTextBox}"/>
-                    <DataGridTextColumn Header="Объект" Width="2*"
-                                        Binding="{Binding Object, UpdateSourceTrigger=PropertyChanged}"
-                                        ElementStyle="{StaticResource WrapText}"
-                                        EditingElementStyle="{StaticResource WrapTextBox}"/>
-                </DataGrid.Columns>
-            </DataGrid>
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="180"/>
+                    <ColumnDefinition Width="180"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="180"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Row="0" Grid.Column="0" BorderThickness="1 1 0.5 0.5" Style="{StaticResource BorderTable}">
+                    <TextBlock  Text="Шифр" Style="{StaticResource HeaderTable}"/>
+                </Border>
+                <TextBox Grid.Row="1" Grid.Column="0" BorderThickness="1 0.5 0.5 1" Style="{StaticResource TextBoxTable}" Text="{Binding Task.Code, UpdateSourceTrigger=PropertyChanged}"/>
+                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource BorderTable}">
+                    <TextBlock  Text="Заказчик" Style="{StaticResource HeaderTable}"/>
+                </Border>
+                <ComboBox Grid.Row="1" Grid.Column="1" Style="{StaticResource ComboBoxTable}"
+                          ItemsSource="{Binding Customers, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem ="{Binding Task.Customer, UpdateSourceTrigger=PropertyChanged}"/>
+                <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource BorderTable}">
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Тип КО" Style="{StaticResource HeaderTable}"/>
+                </Border>
+                <ComboBox Grid.Row="1" Grid.Column="2" Style="{StaticResource ComboBoxTable}"
+                          ItemsSource="{Binding TypesCO, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem ="{Binding Task.TypeCO, UpdateSourceTrigger=PropertyChanged}"/>
+                <Border Grid.Row="0" Grid.Column="3" Style="{StaticResource BorderTable}">
+                    <TextBlock Text="Стадия" Style="{StaticResource HeaderTable}"/>
+                </Border>
+                <ComboBox Grid.Row="1" Grid.Column="3" Style="{StaticResource ComboBoxTable}"
+                          ItemsSource="{Binding Stages, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem ="{Binding Task.Stage, UpdateSourceTrigger=PropertyChanged}"/>
+                <Border Grid.Row="0" Grid.Column="4" Style="{StaticResource BorderTable}">
+                    <TextBlock  Text="Класс автоматизации" Style="{StaticResource HeaderTable}"/>
+                </Border>
+                <ComboBox Grid.Row="1" Grid.Column="4" Style="{StaticResource ComboBoxTable}"
+                          ItemsSource="{Binding Classes, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem ="{Binding Task.Class, UpdateSourceTrigger=PropertyChanged}"/>
+                <Border Grid.Row="0" Grid.Column="5" Style="{StaticResource BorderTable}">
+                    <TextBlock Text="Наименование проекта" Style="{StaticResource HeaderTable}"/>
+                </Border>
+                <TextBox Grid.Row="1" Grid.Column="5" Style="{StaticResource TextBoxTable}" Text="{Binding FirstLevelTree.Item[0].Name, UpdateSourceTrigger=PropertyChanged}"/>
+                <Border Grid.Row="0" Grid.Column="6" BorderThickness="0.5 1 1 0.5" Style="{StaticResource BorderTable}">
+                    <TextBlock Text="Объект" Style="{StaticResource HeaderTable}"/>
+                </Border>
+                <TextBox Grid.Row="1" Grid.Column="6" BorderThickness="0.5 0.5 1 1" Style="{StaticResource TextBoxTable}" Text="{Binding Task.Object, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
             <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource border}"  Margin="0 5 5 0" Padding="10 5">
                 <Border.Resources>
                     <Style x:Key="selectTemplate" TargetType="ContentControl">

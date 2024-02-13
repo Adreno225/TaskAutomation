@@ -29,4 +29,9 @@ public class Sheet
         _Worksheet.Columns[numCol].Width = width;
     }
 
+    public void SetAutosizeHeightRow(int numRow)
+    {
+        _Worksheet.Rows[numRow].CustomHeight = false;
+    }
+
 }

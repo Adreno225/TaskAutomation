@@ -34,14 +34,24 @@ public class Parameter:SimpleModel2
     }
     #endregion
 
-    #region Режим 
-    private string _Mode = "";
-    public string Mode
+    #region Местное изменение 
+    private bool _IsManualMeasure;
+    public bool IsManualMeasure
     {
-        get => _Mode;
-        set => Set(ref _Mode, value);
+        get => _IsManualMeasure;
+        set => Set(ref _IsManualMeasure, value);
     }
     #endregion
+
+    #region Местное изменение 
+    private bool _IsRemoteMeasure;
+    public bool IsRemoteMeasure
+    {
+        get => _IsRemoteMeasure;
+        set => Set(ref _IsRemoteMeasure, value);
+    }
+    #endregion
+
 
     #region Диапазон измерения 
     private string _RangeMeasure = "";

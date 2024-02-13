@@ -9,18 +9,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Infrastructure\ExtensionMethods\**" />
     <Compile Remove="Infrastructure\TemplateSelectors\**" />
     <Compile Remove="Tasks\**" />
+    <EmbeddedResource Remove="Infrastructure\ExtensionMethods\**" />
     <EmbeddedResource Remove="Infrastructure\TemplateSelectors\**" />
     <EmbeddedResource Remove="Tasks\**" />
+    <None Remove="Infrastructure\ExtensionMethods\**" />
     <None Remove="Infrastructure\TemplateSelectors\**" />
     <None Remove="Tasks\**" />
+    <Page Remove="Infrastructure\ExtensionMethods\**" />
     <Page Remove="Infrastructure\TemplateSelectors\**" />
     <Page Remove="Tasks\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Infrastructure\ExtensionMethods\CollectionBaseModel.cs" />
     <Compile Remove="Models\ParametersArea.cs" />
     <Compile Remove="ViewModels\MainWindowViewModelNamespace\AreaTemplate.cs" />
     <Compile Remove="ViewModels\MainWindowViewModelNamespace\BaseTemplate.cs" />
@@ -40,10 +43,6 @@
 
   <ItemGroup>
     <Resource Include="Views\Windows\Logo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Infrastructure\ExtensionMethods\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -45,14 +45,14 @@ public class DbInitializer
 
     public async Task InitializeAsync()
     {
-        //var timer = Stopwatch.StartNew();
-        //_logger.LogInformation("Инициализация БД...");
-        //_logger.LogInformation("Удаление существующей БД...");
-        //await _db.Database.EnsureDeletedAsync().ConfigureAwait(false);
-        //_logger.LogInformation(MessageDeleteDB, timer.ElapsedMilliseconds);
-        //_logger.LogInformation("Миграция БД...");
-        //await _db.Database.MigrateAsync().ConfigureAwait(false);
-        //_logger.LogInformation(MessageMigrationDB, timer.ElapsedMilliseconds);
+        var timer = Stopwatch.StartNew();
+        _logger.LogInformation("Инициализация БД...");
+        _logger.LogInformation("Удаление существующей БД...");
+        await _db.Database.EnsureDeletedAsync().ConfigureAwait(false);
+        _logger.LogInformation(MessageDeleteDB, timer.ElapsedMilliseconds);
+        _logger.LogInformation("Миграция БД...");
+        await _db.Database.MigrateAsync().ConfigureAwait(false);
+        _logger.LogInformation(MessageMigrationDB, timer.ElapsedMilliseconds);
         if (await _db.Classes.AnyAsync()) return;
         using (var excel = new Package(_pathInitializator))
         {
@@ -66,7 +66,7 @@ public class DbInitializer
             await WriteColumnParameter(excel);
             await WriteDataMainTableParameter(excel);
         }
-        //_logger.LogInformation(MessageInitializationDB, timer.Elapsed.TotalSeconds);
+        _logger.LogInformation(MessageInitializationDB, timer.Elapsed.TotalSeconds);
     }
 
     private async Task WriteColumn<T>(Package package, int numSheet, Func <Sheet,int, string> func) where T : NamedEntity, new()

@@ -35,6 +35,12 @@ public class BaseRange
         return this;
     }
 
+    public BaseRange SetTopVAlign()
+    {
+        _ExcelRange.Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Top;
+        return this;
+    }
+
     public BaseRange SetBorder()
     {
         _ExcelRange.Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);

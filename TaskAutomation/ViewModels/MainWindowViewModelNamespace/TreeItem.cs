@@ -6,7 +6,7 @@ namespace TaskAutomation.ViewModels.MainWindowViewModelNamespace;
 
 public abstract class TreeItem : ViewModel<object>, ITreeItem
 {
-    private string _Name;
+    protected string _Name;
     public virtual string Name
     {
         get => _Name;
