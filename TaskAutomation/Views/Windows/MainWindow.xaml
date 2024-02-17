@@ -151,7 +151,7 @@
                 </Border>
                 <TextBox Grid.Row="1" Grid.Column="5" Style="{StaticResource TextBoxTable}" Text="{Binding FirstLevelTree.Item[0].Name, UpdateSourceTrigger=PropertyChanged}"/>
                 <Border Grid.Row="0" Grid.Column="6" BorderThickness="0.5 1 1 0.5" Style="{StaticResource BorderTable}">
-                    <TextBlock Text="Объект" Style="{StaticResource HeaderTable}"/>
+                    <TextBlock Text="Объект проектирования" Style="{StaticResource HeaderTable}"/>
                 </Border>
                 <TextBox Grid.Row="1" Grid.Column="6" BorderThickness="0.5 0.5 1 1" Style="{StaticResource TextBoxTable}" Text="{Binding Task.Object, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>

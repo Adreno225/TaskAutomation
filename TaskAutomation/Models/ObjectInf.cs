@@ -6,7 +6,7 @@ namespace TaskAutomation.Models;
 
 public class ObjectInf:SimpleModel
 {
-    private const string Text = "Объект";
+    private const string Text = "Сооружение";
 
     #region Подобъекты 
     private ObservableCollection<string> _Subobjects = new();
