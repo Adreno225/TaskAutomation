@@ -340,7 +340,13 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Тип сооружения: "/>
-                <ComboBox Grid.Column="1" Margin="5 0 0 0" ItemsSource="{Binding TypesObjects}" SelectedItem="{Binding SelectedTypeObject}"/>
+                <ComboBox Grid.Column="1" Margin="5 0 0 0" 
+                      ItemsSource="{Binding TypesObjects}" 
+                      SelectedItem="{Binding SelectedTypeObject}"
+                      IsTextSearchEnabled="True"
+                      TextSearch.TextPath="."
+                      IsEditable="True"
+                      StaysOpenOnEdit="True"/>
             </Grid>
             <ContentControl Grid.Row="1" ContentTemplate="{StaticResource nameGroup}"/>
             <ContentControl Grid.Row="2" ContentTemplate="{StaticResource tableObject}"/>
