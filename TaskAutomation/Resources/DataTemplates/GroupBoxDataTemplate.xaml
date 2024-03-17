@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:models="clr-namespace:TaskAutomation.Models"
                     xmlns:vm ="clr-namespace:TaskAutomation.ViewModels"
+                    xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
                     xmlns:conv="clr-namespace:TaskAutomation.Infrastructure.Converters"
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                     xmlns:beh="clr-namespace:TaskAutomation.Infrastructure.Behaviours"
@@ -75,6 +76,8 @@
     <!--Шаблон поведения листбокса-->
     <DataTemplate x:Key="listBoxControl">
         <ListBox DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
+            dd:DragDrop.IsDragSource="True"
+            dd:DragDrop.IsDropTarget="True"
             Style="{StaticResource actualList}">
             <i:Interaction.Behaviors>
                 <beh:ListBoxBehavior SelectedItem="{Binding SelectedItem}"/>
@@ -228,6 +231,8 @@
     <!--Таблица сигнализаций-->
     <DataTemplate x:Key="tableSignalings">
         <DataGrid ItemsSource="{Binding Items}"
+                  dd:DragDrop.IsDragSource="True"
+                  dd:DragDrop.IsDropTarget="True"
                   Margin="10 5 5 10"
                   RowHeight="20"
                   MinHeight="110"
@@ -247,6 +252,8 @@
     <!--Таблица алгоритмов-->
     <DataTemplate x:Key="tableAlgorithms">
         <DataGrid ItemsSource="{Binding Items}"
+                  dd:DragDrop.IsDragSource="True"
+                  dd:DragDrop.IsDropTarget="True"
                   Margin="10 5 5 10"
                   RowHeight="20" 
                   VerticalScrollBarVisibility="Auto"
@@ -341,12 +348,12 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Тип сооружения: "/>
                 <ComboBox Grid.Column="1" Margin="5 0 0 0" 
-                  ItemsSource="{Binding TypesObjects}" 
-                  SelectedItem="{Binding SelectedTypeObject}"
-                  IsTextSearchEnabled="True"
-                  TextSearch.TextPath="."
-                  IsEditable="True"
-                  StaysOpenOnEdit="True"/>
+                      ItemsSource="{Binding TypesObjects}" 
+                      SelectedItem="{Binding SelectedTypeObject}"
+                      IsTextSearchEnabled="True"
+                      TextSearch.TextPath="."
+                      IsEditable="True"
+                      StaysOpenOnEdit="True"/>
             </Grid>
             <ContentControl Grid.Row="1" ContentTemplate="{StaticResource nameGroup}"/>
             <ContentControl Grid.Row="2" ContentTemplate="{StaticResource tableObject}"/>
