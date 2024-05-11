@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelLib", "ExcelLib\ExcelL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskAutomationDB", "TaskAutomationDB\TaskAutomationDB.csproj", "{DB87614D-A280-4D37-95B0-4747AED190A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskAutomationInterfaces", "TaskAutomationInterfaces\TaskAutomationInterfaces.csproj", "{222FE7B0-40A9-47A5-9E79-AE5CE7848A0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskAutomationInterfaces", "TaskAutomationInterfaces\TaskAutomationInterfaces.csproj", "{222FE7B0-40A9-47A5-9E79-AE5CE7848A0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{71F27E5E-D118-4AD2-ADAB-EFEE06F70AF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,12 @@ Global
 		{222FE7B0-40A9-47A5-9E79-AE5CE7848A0E}.Proj|Any CPU.Build.0 = Debug|Any CPU
 		{222FE7B0-40A9-47A5-9E79-AE5CE7848A0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{222FE7B0-40A9-47A5-9E79-AE5CE7848A0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71F27E5E-D118-4AD2-ADAB-EFEE06F70AF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71F27E5E-D118-4AD2-ADAB-EFEE06F70AF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71F27E5E-D118-4AD2-ADAB-EFEE06F70AF3}.Proj|Any CPU.ActiveCfg = Debug|Any CPU
+		{71F27E5E-D118-4AD2-ADAB-EFEE06F70AF3}.Proj|Any CPU.Build.0 = Debug|Any CPU
+		{71F27E5E-D118-4AD2-ADAB-EFEE06F70AF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71F27E5E-D118-4AD2-ADAB-EFEE06F70AF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

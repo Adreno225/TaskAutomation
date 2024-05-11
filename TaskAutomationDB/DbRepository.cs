@@ -4,21 +4,31 @@ using TaskAutomationDB.Entities;
 using TaskAutomationInterfaces;
 
 namespace TaskAutomationDB;
-
+/// <summary>
+/// Реализация репозиотрия БД
+/// </summary>
+/// <typeparam name="T">Тип элементов репозитория</typeparam>
 internal class DbRepository<T> : IRepository<T> where T : Entity, new()
 {
     private readonly TaskAutomationContext _db;
     private readonly DbSet<T> _set;
-
+    /// <summary>
+    /// Автосохранение изменений
+    /// </summary>
     public bool AutoSaveChanges { get; set; } = true;
-
+    /// <summary>
+    /// Конструктор репозитория
+    /// </summary>
+    /// <param name="db">Контекст БД</param>
     public DbRepository(TaskAutomationContext db)
     {
         _db = db;
         _set = db.Set<T>();
     }
 
-    public virtual IQueryable<T> Items { get => _set; }
+    public virtual IQueryable<T> Items => _set;
+
+    public T[] ItemsArray => _set.ToArray();
 
     public T Add(T item)
     {

@@ -1,6 +1,4 @@
-﻿using TaskAutomation.Models;
-
-namespace TaskAutomation.ViewModels.MainWindowViewModelNamespace;
+﻿namespace TaskAutomation.ViewModels.MainWindowViewModelNamespace;
 
 public class TableOneRow<T> where T : class, IItem
 {

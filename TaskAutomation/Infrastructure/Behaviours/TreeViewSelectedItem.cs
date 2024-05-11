@@ -3,7 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using TaskAutomation.ViewModels;
-using TaskAutomation.ViewModels.MainWindowViewModelNamespace;
+using TaskAutomation.ViewModels.SubClasses;
+using TaskAutomation.ViewModels.TreeItems;
 
 namespace TaskAutomation.Infrastructure.Behaviours;
 

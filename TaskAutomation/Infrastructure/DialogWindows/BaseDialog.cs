@@ -5,5 +5,4 @@ namespace TaskAutomation.Infrastructure.DialogWindows;
 public abstract class BaseDialog
 {
     protected FileDialog _FileDialog;
-
 }

@@ -6,6 +6,9 @@ namespace TaskAutomation;
 
 public static class Program
 {
+    /// <summary>
+    /// Точка входа в приложение
+    /// </summary>
     [STAThread]
     public static void Main()
     {
@@ -13,7 +16,11 @@ public static class Program
         app.InitializeComponent();
         app.Run();
     }
-
+    /// <summary>
+    /// Создание хоста приложения
+    /// </summary>
+    /// <param name="Args">Аргументы хоста</param>
+    /// <returns>Хост приложения</returns>
     public static IHostBuilder CreateHostBuilder(string[] Args)
     {
         var host_builder = Host.CreateDefaultBuilder(Args);

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using TaskAutomation.Models.Base;
+using TaskAutomation.ViewModels.MainWindowViewModelNamespace;
 
 namespace TaskAutomation.Models;
 

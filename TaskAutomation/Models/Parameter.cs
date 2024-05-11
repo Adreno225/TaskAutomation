@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TaskAutomation.Models.Base;
+using TaskAutomation.ViewModels.MainWindowViewModelNamespace;
 
 namespace TaskAutomation.Models;
 
@@ -98,4 +99,5 @@ public class Parameter:SimpleModel2
     #endregion
 
     public Parameter(): base(Text) { }
+
 }

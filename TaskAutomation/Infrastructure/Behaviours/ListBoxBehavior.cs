@@ -36,7 +36,7 @@ public class ListBoxBehavior: Behavior<ListBox>
         {
             var vM = App.Host.Services.GetRequiredService<MainWindowViewModel>();
             var actTreeItem = vM.SelectedTreeViewItem;
-            vM.SelectedTreeViewItem = actTreeItem.Items.Single(x => x == selItem);
+            vM.SelectedTreeViewItem = actTreeItem.ListGroup.Items.Single(x => x == selItem);
         } 
     }
 }

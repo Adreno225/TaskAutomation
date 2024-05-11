@@ -11,26 +11,46 @@
   <ItemGroup>
     <Compile Remove="Infrastructure\ExtensionMethods\**" />
     <Compile Remove="Infrastructure\TemplateSelectors\**" />
+    <Compile Remove="Models\Base\**" />
+    <Compile Remove="Models\Interfaces\**" />
+    <Compile Remove="Resources\ObjectDataProviders\**" />
     <Compile Remove="Tasks\**" />
     <EmbeddedResource Remove="Infrastructure\ExtensionMethods\**" />
     <EmbeddedResource Remove="Infrastructure\TemplateSelectors\**" />
+    <EmbeddedResource Remove="Models\Base\**" />
+    <EmbeddedResource Remove="Models\Interfaces\**" />
+    <EmbeddedResource Remove="Resources\ObjectDataProviders\**" />
     <EmbeddedResource Remove="Tasks\**" />
     <None Remove="Infrastructure\ExtensionMethods\**" />
     <None Remove="Infrastructure\TemplateSelectors\**" />
+    <None Remove="Models\Base\**" />
+    <None Remove="Models\Interfaces\**" />
+    <None Remove="Resources\ObjectDataProviders\**" />
     <None Remove="Tasks\**" />
     <Page Remove="Infrastructure\ExtensionMethods\**" />
     <Page Remove="Infrastructure\TemplateSelectors\**" />
+    <Page Remove="Models\Base\**" />
+    <Page Remove="Models\Interfaces\**" />
+    <Page Remove="Resources\ObjectDataProviders\**" />
     <Page Remove="Tasks\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Area.cs" />
+    <Compile Remove="Models\ObjectInf.cs" />
+    <Compile Remove="Models\Parameter.cs" />
     <Compile Remove="Models\ParametersArea.cs" />
-    <Compile Remove="ViewModels\MainWindowViewModelNamespace\AreaTemplate.cs" />
-    <Compile Remove="ViewModels\MainWindowViewModelNamespace\BaseTemplate.cs" />
-    <Compile Remove="ViewModels\MainWindowViewModelNamespace\ObjectTemplate.cs" />
-    <Compile Remove="ViewModels\MainWindowViewModelNamespace\ParametersAreaTemplate.cs" />
-    <Compile Remove="ViewModels\MainWindowViewModelNamespace\ParameterTemplate.cs" />
-    <Compile Remove="ViewModels\MainWindowViewModelNamespace\TaskTemplate.cs" />
+    <Compile Remove="Models\Subobject.cs" />
+    <Compile Remove="Models\TaskClass.cs" />
+    <Compile Remove="ViewModels\SubClasses\AreaTemplate.cs" />
+    <Compile Remove="ViewModels\SubClasses\BaseTemplate.cs" />
+    <Compile Remove="ViewModels\SubClasses\CreatorTreeItem.cs" />
+    <Compile Remove="ViewModels\SubClasses\MainTreeItem.cs" />
+    <Compile Remove="ViewModels\SubClasses\ObjectTemplate.cs" />
+    <Compile Remove="ViewModels\SubClasses\ParametersAreaTemplate.cs" />
+    <Compile Remove="ViewModels\SubClasses\ParameterTemplate.cs" />
+    <Compile Remove="ViewModels\SubClasses\TableOneRow.cs" />
+    <Compile Remove="ViewModels\SubClasses\TaskTemplate.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +66,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="gong-wpf-dragdrop" Version="3.2.1" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="4.11.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.15" />
@@ -55,6 +76,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
   </ItemGroup>
 

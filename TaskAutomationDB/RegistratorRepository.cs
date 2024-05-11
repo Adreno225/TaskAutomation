@@ -6,6 +6,11 @@ namespace TaskAutomationDB;
 
 public static class RegistratorRepository
 {
+    /// <summary>
+    /// Рестрация репозиториев БД
+    /// </summary>
+    /// <param name="services">Коллекция сервисов</param>
+    /// <returns>Коллекция сервисов</returns>
     public static IServiceCollection AddRepositoriesInDB(this IServiceCollection services) => services
         .AddTransient<IRepository<Class>, DbRepository<Class>>()
         .AddTransient<IRepository<Stage>, DbRepository<Stage>>()

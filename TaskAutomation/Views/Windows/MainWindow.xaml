@@ -6,9 +6,9 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:conv="clr-namespace:TaskAutomation.Infrastructure.Converters"
         xmlns:vm ="clr-namespace:TaskAutomation.ViewModels"
-        xmlns:models="clr-namespace:TaskAutomation.Models"
+        xmlns:tree ="clr-namespace:TaskAutomation.ViewModels.TreeItems"
         xmlns:beh="clr-namespace:TaskAutomation.Infrastructure.Behaviours"
-        xmlns:mainWindowViewModelNamespace="clr-namespace:TaskAutomation.ViewModels.MainWindowViewModelNamespace"
+        xmlns:mainWindowViewModelNamespace="clr-namespace:TaskAutomation.ViewModels.SubClasses"
         mc:Ignorable="d"
         Title="Задание на автоматизацию"
         MinHeight="720"
@@ -47,8 +47,8 @@
                             <Setter Property="FontSize" Value="12"/>
                         </Style>
                     </Menu.Resources>
-                    <MenuItem Header="Сохранить проект"></MenuItem>
-                    <MenuItem Header="Загрузить проект"></MenuItem>
+                    <MenuItem Header="Сохранить проект" Command="{Binding SaveDataCommand}"></MenuItem>
+                    <MenuItem Header="Загрузить проект" Command="{Binding LoadDataCommand}"></MenuItem>
                     <MenuItem Command="{Binding SetDefaultSettingsCommand}" Header="Сброс данных"></MenuItem>
                 </Menu>
             </StackPanel>
@@ -73,32 +73,37 @@
                     <Style x:Key="treeTexblock" TargetType="TextBlock">
                         <Setter Property="MinWidth" Value="50"/>
                     </Style>
-                    <DataTemplate x:Key="treeParameter" DataType="models:Parameter">
+                    <DataTemplate x:Key="treeParameter" DataType="tree:ParameterTreeItem">
                         <TextBlock Style="{StaticResource treeTexblock}" Text="{Binding Name}"/>
                     </DataTemplate>
-                    <HierarchicalDataTemplate x:Key="treeObject" DataType="models:Object"
-                                  ItemsSource="{Binding Parameters}"
+                    <HierarchicalDataTemplate x:Key="treeSub" DataType="tree:SubTreeItemCOParameters"
+                                  ItemsSource="{Binding ListGroup.Items}"
                                   ItemTemplate="{StaticResource treeParameter}">
                         <TextBlock Style="{StaticResource treeTexblock}" Text="{Binding Name}"/>
                     </HierarchicalDataTemplate>
-                    <HierarchicalDataTemplate x:Key="treeArea"  DataType="models:Area"
-                              ItemsSource="{Binding ObjectsParameters}"
-                              ItemTemplate="{StaticResource treeObject}">
+                    <HierarchicalDataTemplate x:Key="treeObject" DataType="tree:ObjectTreeItem"
+                                  ItemsSource="{Binding ListGroup.Items}"
+                                  ItemTemplate="{StaticResource treeParameter}">
                         <TextBlock Style="{StaticResource treeTexblock}" Text="{Binding Name}"/>
                     </HierarchicalDataTemplate>
-                    <HierarchicalDataTemplate x:Key="treeTask" DataType="models:Task"
-                              ItemsSource="{Binding Areas}"
-                              ItemTemplate="{StaticResource treeArea}">
+                    <HierarchicalDataTemplate x:Key="treeArea"  DataType="tree:AreaTreeItem"
+                              ItemsSource="{Binding ListGroup.Items}"
+                              >
                         <TextBlock Style="{StaticResource treeTexblock}" Text="{Binding Name}"/>
+                    </HierarchicalDataTemplate>
+                    <HierarchicalDataTemplate x:Key="treeTask" DataType="tree:ComplexObjectTreeItem"
+                              ItemsSource="{Binding ListGroup.Items}"
+                              >
+                        <TextBlock Style="{StaticResource treeTexblock}" Text="{Binding MainWindowViewModel.MainDataProject.Object, Source={StaticResource Locator}}"/>
                     </HierarchicalDataTemplate>
                 </Border.Resources>
-                <TreeView x:Name="MainTree" Margin="5" BorderThickness="0" ItemsSource="{Binding FirstLevelTree.Item}">
+                <TreeView x:Name="MainTree" Margin="5" BorderThickness="0" ItemsSource="{Binding Tasks}">
                     <i:Interaction.Behaviors>
                         <beh:TreeViewSelectedItem SelectedItem="{Binding SelectedTreeViewItem, Mode=TwoWay}"/>
                     </i:Interaction.Behaviors>
                     <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate  DataType="mainWindowViewModelNamespace:TreeItem"
-                              ItemsSource="{Binding Items}">
+                        <HierarchicalDataTemplate  DataType="tree:ComplexObjectTreeItem"
+                              ItemsSource="{Binding ListGroup.Items}">
                             <TextBlock Style="{StaticResource treeTexblock}" Text="{Binding Name}" TextWrapping="Wrap"/>
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
@@ -121,39 +126,40 @@
                 <Border Grid.Row="0" Grid.Column="0" BorderThickness="1 1 0.5 0.5" Style="{StaticResource BorderTable}">
                     <TextBlock  Text="Шифр" Style="{StaticResource HeaderTable}"/>
                 </Border>
-                <TextBox Grid.Row="1" Grid.Column="0" BorderThickness="1 0.5 0.5 1" Style="{StaticResource TextBoxTable}" Text="{Binding Task.Code, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Row="1" Grid.Column="0" BorderThickness="1 0.5 0.5 1" Style="{StaticResource TextBoxTable}" Text="{Binding MainDataProject.Code, UpdateSourceTrigger=PropertyChanged}"/>
                 <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource BorderTable}">
                     <TextBlock  Text="Заказчик" Style="{StaticResource HeaderTable}"/>
                 </Border>
                 <ComboBox Grid.Row="1" Grid.Column="1" Style="{StaticResource ComboBoxTable}"
-                          ItemsSource="{Binding Customers, UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem ="{Binding Task.Customer, UpdateSourceTrigger=PropertyChanged}"/>
+                          ItemsSource="{Binding Repositories.RepositoryCustomers.ItemsArray, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem ="{Binding MainDataProject.Customer, UpdateSourceTrigger=PropertyChanged}"/>
                 <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource BorderTable}">
                     <TextBlock Grid.Row="0" Grid.Column="2" Text="Тип КО" Style="{StaticResource HeaderTable}"/>
                 </Border>
                 <ComboBox Grid.Row="1" Grid.Column="2" Style="{StaticResource ComboBoxTable}"
-                          ItemsSource="{Binding TypesCO, UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem ="{Binding Task.TypeCO, UpdateSourceTrigger=PropertyChanged}"/>
+                          ItemsSource="{Binding Repositories.RepositoryTypesCO.ItemsArray, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem ="{Binding MainDataProject.TypeCO, UpdateSourceTrigger=PropertyChanged}"/>
                 <Border Grid.Row="0" Grid.Column="3" Style="{StaticResource BorderTable}">
                     <TextBlock Text="Стадия" Style="{StaticResource HeaderTable}"/>
                 </Border>
                 <ComboBox Grid.Row="1" Grid.Column="3" Style="{StaticResource ComboBoxTable}"
-                          ItemsSource="{Binding Stages, UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem ="{Binding Task.Stage, UpdateSourceTrigger=PropertyChanged}"/>
+                          ItemsSource="{Binding Repositories.RepositoryStages.ItemsArray, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem ="{Binding MainDataProject.Stage, UpdateSourceTrigger=PropertyChanged}"/>
                 <Border Grid.Row="0" Grid.Column="4" Style="{StaticResource BorderTable}">
                     <TextBlock  Text="Класс автоматизации" Style="{StaticResource HeaderTable}"/>
                 </Border>
                 <ComboBox Grid.Row="1" Grid.Column="4" Style="{StaticResource ComboBoxTable}"
-                          ItemsSource="{Binding Classes, UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem ="{Binding Task.Class, UpdateSourceTrigger=PropertyChanged}"/>
+                          ItemsSource="{Binding Repositories.RepositoryClasses.ItemsArray, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem ="{Binding MainDataProject.Class, UpdateSourceTrigger=PropertyChanged}"/>
                 <Border Grid.Row="0" Grid.Column="5" Style="{StaticResource BorderTable}">
                     <TextBlock Text="Наименование проекта" Style="{StaticResource HeaderTable}"/>
                 </Border>
-                <TextBox Grid.Row="1" Grid.Column="5" Style="{StaticResource TextBoxTable}" Text="{Binding FirstLevelTree.Item[0].Name, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Row="1" Grid.Column="5" Style="{StaticResource TextBoxTable}" Text="{Binding MainDataProject.Name, UpdateSourceTrigger=PropertyChanged}"/>
                 <Border Grid.Row="0" Grid.Column="6" BorderThickness="0.5 1 1 0.5" Style="{StaticResource BorderTable}">
                     <TextBlock Text="Объект проектирования" Style="{StaticResource HeaderTable}"/>
                 </Border>
-                <TextBox Grid.Row="1" Grid.Column="6" BorderThickness="0.5 0.5 1 1" Style="{StaticResource TextBoxTable}" Text="{Binding Task.Object, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Row="1" Grid.Column="6" BorderThickness="0.5 0.5 1 1" Style="{StaticResource TextBoxTable}"
+                         Text="{Binding MainDataProject.ComplexObject.Name, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
             <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource border}"  Margin="0 5 5 0" Padding="10 5">
                 <Border.Resources>

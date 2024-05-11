@@ -1,7 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:models="clr-namespace:TaskAutomation.Models"
                     xmlns:vm ="clr-namespace:TaskAutomation.ViewModels"
+                    xmlns:tree ="clr-namespace:TaskAutomation.ViewModels.TreeItems"
+                    xmlns:lists ="clr-namespace:TaskAutomation.ViewModels.Lists" 
+                    xmlns:subs ="clr-namespace:TaskAutomation.ViewModels.SubClasses" 
                     xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
                     xmlns:conv="clr-namespace:TaskAutomation.Infrastructure.Converters"
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -34,7 +36,7 @@
     </Style>
     
     <!--Шаблон панелей кнопок-->
-    <DataTemplate x:Key="buttonsStackPanel" DataType="x:Type vm:ListGroup">
+    <DataTemplate x:Key="buttonsStackPanel" DataType="lists:ListGroup">
         <StackPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
             <Button Style="{StaticResource buttonStackPanel}" ToolTip="Добавить" Command="{Binding AddItemCommand}">+</Button>
             <Button Style="{StaticResource buttonStackPanel}" ToolTip="Удалить" Command="{Binding RemoveSelectedItemCommand}">-</Button>
@@ -46,7 +48,7 @@
     <DataTemplate x:Key="buttons2StackPanel" DataType="x:Type vm:ListGroup">
         <StackPanel DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}">
             <Button Style="{StaticResource buttonStackPanel}" ToolTip="Добавить площадку" Command="{Binding AddItemCommand}">+</Button>
-            <Button Style="{StaticResource buttonStackPanel}" ToolTip="Добавить объект" Command="{Binding AddItemCommand2}">+</Button>
+            <Button Style="{StaticResource buttonStackPanel}" ToolTip="Добавить сооружение" Command="{Binding AddItem2Command}">+</Button>
             <Button Style="{StaticResource buttonStackPanel}" ToolTip="Удалить" Command="{Binding RemoveSelectedItemCommand}">-</Button>
             <Button Style="{StaticResource buttonStackPanel}" ToolTip="Копировать" Command="{Binding CopySelectedItemCommand}"></Button>
         </StackPanel>
@@ -54,13 +56,13 @@
 
     <!--Стиль листбокса в шаблоне-->
     <Style TargetType="ListBox" x:Key="actualList">
-        <Setter Property="ItemsSource" Value="{Binding DataContext.OutputTreeItems, RelativeSource={RelativeSource Mode=Self} }"/>
+        <Setter Property="ItemsSource" Value="{Binding DataContext.Items, RelativeSource={RelativeSource Mode=Self} }"/>
         <Setter Property="SelectedItem" Value="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource Mode=Self}}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Margin" Value="10 5 5 10"/>
         <Setter Property="ItemTemplate">
             <Setter.Value>
-                <DataTemplate DataType="models:BaseModel">
+                <DataTemplate DataType="tree:TreeItem">
                     <TextBlock Text="{Binding Name}"/>
                 </DataTemplate>
             </Setter.Value>
@@ -164,53 +166,73 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="90"/>
                 <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="80"/>
-                <ColumnDefinition Width="80"/>
-                <ColumnDefinition Width="80"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="90"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Row="0" Grid.Column="0" BorderThickness="1 1 0.5 0.5" Style="{StaticResource BorderTable}">
                 <TextBlock  Text="Измеримость" Style="{StaticResource HeaderTable}"/>
             </Border>
             <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource BorderCheckBoxTable}">
-                <CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding Object.IsControl}" Style="{StaticResource CheckBoxTable}"/>
+                <CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding IsControl}" Style="{StaticResource CheckBoxTable}"/>
             </Border>
             <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource BorderTable}">
                 <TextBlock  Text="ПАЗ" Style="{StaticResource HeaderTable}"/>
             </Border>
             <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource BorderCheckBoxTable}">
-                <CheckBox  IsChecked="{Binding Object.ESD}" Style="{StaticResource CheckBoxTable}"/>
+                <CheckBox  IsChecked="{Binding ESD}" Style="{StaticResource CheckBoxTable}"/>
             </Border>
             <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource BorderTable}">
-                <TextBlock  Text="Местн. изм." Style="{StaticResource HeaderTable}"/>
-            </Border>
-            <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource BorderCheckBoxTable}">
-                <CheckBox  IsChecked="{Binding Object.IsManualMeasure}" Style="{StaticResource CheckBoxTable}"/>
-            </Border>
-            <Border Grid.Row="0" Grid.Column="3" Style="{StaticResource BorderTable}">
-                <TextBlock  Text="Дист. изм." Style="{StaticResource HeaderTable}"/>
-            </Border>
-            <Border Grid.Row="1" Grid.Column="3" Style="{StaticResource BorderCheckBoxTable}">
-                <CheckBox IsChecked="{Binding Object.IsRemoteMeasure}" Style="{StaticResource CheckBoxTable}"/>
-            </Border>
-            <Border Grid.Row="0" Grid.Column="4" Style="{StaticResource BorderTable}">
                 <TextBlock  Text="Ед. изм." Style="{StaticResource HeaderTable}"/>
             </Border>
-            <TextBox Grid.Row="1" Grid.Column="4" Style="{StaticResource TextBoxTable}" Text="{Binding Object.Unit, UpdateSourceTrigger=PropertyChanged}"/>
-            <Border Grid.Row="0" Grid.Column="5" Style="{StaticResource BorderTable}">
-                <TextBlock  Text="Диапазон изм." Style="{StaticResource HeaderTable}"/>
+            <TextBox Grid.Row="1" Grid.Column="2" Style="{StaticResource TextBoxTable}" 
+                     Text="{Binding Unit, UpdateSourceTrigger=PropertyChanged}"/>
+            <Border Grid.Row="0" Grid.Column="3" Style="{StaticResource BorderTable}">
+                <TextBlock  Text="Местн. измерение" Style="{StaticResource HeaderTable}"/>
             </Border>
-            <TextBox Grid.Row="1" Grid.Column="5" Style="{StaticResource TextBoxTable}" Text="{Binding Object.RangeMeasure, UpdateSourceTrigger=PropertyChanged}"/>
-            <Border Grid.Row="0" Grid.Column="6" Style="{StaticResource BorderTable}">
+            <Grid Grid.Row="1" Grid.Column="3" DataContext="{Binding ManualMeasure}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource BorderTable}">
+                    <CheckBox  IsChecked="{Binding IsMeasurable}" Style="{StaticResource CheckBoxTable}"/>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource BorderTable}">
+                    <TextBox BorderThickness="0.5 0.5 1 1" Style="{StaticResource TextBoxTable}"
+                             Text="{Binding Range, UpdateSourceTrigger=PropertyChanged}" ToolTip="Введите диапазон измерения"
+                             IsEnabled="{Binding IsMeasurable}"/>
+                </Border>
+            </Grid>
+            <Border Grid.Row="0" Grid.Column="4" Style="{StaticResource BorderTable}">
+                <TextBlock  Text="Дист. измерение" Style="{StaticResource HeaderTable}"/>
+            </Border>
+            <Grid Grid.Row="1" Grid.Column="4" DataContext="{Binding RemoteMeasure}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource BorderTable}">
+                    <CheckBox  IsChecked="{Binding IsMeasurable}" Style="{StaticResource CheckBoxTable}"/>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource BorderTable}">
+                    <TextBox BorderThickness="0.5 0.5 1 1" Style="{StaticResource TextBoxTable}"
+                             Text="{Binding Range, UpdateSourceTrigger=PropertyChanged}" ToolTip="Введите диапазон измерения"
+                             IsEnabled="{Binding IsMeasurable}"/>
+                </Border>
+            </Grid>
+            <Border Grid.Row="0" Grid.Column="5" Style="{StaticResource BorderTable}">
                 <TextBlock  Text="Расч. значение" Style="{StaticResource HeaderTable}"/>
             </Border>
-            <TextBox Grid.Row="1" Grid.Column="6" Style="{StaticResource TextBoxTable}" Text="{Binding Object.CalculatedValue, UpdateSourceTrigger=PropertyChanged}"/>
-            <Border Grid.Row="0" Grid.Column="7" BorderThickness="0.5 1 1 0.5" Style="{StaticResource BorderTable}">
+            <TextBox Grid.Row="1" Grid.Column="5" Style="{StaticResource TextBoxTable}"
+                     Text="{Binding CalculatedValue, UpdateSourceTrigger=PropertyChanged}"/>
+            <Border Grid.Row="0" Grid.Column="6" BorderThickness="0.5 1 1 0.5" Style="{StaticResource BorderTable}">
                 <TextBlock  Text="Примечание" Style="{StaticResource HeaderTable}"/>
             </Border>
-            <TextBox Grid.Row="1" Grid.Column="7" BorderThickness="0.5 0.5 1 1" Style="{StaticResource TextBoxTable}" Text="{Binding Object.Note, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="1" Grid.Column="6" BorderThickness="0.5 0.5 1 1" Style="{StaticResource TextBoxTable}"
+                     Text="{Binding Note, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
         <!--<DataGrid ItemsSource="{Binding TableParameter.Item}"
                   
@@ -240,10 +262,12 @@
                   DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentControl, Mode=FindAncestor}}"
                   SelectedItem="{Binding SelectedItem}">
             <DataGrid.Columns>
-                <DataGridComboBoxColumn Header="Тип сигнализации"  ItemsSource="{Binding Source={StaticResource EnumDataSourceTypeSignaling},UpdateSourceTrigger=PropertyChanged}"
+                <DataGridComboBoxColumn Header="Тип сигнализации"
                                         SelectedItemBinding="{Binding Type, UpdateSourceTrigger=PropertyChanged}" Width="120"/>
                 <DataGridTextColumn Header="Уставка сигнализации" Binding="{Binding SetPoint, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
-                <DataGridComboBoxColumn Header="Режим сигнализации"  ItemsSource="{Binding MainWindowViewModel.Modes, Source={StaticResource Locator},UpdateSourceTrigger=PropertyChanged}"
+                <DataGridComboBoxColumn Header="Режим сигнализации"
+                                        ItemsSource="{Binding MainWindowViewModel.Repositories.RepositoryModes.ItemsArray,
+                                            Source={StaticResource Locator},UpdateSourceTrigger=PropertyChanged}"
                                         SelectedItemBinding="{Binding Mode, UpdateSourceTrigger=PropertyChanged}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
@@ -316,7 +340,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <ContentControl Grid.Row="0" DataContext="{Binding Objects}" ContentTemplate="{StaticResource listBox2}"/>
+            <ContentControl Grid.Row="0" DataContext="{Binding ListGroup}" ContentTemplate="{StaticResource listBox2}"/>
         </Grid>
     </DataTemplate>
 
@@ -328,7 +352,7 @@
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <ContentControl Grid.Row="0" ContentTemplate="{StaticResource nameGroup}"/>
-            <ContentControl Grid.Row="1" DataContext="{Binding Objects}" ContentTemplate="{StaticResource listGrop}"/>
+            <ContentControl Grid.Row="1" DataContext="{Binding ListGroup}" ContentTemplate="{StaticResource listGrop}"/>
         </Grid>
     </DataTemplate>
 
@@ -348,7 +372,8 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Тип сооружения: "/>
                 <ComboBox Grid.Column="1" Margin="5 0 0 0" 
-                      ItemsSource="{Binding TypesObjects}" 
+                      ItemsSource="{Binding MainWindowViewModel.Repositories.RepositoryObjectsAutomation.ItemsArray,
+                            Source={StaticResource Locator}}" 
                       SelectedItem="{Binding SelectedTypeObject}"
                       IsTextSearchEnabled="True"
                       TextSearch.TextPath="."
@@ -357,7 +382,7 @@
             </Grid>
             <ContentControl Grid.Row="1" ContentTemplate="{StaticResource nameGroup}"/>
             <ContentControl Grid.Row="2" ContentTemplate="{StaticResource tableObject}"/>
-            <ContentControl Grid.Row="3" DataContext="{Binding Parameters}" ContentTemplate="{StaticResource listGrop}"/>
+            <ContentControl Grid.Row="3" DataContext="{Binding ListGroup}" ContentTemplate="{StaticResource listGrop}"/>
         </Grid>
     </DataTemplate>
 
@@ -367,7 +392,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <ContentControl Grid.Row="0" DataContext="{Binding Parameters}" ContentTemplate="{StaticResource listBox}"/>
+            <ContentControl Grid.Row="0" DataContext="{Binding ListGroup}" ContentTemplate="{StaticResource listBox}"/>
         </Grid>
     </DataTemplate>
 
@@ -382,8 +407,8 @@
             </Grid.RowDefinitions>
             <ContentControl Grid.Row="0" ContentTemplate="{StaticResource nameGroup}"/>
             <ContentControl Grid.Row="1" ContentTemplate="{StaticResource tableParameter}"/>
-            <ContentControl Grid.Row="2" DataContext="{Binding Signalings}" ContentTemplate="{StaticResource listSignalings}"/>
-            <ContentControl Grid.Row="3" DataContext="{Binding Algorithms}" ContentTemplate="{StaticResource listAlgorithms}"/>
+            <ContentControl Grid.Row="2" DataContext="{Binding ListSignalings}" ContentTemplate="{StaticResource listSignalings}"/>
+            <ContentControl Grid.Row="3" DataContext="{Binding ListAlgorithms}" ContentTemplate="{StaticResource listAlgorithms}"/>
         </Grid>
     </DataTemplate>
     

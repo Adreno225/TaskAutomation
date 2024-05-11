@@ -1,5 +1,4 @@
 ﻿using System;
-using TaskAutomation.Models;
 
 namespace TaskAutomation.ViewModels.MainWindowViewModelNamespace;
 
