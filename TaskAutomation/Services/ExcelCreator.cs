@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
-using TaskAutomation.Infrastructure.DialogWindows;
 using TaskAutomation.ViewModels;
 using TaskAutomation.ViewModels.SubClasses;
 using TaskAutomation.ViewModels.TreeItems;
@@ -53,17 +52,20 @@ public class ExcelCreator : ICreatorTask
     private static readonly Dictionary<object, int> _ColumnsSignalingsAlgs = new();
     private static int _EndColumn;
     private readonly IMainData _mainData;
+    private readonly IDialogService _dialogService;
+
     private IComplexObjectTreeItem TaskTreeItem => _mainData.ComplexObject;
 
-    public ExcelCreator(IMainData mainData)
+    public ExcelCreator(IMainData mainData, IDialogService dialogService)
     {
         _mainData = mainData;
+        _dialogService = dialogService;
     }
 
     public void Create()
     {
-        var dialog = new SaveDialog();
-        dialog.Save(MainMethod, filter: FiltersDialogWindow);
+        if (_dialogService.SaveFileDialog(FiltersDialogWindow))
+            MainMethod(_dialogService.FilePath);
     }
 
     private void MainMethod(string pathSave)

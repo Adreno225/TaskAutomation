@@ -24,11 +24,14 @@ public interface IMeasure: ICopy<IMeasure>
 /// </summary>
 public partial class Measure : ObservableObject, IMeasure
 {
+    private const bool DefaultIsMeasurable = false;
+    private const string DefaultRange = "";
+
     [ObservableProperty]
-    private bool _isMeasurable = false;
+    private bool _isMeasurable;
     [ObservableProperty]
-    private string _range = "";
-    public Measure() { }
+    private string _range;
+    public Measure():this(DefaultIsMeasurable,DefaultRange) { }
 
     [JsonConstructor]
     public Measure(bool isMeasurable, string range)

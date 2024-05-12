@@ -83,11 +83,7 @@ namespace TaskAutomation.ViewModels.Lists
         /// Контруктор базового класса списков
         /// </summary>
         /// <param name="text">Подпись над списком</param>
-        protected BaseGroup(string text)
-        {
-            Text = text;
-            Items = new ObservableCollection<TypeItems>();
-        }
+        protected BaseGroup(string text) : this(text, default, new()) { }
         /// <summary>
         /// Дополнительный конструктор
         /// </summary>

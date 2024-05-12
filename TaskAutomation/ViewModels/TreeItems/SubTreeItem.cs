@@ -1,4 +1,5 @@
-﻿using TaskAutomation.ViewModels.Lists;
+﻿using Newtonsoft.Json;
+using TaskAutomation.ViewModels.Lists;
 
 namespace TaskAutomation.ViewModels.TreeItems;
 /// <summary>
@@ -22,42 +23,52 @@ public abstract class SubTreeItem<Children, Parent> : TreeItem, ISubTreeItem<Chi
     /// Конструктор
     /// </summary>
     /// <param name="listGroup">Список элементов детей</param>
-    /// <param name="nameSubItem">Подпись наименования элемента</param>
-    public SubTreeItem(IListGroup<Children> listGroup, string nameSubItem) : base(nameSubItem, listGroup) { }
+    /// <param name="name">Подпись наименования элемента</param>
+    public SubTreeItem(string name, IListGroup listGroup) : base(name, listGroup) { }
 }
 /// <summary>
 /// Элемент дерева, представляющий параметры КО
 /// </summary>
 public class SubTreeItemCOParameters : SubTreeItem<IParameterTreeItem, IComplexObjectTreeItem>
 {
-    private const string NameSubItems = "Параметры КО";
+    private const string DefaultName = "Параметры КО";
     /// <summary>
-    /// Конструктор
+    /// Основной конструктор
     /// </summary>
     /// <param name="listGroup">Список параметров</param>
-    public SubTreeItemCOParameters(IListGroup<IParameterTreeItem> listGroup) : base(listGroup, NameSubItems) { }
+    public SubTreeItemCOParameters(IListGroup<IParameterTreeItem> listGroup) : this(DefaultName, listGroup) { }
 
-    public override ITreeItem Copy() => 
-        new SubTreeItemCOParameters((IListGroup<IParameterTreeItem>)ListGroup?.Copy()) 
-        { 
-            Name=Name
-        };
+    /// <summary>
+    /// Дополнительный конструктор
+    /// </summary>
+    /// <param name="name">Наименование подписи элемента дерева</param>
+    /// <param name="listGroup">Список элементов детей</param>
+    [JsonConstructor]
+    public SubTreeItemCOParameters(string name, IListGroup listGroup) : base(name, listGroup) { }
+
+    public override ITreeItem Copy() =>
+        new SubTreeItemCOParameters(Name,ListGroup?.Copy());
 }
 /// <summary>
 /// Элемент дерева, представляющий параметры площадки
 /// </summary>
 public class SubTreeItemAreaParameters : SubTreeItem<IParameterTreeItem, IAreaTreeItem>
 {
-    private const string NameSubItems = "Параметры площадки";
+    private const string DefaultName = "Параметры площадки";
     /// <summary>
     /// Конструктор
     /// </summary>
     /// <param name="listGroup">Список параметров</param>
-    public SubTreeItemAreaParameters(IListGroup<IParameterTreeItem> listGroup) : base(listGroup, NameSubItems) { }
+    public SubTreeItemAreaParameters(IListGroup<IParameterTreeItem> listGroup) : base(DefaultName, listGroup) { }
+
+    /// <summary>
+    /// Дополнительный конструктор
+    /// </summary>
+    /// <param name="name">Наименование подписи элемента дерева</param>
+    /// <param name="listGroup">Список элементов детей</param>
+    [JsonConstructor]
+    public SubTreeItemAreaParameters(string name, IListGroup listGroup) : base(name, listGroup) { }
 
     public override ITreeItem Copy() =>
-        new SubTreeItemAreaParameters((IListGroup<IParameterTreeItem>)ListGroup?.Copy())
-        {
-            Name = Name
-        };
+        new SubTreeItemAreaParameters(Name, ListGroup?.Copy());
 }

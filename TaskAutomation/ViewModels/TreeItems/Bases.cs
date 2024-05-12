@@ -35,11 +35,11 @@ public abstract partial class TreeItem : ObservableObject, ITreeItem
     /// <summary>
     /// Базовый конструктор
     /// </summary>
-    /// <param name="defaultName">Наименование элемента по умолчанию</param>
+    /// <param name="name">Наименование элемента</param>
     /// <param name="listGroup">Cписок вложенных элементов</param>
-    protected TreeItem(string defaultName, IListGroup listGroup)
+    protected TreeItem(string name, IListGroup listGroup)
     {
-        Name = defaultName;
+        Name = name;
         ListGroup = listGroup;
     }
     /// <summary>

@@ -24,16 +24,18 @@ public interface IAlgorithm: ICopy<IAlgorithm>
 /// </summary>
 public partial class Algorithm: ObservableObject, IAlgorithm
 {
+    private const string DefaultSetPoint = "";
+    private const string DefaultAction = "";
     #region Уставка
     [ObservableProperty]
-    private string _setPoint = "";
+    private string _setPoint;
     #endregion
 
     #region Действия
     [ObservableProperty]
-    private string _action = "";
+    private string _action;
 
-    public Algorithm() { }
+    public Algorithm():this(DefaultAction,DefaultSetPoint) { }
 
     [JsonConstructor]
     public Algorithm(string action, string setPoint)

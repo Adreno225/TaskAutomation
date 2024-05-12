@@ -36,23 +36,26 @@ public enum TypeSignaling
 /// </summary>
 public partial class Signaling : ObservableObject, ISignaling
 {
+    private const string DefaultMode = "";
+    private const string DefaultSetPoint = "";
+    private const TypeSignaling DefaultType = TypeSignaling.H;
 
     #region Режим
     [ObservableProperty]
-    private string _mode = "";
+    private string _mode;   
     #endregion
 
     #region Уставка
     [ObservableProperty]
-    private string _setPoint = "";
+    private string _setPoint;
     #endregion
 
     #region Тип 
     [ObservableProperty]
-    private TypeSignaling _type = TypeSignaling.H;
+    private TypeSignaling _type;
     #endregion
 
-    public Signaling() { }
+    public Signaling():this(DefaultMode,DefaultSetPoint,DefaultType) { }
 
     [JsonConstructor]
     public Signaling(string mode, string setPoint, TypeSignaling type)

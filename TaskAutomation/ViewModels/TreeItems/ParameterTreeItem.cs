@@ -66,6 +66,13 @@ public interface IParameterTreeItem: ITreeItem
 public partial class ParameterTreeItem : TreeItem, IParameterTreeItem
 {
     private const string DefaultName = "Параметр";
+    private const string DefaultUnit = "";
+    private const string DefualtCalculatedValue = "";
+    private const string DefaultRangeControl = "";
+    private const string DefaultNote = "";
+    private const bool DefaultIsControl = false;
+    private const bool DefaultESD = false;
+
     public ITableGroup<ISignaling> ListSignalings { get; }
     public ITableGroup<IAlgorithm> ListAlgorithms { get; }
     [JsonIgnore]
@@ -75,17 +82,17 @@ public partial class ParameterTreeItem : TreeItem, IParameterTreeItem
 
     #region Измеримость
     [ObservableProperty]
-    private bool _isControl = true;
+    private bool _isControl;
     #endregion
 
     #region Ед.изм.
     [ObservableProperty]
-    private string _unit = "";
+    private string _unit;
     #endregion
 
     #region ПАЗ
     [ObservableProperty]
-    private bool _ESD = false;
+    private bool _ESD;
     #endregion
 
     #region Местное изменение 
@@ -98,44 +105,63 @@ public partial class ParameterTreeItem : TreeItem, IParameterTreeItem
 
     #region Расчетное значение
     [ObservableProperty]
-    private string _calculatedValue = "";
+    private string _calculatedValue;
     #endregion
 
     #region Диапазон управления/регулирования
     [ObservableProperty]
-    private string _rangeControl = "";
+    private string _rangeControl;
     #endregion
 
     #region Примечание
     [ObservableProperty]
-    private string _note = "";
+    private string _note;
     #endregion
     /// <summary>
-    /// Конструктор
+    /// Основной конструктор
     /// </summary>
     /// <param name="manualMeasure">Местное измерение</param>
     /// <param name="remoteMeasure">Дистанционное измерение</param>
     /// <param name="listSignalings">Таблица сигнализаций</param>
     /// <param name="listAlgorithms">Таблица алгоритмов</param>
     public ParameterTreeItem(IMeasure manualMeasure, IMeasure remoteMeasure,
-        ITableGroup<ISignaling> listSignalings, ITableGroup<IAlgorithm> listAlgorithms) :base(DefaultName, null)
+        ITableGroup<ISignaling> listSignalings, ITableGroup<IAlgorithm> listAlgorithms) 
+        :this(DefaultName, manualMeasure,remoteMeasure,listSignalings,listAlgorithms,DefaultIsControl,
+             DefaultUnit,DefaultESD,DefualtCalculatedValue,DefaultRangeControl,DefaultNote) { }
+
+    /// <summary>
+    /// Дополнительный конструктор
+    /// </summary>
+    /// <param name="name">Наименование элемента дерева</param>
+    /// <param name="manualMeasure">Местное измерение</param>
+    /// <param name="remoteMeasure">Дистанционное измерение</param>
+    /// <param name="listSignalings">Таблица сигнализаций</param>
+    /// <param name="listAlgorithms">Таблица алгоритмов</param>
+    /// <param name="isControl">Требуется ли включать параметр в задание</param>
+    /// <param name="unit">Ед. изм.</param>
+    /// <param name="eSD">Относится ли параметр к системе ПАЗ</param>
+    /// <param name="calculatedValue">Расчетное значение</param>
+    /// <param name="rangeControl">Диапазон управления/регулирования</param>
+    /// <param name="note">Примечание</param>
+    [JsonConstructor]
+    public ParameterTreeItem(string name, IMeasure manualMeasure, IMeasure remoteMeasure,
+        ITableGroup<ISignaling> listSignalings, ITableGroup<IAlgorithm> listAlgorithms,
+        bool isControl, string unit, bool eSD, string calculatedValue, 
+        string rangeControl, string note): base(name, null)
     {
         ManualMeasure = manualMeasure;
         RemoteMeasure = remoteMeasure;
-        ListSignalings = listSignalings;
+        ListSignalings= listSignalings;
         ListAlgorithms = listAlgorithms;
+        IsControl = isControl;
+        Unit = unit;
+        ESD = eSD;
+        CalculatedValue = calculatedValue;
+        RangeControl = rangeControl;
+        Note = note;
     }
 
     public override ITreeItem Copy() =>
-        new ParameterTreeItem
-            (ManualMeasure.Copy(), RemoteMeasure.Copy(), ListSignalings.Copy(), ListAlgorithms.Copy())
-            {
-                Name = Name,
-                IsControl = IsControl,
-                Unit = Unit,
-                ESD = ESD,
-                CalculatedValue = CalculatedValue,
-                RangeControl = RangeControl,
-                Note = Note,
-            };
+        new ParameterTreeItem(Name, ManualMeasure.Copy(), RemoteMeasure.Copy(), ListSignalings.Copy(), 
+            ListAlgorithms.Copy(), IsControl, Unit, ESD, CalculatedValue, RangeControl, Note);
 }

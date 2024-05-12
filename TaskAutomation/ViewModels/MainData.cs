@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using TaskAutomation.Models;
 using TaskAutomation.Services;
 using TaskAutomation.ViewModels.TreeItems;
@@ -57,6 +56,9 @@ public interface IMainData: ICopy<IMainData>
 public partial class MainData : ObservableObject, IMainData
 {
     private const string DefaultNameObject = "Комплексный объект";
+    private const string DefaultCode = "";
+    private const string DefaultName = "";
+
     /// <summary>
     /// Сервис создания запросов
     /// </summary>
@@ -67,17 +69,17 @@ public partial class MainData : ObservableObject, IMainData
 
     #region Шифр
     [ObservableProperty]
-    private string _code = "";
+    private string _code;
     #endregion
 
     #region Наименование проекта
     [ObservableProperty]
-    private string _name = "";
+    private string _name;
     #endregion
 
     #region Объект
     [ObservableProperty]
-    private string _object = DefaultNameObject;
+    private string _object;
     #endregion
 
     #region Стадия
@@ -111,13 +113,13 @@ public partial class MainData : ObservableObject, IMainData
     public IComplexObjectTreeItem ComplexObject { get; set; }
     public void SetDefaultData(bool isReset)
     {
-        Code = "";
-        Name = "";
+        Code = DefaultCode;
+        Name = DefaultName;
         Object = DefaultNameObject;
         Class = _repositoryClasses.Get(2);
         Stage = _repositoryStages.Get(5);
-        Customer = null;
-        TypeCO = null;
+        Customer = default;
+        TypeCO = default;
         if (isReset)
             ComplexObject = App.Services.GetRequiredService<IComplexObjectTreeItem>();
     }

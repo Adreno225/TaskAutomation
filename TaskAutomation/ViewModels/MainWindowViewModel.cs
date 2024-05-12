@@ -22,7 +22,7 @@ public partial class MainWindowViewModel : ObservableObject
 {
     private readonly ICreatorTask _ExcelCreator;
 
-    private readonly IQueryCreator _QueryCreator;
+    public IQueryCreator QueryCreator { get; }
 
     #region Основные данные проекта
     /// <summary>
@@ -91,10 +91,8 @@ public partial class MainWindowViewModel : ObservableObject
 
     private void Initialize()
     {
-        if (Tasks.Count == 0)
-            Tasks.Add(MainDataProject.ComplexObject);
-        else
-            Tasks[0] = MainDataProject.ComplexObject;
+        Tasks.Clear();
+        Tasks.Add(MainDataProject.ComplexObject);
         SelectedTreeViewItem = Tasks[0];
         SelectTemplate();
     }
@@ -111,7 +109,7 @@ public partial class MainWindowViewModel : ObservableObject
 
     #region Загрузка данных
     [RelayCommand]
-    private void LoadData() { Serializer.LoadData(); }
+    private void LoadData() => Serializer.LoadData();
     #endregion
 
     /// <summary>
@@ -128,7 +126,7 @@ public partial class MainWindowViewModel : ObservableObject
         Repositories = projectRepositories;
         MainDataProject = mainDataProject;
         _ExcelCreator = creator;
-        _QueryCreator = queryCreator;
+        QueryCreator = queryCreator;
         Serializer = serializer;
         Initialize(); 
     }

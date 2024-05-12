@@ -14,6 +14,7 @@ public static class Registrator
         services.AddSingleton<ICreatorTask,ExcelCreator>();
         services.AddSingleton<IQueryCreator, QueryCreator>();
         services.AddSingleton<ISerializer, Serializer>();
+        services.AddTransient<IDialogService, DialogWindows>();
         return services;
     }
 }

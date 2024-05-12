@@ -12,7 +12,7 @@ namespace TaskAutomation.ViewModels.Lists
     {
         private const string TextAreasObjects = "Перечень технологических площадок, ОИ и параметров КО:";
         /// <summary>
-        /// Конструктор
+        /// Основной конструктор
         /// </summary>
         public ListGroupAreaObjects() : base(TextAreasObjects) { }
 
@@ -36,7 +36,7 @@ namespace TaskAutomation.ViewModels.Lists
     {
         private const string TextObjects = "Перечень ОИ:";
         /// <summary>
-        /// Конструктор
+        /// Основной конструктор
         /// </summary>
         public ListGroupObjects() : base(TextObjects) { }
 
@@ -59,7 +59,7 @@ namespace TaskAutomation.ViewModels.Lists
     {
         private const string TextParameters = "Перечень параметров";
         /// <summary>
-        /// Конструктор
+        /// Основной конструктор
         /// </summary>
         public LisGroupParameters() : base(TextParameters) { }
 

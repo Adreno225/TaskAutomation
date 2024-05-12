@@ -25,15 +25,17 @@ public interface IProduct: ICopy<IProduct>
 public partial class Product:ObservableObject, IProduct
 {
     private const string DefaultNameProduct = "Продукт";
+    private const string DefaultParameters = "";
+
     [ObservableProperty]
-    private string _name = DefaultNameProduct;
+    private string _name;
 
     #region Параметры среды 
     [ObservableProperty]
-    private string _parameters = "";
+    private string _parameters;
     #endregion
 
-    public Product() { }
+    public Product():this(DefaultNameProduct,DefaultParameters) { }
 
     [JsonConstructor]
     public Product(string name, string parameters)

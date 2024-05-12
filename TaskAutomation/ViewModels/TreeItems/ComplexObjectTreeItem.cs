@@ -29,10 +29,10 @@ public class ComplexObjectTreeItem : TreeItem, IComplexObjectTreeItem
     [JsonIgnore]
     public List<IParameterTreeItem> Parameters => DefineTypeObjects<IParameterTreeItem, ITreeItem>(ListGroup.Items[0].ListGroup.Items);
     /// <summary>
-    /// Конструктор
+    /// Основной конструктор
     /// </summary>
     /// <param name="listGroup">Список площадок/объектов</param>
-    public ComplexObjectTreeItem(IListGroup<IAreaTreeItem, IObjectTreeItem> listGroup) : base(DefaultName, listGroup) { }
+    public ComplexObjectTreeItem(IListGroup<IAreaTreeItem, IObjectTreeItem> listGroup) : this(DefaultName, listGroup) { }
     
     /// <summary>
     /// Дополнительный конструктор
@@ -40,8 +40,8 @@ public class ComplexObjectTreeItem : TreeItem, IComplexObjectTreeItem
     /// <param name="name">Наименование элемента дерева</param>
     /// <param name="listGroup">Список площадок/объектов</param>
     [JsonConstructor]
-    public ComplexObjectTreeItem(string name, IListGroup<IAreaTreeItem, IObjectTreeItem> listGroup) : base(name, listGroup) { }
+    public ComplexObjectTreeItem(string name, IListGroup listGroup) : base(name, listGroup) { }
 
     public override ITreeItem Copy() =>
-        new ComplexObjectTreeItem(Name,(IListGroup<IAreaTreeItem, IObjectTreeItem>)ListGroup?.Copy());
+        new ComplexObjectTreeItem(Name,ListGroup.Copy());
 }

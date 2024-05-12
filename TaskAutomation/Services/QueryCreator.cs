@@ -78,10 +78,8 @@ namespace TaskAutomation.Services
                 else
                     dictionary.Add(item.Parameter, new List<FunctionParameter>() { item.FunctionParameter });
             }
-            var parameters = objectTreeItem.Parameters;
             if (objectTreeItem.SelectedTypeObject is not null)
             {
-                parameters.Clear();
                 objectTreeItem.ListGroup.Items.Clear();
                 objectTreeItem.Name = objectTreeItem.SelectedTypeObject.Name;
                 foreach (var item in dictionary)
@@ -94,7 +92,7 @@ namespace TaskAutomation.Services
                     newParameter.ManualMeasure.IsMeasurable = isManualMeasure;
                     newParameter.RemoteMeasure = App.Services.GetRequiredService<IMeasure>();
                     newParameter.RemoteMeasure.IsMeasurable = isRemoteMeasure;
-                    parameters.Add(newParameter);
+                    objectTreeItem.ListGroup.Items.Add(newParameter);
                 }
             }
         }
